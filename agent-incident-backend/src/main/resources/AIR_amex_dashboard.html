@@ -1,0 +1,978 @@
+
+<style>
+:root {
+  --axp-navy:#00175A;--axp-blue:#006FCF;--axp-mid:#1a4480;
+  --axp-teal:#00827F;--axp-green:#007B40;--axp-amber:#F5A623;
+  --axp-red:#C0392B;--axp-orange:#E05C00;
+  --axp-surface:#F5F7FA;--axp-border:#D0DBE8;
+  --axp-text:#1A2744;--axp-muted:#5C6B8A;
+  --axp-p1:#C0392B;--axp-p2:#E05C00;--axp-p3:#F5A623;--axp-p4:#007B40;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,'Helvetica Neue',Arial,sans-serif}
+body{background:var(--axp-surface)}
+
+.shell{display:grid;grid-template-rows:auto auto 1fr;height:100%;min-height:900px}
+
+/* ── Top nav ── */
+.topnav{background:var(--axp-navy);padding:0 20px;display:flex;align-items:center;height:52px;gap:20px;border-bottom:3px solid var(--axp-blue)}
+.nav-logo{display:flex;align-items:center;gap:10px;color:#fff;font-size:13px;font-weight:700;letter-spacing:.5px}
+.nav-logo-box{background:var(--axp-blue);color:#fff;font-size:11px;font-weight:900;padding:3px 7px;border-radius:3px;letter-spacing:1px}
+.nav-links{display:flex;gap:2px;margin-left:16px}
+.nav-link{color:rgba(255,255,255,.7);font-size:12px;padding:6px 12px;border-radius:4px;cursor:pointer;transition:all .15s;border:none;background:none}
+.nav-link:hover,.nav-link.active{color:#fff;background:rgba(255,255,255,.12)}
+.nav-link.active{border-bottom:2px solid var(--axp-blue);border-radius:4px 4px 0 0}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.nav-badge{background:var(--axp-p1);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px}
+.nav-avatar{width:30px;height:30px;background:var(--axp-blue);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;cursor:pointer}
+.env-pill{background:rgba(0,111,207,.3);color:#7DB8F5;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.5px}
+
+/* ── Sub nav / toolbar ── */
+.toolbar{background:#fff;border-bottom:1px solid var(--axp-border);padding:8px 20px;display:flex;align-items:center;gap:12px}
+.toolbar-title{font-size:15px;font-weight:700;color:var(--axp-navy);display:flex;align-items:center;gap:8px}
+.toolbar-title i{color:var(--axp-blue);font-size:18px}
+.toolbar-sep{color:var(--axp-border);font-size:14px;margin:0 4px}
+.filter-pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;cursor:pointer;border:1px solid var(--axp-border);background:#fff;color:var(--axp-muted);transition:all .12s}
+.pill:hover{border-color:var(--axp-blue);color:var(--axp-blue)}
+.pill.active-pill{background:var(--axp-blue);color:#fff;border-color:var(--axp-blue)}
+.pill.p1-pill.active-pill{background:var(--axp-p1);border-color:var(--axp-p1)}
+.pill.p2-pill.active-pill{background:var(--axp-p2);border-color:var(--axp-p2)}
+.btn-refresh{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--axp-blue);background:none;border:1px solid var(--axp-blue);border-radius:4px;padding:5px 12px;cursor:pointer;font-weight:600}
+.btn-refresh i{font-size:14px}
+.live-dot{width:8px;height:8px;background:#27AE60;border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+/* ── Main layout: sidebar + content ── */
+.main{display:grid;grid-template-columns:220px 1fr;overflow:hidden}
+.sidebar{background:#fff;border-right:1px solid var(--axp-border);padding:16px 0;overflow-y:auto}
+.sb-section{padding:4px 0 8px}
+.sb-label{font-size:10px;font-weight:700;color:var(--axp-muted);letter-spacing:1px;padding:4px 16px 6px;text-transform:uppercase}
+.sb-item{display:flex;align-items:center;gap:10px;padding:8px 16px;cursor:pointer;font-size:12.5px;color:var(--axp-text);transition:background .12s;position:relative}
+.sb-item:hover{background:var(--axp-surface)}
+.sb-item.active{background:rgba(0,111,207,.08);color:var(--axp-blue);font-weight:600;border-right:3px solid var(--axp-blue)}
+.sb-item i{font-size:16px;color:inherit;opacity:.8}
+.sb-count{margin-left:auto;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px}
+.sb-count.red{background:#FDEAEA;color:var(--axp-p1)}
+.sb-count.orange{background:#FEF0E7;color:var(--axp-orange)}
+.sb-count.blue{background:#E6F1FB;color:var(--axp-blue)}
+.sb-count.gray{background:var(--axp-surface);color:var(--axp-muted)}
+.sb-divider{border:none;border-top:1px solid var(--axp-border);margin:8px 0}
+
+/* ── Content area ── */
+.content{overflow-y:auto;padding:20px;background:var(--axp-surface);display:flex;flex-direction:column;gap:16px}
+
+/* ── Metric row ── */
+.metric-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.metric-card{background:#fff;border:1px solid var(--axp-border);border-radius:8px;padding:12px 14px;position:relative;overflow:hidden}
+.metric-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--mc-color,var(--axp-blue))}
+.metric-label{font-size:10px;color:var(--axp-muted);font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
+.metric-val{font-size:22px;font-weight:700;color:var(--axp-navy);line-height:1.1}
+.metric-sub{font-size:10px;color:var(--axp-muted);margin-top:3px;display:flex;align-items:center;gap:4px}
+.trend-up{color:#27AE60}.trend-dn{color:var(--axp-p1)}
+
+/* ── Panel header ── */
+.panel{background:#fff;border:1px solid var(--axp-border);border-radius:8px;overflow:hidden}
+.panel-hdr{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--axp-border);background:#FAFBFC}
+.panel-hdr-title{font-size:13px;font-weight:700;color:var(--axp-navy);flex:1}
+.panel-hdr-sub{font-size:11px;color:var(--axp-muted)}
+.panel-hdr i{font-size:16px;color:var(--axp-blue)}
+
+/* ── Alert / incident rows ── */
+.inc-list{display:flex;flex-direction:column}
+.inc-row{display:grid;grid-template-columns:56px 1fr auto;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--axp-border);cursor:pointer;transition:background .1s;position:relative}
+.inc-row:last-child{border-bottom:none}
+.inc-row:hover{background:var(--axp-surface)}
+.inc-row.selected{background:rgba(0,111,207,.04);border-left:3px solid var(--axp-blue)}
+.sev-badge{font-size:10px;font-weight:800;padding:4px 6px;border-radius:5px;text-align:center;letter-spacing:.5px;min-width:36px}
+.sev-P1{background:#FDEAEA;color:var(--axp-p1)}
+.sev-P2{background:#FEF0E7;color:var(--axp-orange)}
+.sev-P3{background:#FEF9E7;color:#B7770D}
+.sev-P4{background:#EAF7EF;color:var(--axp-green)}
+.inc-title{font-size:13px;font-weight:600;color:var(--axp-text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.inc-meta{font-size:11px;color:var(--axp-muted);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.inc-meta i{font-size:12px}
+.inc-status-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px}
+.status-label{font-size:11px;font-weight:600;display:flex;align-items:center;white-space:nowrap}
+.s-active{color:var(--axp-p1)}.s-active .status-dot{background:var(--axp-p1)}
+.s-investigating{color:var(--axp-orange)}.s-investigating .status-dot{background:var(--axp-orange)}
+.s-monitoring{color:#F5A623}.s-monitoring .status-dot{background:#F5A623}
+.s-resolved{color:var(--axp-green)}.s-resolved .status-dot{background:var(--axp-green)}
+.auto-tag{font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;letter-spacing:.5px}
+.l1-tag{background:#E6F1FB;color:var(--axp-blue)}
+.l2-tag{background:#E8F5E9;color:#2E7D32}
+.l3-tag{background:#EDE7F6;color:#5E35B1}
+.elapsed{font-size:10px;color:var(--axp-muted)}
+
+/* ── Two-col grid ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+
+/* ── Slack panel ── */
+.slack-frame{background:#1a1d21;border-radius:0 0 8px 8px;overflow:hidden}
+.slack-ch-hdr{background:#19171D;padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.08)}
+.slack-ch-name{color:#fff;font-size:13px;font-weight:700}
+.slack-ch-icon{color:#E8A838;font-size:14px}
+.slack-ch-meta{margin-left:auto;font-size:11px;color:#8B8FA3}
+.slack-msgs{padding:12px 14px;display:flex;flex-direction:column;gap:12px;max-height:320px;overflow-y:auto}
+.slack-msg{display:grid;grid-template-columns:30px 1fr;gap:10px}
+.slack-avatar{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0}
+.slack-content{}
+.slack-meta{display:flex;align-items:baseline;gap:8px;margin-bottom:3px}
+.slack-author{font-size:12px;font-weight:700;color:#fff}
+.slack-time{font-size:11px;color:#8B8FA3}
+.slack-text{font-size:12px;color:#D1D2D3;line-height:1.5}
+.slack-text b{color:#fff}
+.slack-text code{background:rgba(255,255,255,.1);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:11px;color:#8FC3FF}
+.slack-card{background:#222529;border:1px solid rgba(255,255,255,.1);border-left:3px solid var(--axp-blue);border-radius:4px;padding:8px 12px;margin-top:6px}
+.sc-title{font-size:12px;font-weight:700;color:#fff;margin-bottom:4px}
+.sc-field{display:grid;grid-template-columns:100px 1fr;font-size:11px;gap:4px;margin-bottom:2px}
+.sc-key{color:#8B8FA3;font-weight:600}.sc-val{color:#D1D2D3}
+.slack-actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.slack-btn{font-size:11px;font-weight:700;padding:5px 14px;border-radius:4px;cursor:pointer;border:none}
+.slack-btn-green{background:#2EAB7B;color:#fff}
+.slack-btn-red{background:#E01E5A;color:#fff}
+.slack-btn-ghost{background:rgba(255,255,255,.1);color:#fff}
+.slack-bot-tag{font-size:10px;background:rgba(0,111,207,.4);color:#7DB8F5;padding:1px 5px;border-radius:3px;font-weight:700}
+
+/* ── Progress / status bars ── */
+.progress-wrap{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.prog-row{display:flex;flex-direction:column;gap:4px}
+.prog-hdr{display:flex;justify-content:space-between;align-items:center}
+.prog-name{font-size:12px;font-weight:600;color:var(--axp-text)}
+.prog-pct{font-size:12px;font-weight:700}
+.prog-bar{height:7px;background:var(--axp-surface);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;border-radius:4px;transition:width .6s ease}
+
+/* ── Agent activity ── */
+.agent-list{display:flex;flex-direction:column}
+.agent-row{display:grid;grid-template-columns:36px 1fr auto;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--axp-border)}
+.agent-row:last-child{border-bottom:none}
+.agent-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.agent-info{}
+.agent-name{font-size:12.5px;font-weight:600;color:var(--axp-text)}
+.agent-step{font-size:11px;color:var(--axp-muted);margin-top:1px;display:flex;align-items:center;gap:4px}
+.agent-step i{font-size:12px}
+.spin{animation:spin .8s linear infinite}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.agent-conf{text-align:right}
+.conf-val{font-size:13px;font-weight:700;color:var(--axp-navy)}
+.conf-lbl{font-size:10px;color:var(--axp-muted)}
+
+/* ── Alert dedup clusters ── */
+.cluster-row{padding:10px 16px;border-bottom:1px solid var(--axp-border);display:flex;align-items:center;gap:10px}
+.cluster-row:last-child{border-bottom:none}
+.cluster-count{font-size:11px;font-weight:800;background:var(--axp-navy);color:#fff;border-radius:20px;padding:2px 8px;white-space:nowrap}
+.cluster-info{flex:1}
+.cluster-title{font-size:12.5px;font-weight:600;color:var(--axp-text)}
+.cluster-meta{font-size:11px;color:var(--axp-muted);margin-top:1px}
+.sim-score{font-size:11px;font-weight:700;color:var(--axp-teal)}
+
+/* ── Chart wrappers ── */
+.chart-wrap{padding:12px 14px}
+
+/* ── RCA panel ── */
+.rca-card{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.rca-hyp{background:rgba(0,111,207,.05);border-left:3px solid var(--axp-blue);padding:10px 14px;border-radius:0 6px 6px 0}
+.rca-hyp-label{font-size:10px;font-weight:700;color:var(--axp-blue);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.rca-hyp-text{font-size:12.5px;color:var(--axp-text);line-height:1.5}
+.evidence-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.evidence-item{background:var(--axp-surface);border-radius:6px;padding:8px 10px;border:1px solid var(--axp-border)}
+.ev-label{font-size:10px;font-weight:700;color:var(--axp-muted);text-transform:uppercase;letter-spacing:.5px}
+.ev-val{font-size:12px;font-weight:600;color:var(--axp-text);margin-top:2px}
+.conf-bar-wrap{display:flex;align-items:center;gap:10px;margin-top:4px}
+.conf-bar{flex:1;height:8px;background:var(--axp-surface);border-radius:4px;overflow:hidden}
+.conf-bar-fill{height:100%;border-radius:4px;background:var(--axp-blue)}
+</style>
+
+
+<div class="shell">
+
+  <!-- Top nav -->
+  <nav class="topnav">
+    <div class="nav-logo">
+      <div class="nav-logo-box">AIR</div>
+      <span style="color:rgba(255,255,255,.9);font-size:12px">Agentic Incident Response</span>
+    </div>
+    <div class="nav-links">
+      <button class="nav-link active" aria-current="page">Dashboard</button>
+      <button class="nav-link">Incidents</button>
+      <button class="nav-link">Alerts</button>
+      <button class="nav-link">Runbooks</button>
+      <button class="nav-link">Postmortems</button>
+      <button class="nav-link">Reports</button>
+    </div>
+    <div class="nav-right">
+      <div class="env-pill">PROD</div>
+      <div style="position:relative;cursor:pointer">
+        <i class="ti ti-bell" style="color:rgba(255,255,255,.8);font-size:20px" aria-hidden="true"></i>
+        <span class="nav-badge" style="position:absolute;top:-6px;right:-8px">3</span>
+      </div>
+      <div class="nav-avatar" title="SRE Lead">SL</div>
+    </div>
+  </nav>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="toolbar-title">
+      <i class="ti ti-dashboard" aria-hidden="true"></i>
+      Live Command Centre
+      <span class="toolbar-sep">·</span>
+    </div>
+    <div class="live-dot" title="Live feed active"></div>
+    <span style="font-size:11px;color:var(--axp-muted);margin-right:8px">Live</span>
+    <div class="filter-pills">
+      <span class="pill active-pill">All</span>
+      <span class="pill p1-pill">P1 Critical</span>
+      <span class="pill p2-pill">P2 High</span>
+      <span class="pill">My Teams</span>
+      <span class="pill">AI-Handled</span>
+    </div>
+    <button class="btn-refresh" onclick="sendPrompt('Refresh the AIR dashboard and show me the latest incident status')">
+      <i class="ti ti-refresh" aria-hidden="true"></i> Refresh ↗
+    </button>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sb-section">
+        <div class="sb-label">Incidents</div>
+        <div class="sb-item active">
+          <i class="ti ti-bolt" aria-hidden="true"></i> Active
+          <span class="sb-count red">4</span>
+        </div>
+        <div class="sb-item">
+          <i class="ti ti-eye" aria-hidden="true"></i> Monitoring
+          <span class="sb-count orange">2</span>
+        </div>
+        <div class="sb-item">
+          <i class="ti ti-circle-check" aria-hidden="true"></i> Resolved
+          <span class="sb-count gray">18</span>
+        </div>
+        <div class="sb-item">
+          <i class="ti ti-alert-triangle" aria-hidden="true"></i> All Incidents
+          <span class="sb-count blue">24</span>
+        </div>
+      </div>
+      <hr class="sb-divider">
+      <div class="sb-section">
+        <div class="sb-label">Alerts</div>
+        <div class="sb-item">
+          <i class="ti ti-bell" aria-hidden="true"></i> Alert Feed
+          <span class="sb-count red">127</span>
+        </div>
+        <div class="sb-item">
+          <i class="ti ti-filter" aria-hidden="true"></i> Dedup Groups
+          <span class="sb-count orange">9</span>
+        </div>
+        <div class="sb-item">
+          <i class="ti ti-ban" aria-hidden="true"></i> Suppressed
+          <span class="sb-count gray">843</span>
+        </div>
+      </div>
+      <hr class="sb-divider">
+      <div class="sb-section">
+        <div class="sb-label">AI Agents</div>
+        <div class="sb-item">
+          <i class="ti ti-robot" aria-hidden="true"></i> Active Agents
+          <span class="sb-count blue">5</span>
+        </div>
+        <div class="sb-item">
+          <i class="ti ti-activity" aria-hidden="true"></i> Agent Actions
+          <span class="sb-count orange">12</span>
+        </div>
+        <div class="sb-item">
+          <i class="ti ti-clock-pause" aria-hidden="true"></i> Pending Approval
+          <span class="sb-count red">2</span>
+        </div>
+      </div>
+      <hr class="sb-divider">
+      <div class="sb-section">
+        <div class="sb-label">Integrations</div>
+        <div class="sb-item">
+          <i class="ti ti-brand-slack" aria-hidden="true"></i> Slack
+          <span style="margin-left:auto;width:8px;height:8px;background:#27AE60;border-radius:50%;display:block"></span>
+        </div>
+        <div class="sb-item">
+          <i class="ti ti-api" aria-hidden="true"></i> Datadog
+          <span style="margin-left:auto;width:8px;height:8px;background:#27AE60;border-radius:50%;display:block"></span>
+        </div>
+        <div class="sb-item">
+          <i class="ti ti-container" aria-hidden="true"></i> Kubernetes
+          <span style="margin-left:auto;width:8px;height:8px;background:#27AE60;border-radius:50%;display:block"></span>
+        </div>
+        <div class="sb-item">
+          <i class="ti ti-brand-github" aria-hidden="true"></i> GitHub
+          <span style="margin-left:auto;width:8px;height:8px;background:#27AE60;border-radius:50%;display:block"></span>
+        </div>
+        <div class="sb-item">
+          <i class="ti ti-ticket" aria-hidden="true"></i> JIRA
+          <span style="margin-left:auto;width:8px;height:8px;background:#F5A623;border-radius:50%;display:block"></span>
+        </div>
+        <div class="sb-item">
+          <i class="ti ti-cloud" aria-hidden="true"></i> AWS / GCP
+          <span style="margin-left:auto;width:8px;height:8px;background:#27AE60;border-radius:50%;display:block"></span>
+        </div>
+      </div>
+      <hr class="sb-divider">
+      <div class="sb-section">
+        <div class="sb-label">Config</div>
+        <div class="sb-item">
+          <i class="ti ti-book" aria-hidden="true"></i> Runbooks
+        </div>
+        <div class="sb-item">
+          <i class="ti ti-users" aria-hidden="true"></i> Teams
+        </div>
+        <div class="sb-item">
+          <i class="ti ti-settings" aria-hidden="true"></i> Settings
+        </div>
+      </div>
+    </aside>
+
+    <!-- Content -->
+    <main class="content">
+
+      <!-- Metrics row -->
+      <div class="metric-grid">
+        <div class="metric-card" style="--mc-color:var(--axp-p1)">
+          <div class="metric-label">Active P1/P2</div>
+          <div class="metric-val" style="color:var(--axp-p1)">4</div>
+          <div class="metric-sub"><span class="trend-dn"><i class="ti ti-arrow-up" style="font-size:10px"></i> 2 vs yesterday</span></div>
+        </div>
+        <div class="metric-card" style="--mc-color:var(--axp-teal)">
+          <div class="metric-label">Avg MTTR (today)</div>
+          <div class="metric-val">18<span style="font-size:13px;font-weight:500;color:var(--axp-muted)">m</span></div>
+          <div class="metric-sub"><span class="trend-up"><i class="ti ti-arrow-down" style="font-size:10px"></i> 27m vs baseline</span></div>
+        </div>
+        <div class="metric-card" style="--mc-color:var(--axp-blue)">
+          <div class="metric-label">Auto-Resolved</div>
+          <div class="metric-val">63<span style="font-size:13px;font-weight:500;color:var(--axp-muted)">%</span></div>
+          <div class="metric-sub"><span class="trend-up"><i class="ti ti-arrow-up" style="font-size:10px"></i> +18% this week</span></div>
+        </div>
+        <div class="metric-card" style="--mc-color:var(--axp-orange)">
+          <div class="metric-label">Alerts (last 1h)</div>
+          <div class="metric-val">127</div>
+          <div class="metric-sub"><i class="ti ti-filter" style="font-size:11px"></i> 843 suppressed</div>
+        </div>
+        <div class="metric-card" style="--mc-color:var(--axp-green)">
+          <div class="metric-label">SLA Compliance</div>
+          <div class="metric-val" style="color:var(--axp-green)">94<span style="font-size:13px;font-weight:500;color:var(--axp-muted)">%</span></div>
+          <div class="metric-sub"><span class="trend-up"><i class="ti ti-arrow-up" style="font-size:10px"></i> +4% vs last wk</span></div>
+        </div>
+      </div>
+
+      <!-- Incidents + AI RCA -->
+      <div class="two-col">
+
+        <!-- Active incidents list -->
+        <div class="panel">
+          <div class="panel-hdr">
+            <i class="ti ti-alert-triangle" aria-hidden="true"></i>
+            <div class="panel-hdr-title">Active Incidents</div>
+            <div class="panel-hdr-sub">4 open · sorted by severity</div>
+          </div>
+          <div class="inc-list">
+
+            <div class="inc-row selected">
+              <div>
+                <span class="sev-badge sev-P1">P1</span>
+                <span class="auto-tag l2-tag" style="display:block;margin-top:4px;text-align:center">L2</span>
+              </div>
+              <div style="min-width:0">
+                <div class="inc-title">Payment API — OOMKill (payment-svc-v2)</div>
+                <div class="inc-meta">
+                  <span><i class="ti ti-clock" aria-hidden="true"></i> 14m ago</span>
+                  <span><i class="ti ti-server" aria-hidden="true"></i> payment-service</span>
+                  <span><i class="ti ti-users" aria-hidden="true"></i> Payments SRE</span>
+                </div>
+              </div>
+              <div class="inc-status-wrap">
+                <span class="status-label s-active"><span class="status-dot"></span>Active</span>
+                <span class="elapsed">INC-2847</span>
+              </div>
+            </div>
+
+            <div class="inc-row">
+              <div>
+                <span class="sev-badge sev-P1">P1</span>
+                <span class="auto-tag l3-tag" style="display:block;margin-top:4px;text-align:center">L3</span>
+              </div>
+              <div style="min-width:0">
+                <div class="inc-title">Rewards API — DB replica offline</div>
+                <div class="inc-meta">
+                  <span><i class="ti ti-clock" aria-hidden="true"></i> 32m ago</span>
+                  <span><i class="ti ti-server" aria-hidden="true"></i> rewards-db</span>
+                  <span><i class="ti ti-users" aria-hidden="true"></i> Platform SRE</span>
+                </div>
+              </div>
+              <div class="inc-status-wrap">
+                <span class="status-label s-investigating"><span class="status-dot"></span>Investigating</span>
+                <span class="elapsed">INC-2846</span>
+              </div>
+            </div>
+
+            <div class="inc-row">
+              <div>
+                <span class="sev-badge sev-P2">P2</span>
+                <span class="auto-tag l2-tag" style="display:block;margin-top:4px;text-align:center">L2</span>
+              </div>
+              <div style="min-width:0">
+                <div class="inc-title">Auth service p99 latency spike &gt; 2s</div>
+                <div class="inc-meta">
+                  <span><i class="ti ti-clock" aria-hidden="true"></i> 1h 02m ago</span>
+                  <span><i class="ti ti-server" aria-hidden="true"></i> auth-service</span>
+                  <span><i class="ti ti-users" aria-hidden="true"></i> Identity SRE</span>
+                </div>
+              </div>
+              <div class="inc-status-wrap">
+                <span class="status-label s-monitoring"><span class="status-dot"></span>Monitoring</span>
+                <span class="elapsed">INC-2845</span>
+              </div>
+            </div>
+
+            <div class="inc-row">
+              <div>
+                <span class="sev-badge sev-P2">P2</span>
+                <span class="auto-tag l1-tag" style="display:block;margin-top:4px;text-align:center">L1</span>
+              </div>
+              <div style="min-width:0">
+                <div class="inc-title">Card-activation webhook timeout (3rd party)</div>
+                <div class="inc-meta">
+                  <span><i class="ti ti-clock" aria-hidden="true"></i> 2h 18m ago</span>
+                  <span><i class="ti ti-server" aria-hidden="true"></i> card-activation</span>
+                  <span><i class="ti ti-users" aria-hidden="true"></i> Cards SRE</span>
+                </div>
+              </div>
+              <div class="inc-status-wrap">
+                <span class="status-label s-investigating"><span class="status-dot"></span>Investigating</span>
+                <span class="elapsed">INC-2844</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- AI RCA Panel for INC-2847 -->
+        <div class="panel">
+          <div class="panel-hdr">
+            <i class="ti ti-robot" aria-hidden="true"></i>
+            <div class="panel-hdr-title">AI Root Cause — INC-2847</div>
+            <span style="font-size:10px;background:rgba(0,111,207,.1);color:var(--axp-blue);padding:2px 7px;border-radius:10px;font-weight:700">L2 APPROVAL NEEDED</span>
+          </div>
+          <div class="rca-card">
+            <div class="rca-hyp">
+              <div class="rca-hyp-label">AI Hypothesis</div>
+              <div class="rca-hyp-text">Memory leak introduced in <strong>payment-svc v5.2.1</strong> (deployed 12:03 UTC). Heap exhausted after 847 requests causing OOMKill. 3 identical incidents resolved by rollback in past 30 days.</div>
+            </div>
+            <div class="conf-bar-wrap">
+              <span style="font-size:11px;color:var(--axp-muted);font-weight:600">Confidence</span>
+              <div class="conf-bar"><div class="conf-bar-fill" style="width:94%"></div></div>
+              <span style="font-size:13px;font-weight:700;color:var(--axp-blue)">94%</span>
+            </div>
+            <div class="evidence-grid">
+              <div class="evidence-item">
+                <div class="ev-label">Trigger</div>
+                <div class="ev-val">Heap OOM @ 12:17 UTC</div>
+              </div>
+              <div class="evidence-item">
+                <div class="ev-label">Last Deploy</div>
+                <div class="ev-val">v5.2.1 — 12:03 UTC</div>
+              </div>
+              <div class="evidence-item">
+                <div class="ev-label">Pods Affected</div>
+                <div class="ev-val">3 / 6 OOMKilled</div>
+              </div>
+              <div class="evidence-item">
+                <div class="ev-label">Similar Incidents</div>
+                <div class="ev-val">INC-2801, 2756, 2734</div>
+              </div>
+            </div>
+            <div style="background:var(--axp-surface);border-radius:6px;padding:10px 12px;border:1px solid var(--axp-border)">
+              <div style="font-size:10px;font-weight:700;color:var(--axp-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Proposed Actions (L2)</div>
+              <div style="font-size:12px;color:var(--axp-text);display:flex;flex-direction:column;gap:4px">
+                <span><span style="color:var(--axp-blue);font-weight:700">1.</span> Rollback payment-svc → v5.2.0 <code style="font-size:11px;background:var(--axp-border);padding:1px 5px;border-radius:3px">k8s_rollout</code></span>
+                <span><span style="color:var(--axp-blue);font-weight:700">2.</span> Restart 3 OOMKilled pods</span>
+                <span><span style="color:var(--axp-blue);font-weight:700">3.</span> Monitor error rate for 5 min</span>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:10px">
+                <button style="flex:1;background:var(--axp-green);color:#fff;border:none;border-radius:5px;padding:8px;font-size:12px;font-weight:700;cursor:pointer" onclick="sendPrompt('Approve and execute the AI rollback action for INC-2847 payment service')">
+                  ✓ Approve &amp; Execute ↗
+                </button>
+                <button style="flex:1;background:var(--axp-surface);color:var(--axp-p1);border:1px solid var(--axp-p1);border-radius:5px;padding:8px;font-size:12px;font-weight:700;cursor:pointer">
+                  ✕ Reject
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slack + Status Progress + Agent Activity -->
+      <div class="three-col">
+
+        <!-- Slack panel -->
+        <div class="panel" style="grid-column:span 1">
+          <div class="panel-hdr">
+            <i class="ti ti-brand-slack" aria-hidden="true"></i>
+            <div class="panel-hdr-title">Slack — #inc-2847</div>
+            <span style="font-size:10px;color:var(--axp-muted)">payment-service</span>
+          </div>
+          <div class="slack-frame">
+            <div class="slack-ch-hdr">
+              <span class="slack-ch-icon">#</span>
+              <span class="slack-ch-name">inc-2847-payment-svc</span>
+              <span class="slack-ch-meta">6 members · 14m</span>
+            </div>
+            <div class="slack-msgs">
+
+              <div class="slack-msg">
+                <div class="slack-avatar" style="background:#4A154B">
+                  <span style="color:#E8A838;font-size:14px">⚡</span>
+                </div>
+                <div class="slack-content">
+                  <div class="slack-meta">
+                    <span class="slack-author">AIR Bot</span>
+                    <span class="slack-bot-tag">BOT</span>
+                    <span class="slack-time">12:17</span>
+                  </div>
+                  <div class="slack-text">🚨 <b>P1 INCIDENT</b> — payment-service OOMKill (3 pods)</div>
+                  <div class="slack-card">
+                    <div class="sc-title">INC-2847 · Payment API Down</div>
+                    <div class="sc-field"><span class="sc-key">Service</span><span class="sc-val">payment-svc-v2</span></div>
+                    <div class="sc-field"><span class="sc-key">Root Cause</span><span class="sc-val">Memory leak v5.2.1 (94% conf)</span></div>
+                    <div class="sc-field"><span class="sc-key">Proposed fix</span><span class="sc-val">Rollback → v5.2.0</span></div>
+                    <div class="slack-actions">
+                      <button class="slack-btn slack-btn-green" onclick="sendPrompt('Approve the AI rollback for INC-2847')">✓ Approve ↗</button>
+                      <button class="slack-btn slack-btn-red">✕ Reject</button>
+                      <button class="slack-btn slack-btn-ghost" onclick="sendPrompt('Show full AI evidence and logs for INC-2847')">View Evidence ↗</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="slack-msg">
+                <div class="slack-avatar" style="background:#005A8E;color:#fff;font-size:11px;font-weight:800">RS</div>
+                <div class="slack-content">
+                  <div class="slack-meta">
+                    <span class="slack-author">Ravi S.</span>
+                    <span class="slack-time">12:19</span>
+                  </div>
+                  <div class="slack-text">Confirming the leak — heap dump matches v5.2.1 changelog. Approving rollback.</div>
+                </div>
+              </div>
+
+              <div class="slack-msg">
+                <div class="slack-avatar" style="background:#4A154B">
+                  <span style="color:#E8A838;font-size:14px">⚡</span>
+                </div>
+                <div class="slack-content">
+                  <div class="slack-meta">
+                    <span class="slack-author">AIR Bot</span>
+                    <span class="slack-bot-tag">BOT</span>
+                    <span class="slack-time">12:19</span>
+                  </div>
+                  <div class="slack-text">✅ Rollback approved by <b>@Ravi S.</b> — executing <code>k8s rollout undo payment-svc</code> …</div>
+                </div>
+              </div>
+
+              <div class="slack-msg">
+                <div class="slack-avatar" style="background:#4A154B">
+                  <span style="color:#E8A838;font-size:14px">⚡</span>
+                </div>
+                <div class="slack-content">
+                  <div class="slack-meta">
+                    <span class="slack-author">AIR Bot</span>
+                    <span class="slack-bot-tag">BOT</span>
+                    <span class="slack-time">12:21</span>
+                  </div>
+                  <div class="slack-text">🔄 Rollback in progress — 2/3 pods healthy. Monitoring error rate. ETA: <b>~2 min</b></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Status progress -->
+        <div class="panel">
+          <div class="panel-hdr">
+            <i class="ti ti-progress" aria-hidden="true"></i>
+            <div class="panel-hdr-title">Incident Status Progress</div>
+          </div>
+          <div class="progress-wrap">
+            <div style="font-size:11px;font-weight:700;color:var(--axp-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">INC-2847 — Payment OOM</div>
+            <div class="prog-row">
+              <div class="prog-hdr">
+                <span class="prog-name">Alert Detected</span>
+                <span class="prog-pct" style="color:var(--axp-green)">✓</span>
+              </div>
+              <div class="prog-bar"><div class="prog-fill" style="width:100%;background:var(--axp-green)"></div></div>
+            </div>
+            <div class="prog-row">
+              <div class="prog-hdr">
+                <span class="prog-name">AI Triage &amp; RCA</span>
+                <span class="prog-pct" style="color:var(--axp-green)">✓ 94%</span>
+              </div>
+              <div class="prog-bar"><div class="prog-fill" style="width:100%;background:var(--axp-green)"></div></div>
+            </div>
+            <div class="prog-row">
+              <div class="prog-hdr">
+                <span class="prog-name">Approval Received</span>
+                <span class="prog-pct" style="color:var(--axp-green)">✓</span>
+              </div>
+              <div class="prog-bar"><div class="prog-fill" style="width:100%;background:var(--axp-green)"></div></div>
+            </div>
+            <div class="prog-row">
+              <div class="prog-hdr">
+                <span class="prog-name">Rollback Executing</span>
+                <span class="prog-pct" style="color:var(--axp-orange)">65%</span>
+              </div>
+              <div class="prog-bar"><div class="prog-fill" style="width:65%;background:var(--axp-orange)"></div></div>
+            </div>
+            <div class="prog-row">
+              <div class="prog-hdr">
+                <span class="prog-name">Health Validation</span>
+                <span class="prog-pct" style="color:var(--axp-muted)">Pending</span>
+              </div>
+              <div class="prog-bar"><div class="prog-fill" style="width:0%;background:var(--axp-blue)"></div></div>
+            </div>
+            <div class="prog-row">
+              <div class="prog-hdr">
+                <span class="prog-name">Incident Resolved</span>
+                <span class="prog-pct" style="color:var(--axp-muted)">Pending</span>
+              </div>
+              <div class="prog-bar"><div class="prog-fill" style="width:0%;background:var(--axp-blue)"></div></div>
+            </div>
+
+            <hr style="border:none;border-top:1px solid var(--axp-border);margin:4px 0">
+            <div style="font-size:11px;font-weight:700;color:var(--axp-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Service Health</div>
+
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
+                <span style="color:var(--axp-text);font-weight:600">Payment API</span>
+                <span style="color:var(--axp-p1);font-weight:700;font-size:11px">● Degraded</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
+                <span style="color:var(--axp-text);font-weight:600">Auth Service</span>
+                <span style="color:var(--axp-orange);font-weight:700;font-size:11px">● Warning</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
+                <span style="color:var(--axp-text);font-weight:600">Rewards API</span>
+                <span style="color:var(--axp-p1);font-weight:700;font-size:11px">● Degraded</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
+                <span style="color:var(--axp-text);font-weight:600">Card Activation</span>
+                <span style="color:var(--axp-green);font-weight:700;font-size:11px">● Operational</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px">
+                <span style="color:var(--axp-text);font-weight:600">Digital Banking</span>
+                <span style="color:var(--axp-green);font-weight:700;font-size:11px">● Operational</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Agent activity -->
+        <div class="panel">
+          <div class="panel-hdr">
+            <i class="ti ti-robot" aria-hidden="true"></i>
+            <div class="panel-hdr-title">Agent Activity</div>
+            <div class="panel-hdr-sub">5 active agents</div>
+          </div>
+          <div class="agent-list">
+            <div class="agent-row">
+              <div class="agent-icon" style="background:rgba(0,111,207,.1)">
+                <i class="ti ti-shield-bolt" style="color:var(--axp-blue)" aria-hidden="true"></i>
+              </div>
+              <div class="agent-info">
+                <div class="agent-name">RemediationAgent · INC-2847</div>
+                <div class="agent-step">
+                  <i class="ti ti-refresh spin" aria-hidden="true"></i> Executing k8s rollback…
+                </div>
+              </div>
+              <div class="agent-conf">
+                <div class="conf-val">94%</div>
+                <div class="conf-lbl">confidence</div>
+              </div>
+            </div>
+            <div class="agent-row">
+              <div class="agent-icon" style="background:rgba(0,130,127,.1)">
+                <i class="ti ti-database" style="color:var(--axp-teal)" aria-hidden="true"></i>
+              </div>
+              <div class="agent-info">
+                <div class="agent-name">AutoResolveAgent · INC-2846</div>
+                <div class="agent-step">
+                  <i class="ti ti-refresh spin" aria-hidden="true"></i> Restarting DB replica…
+                </div>
+              </div>
+              <div class="agent-conf">
+                <div class="conf-val">87%</div>
+                <div class="conf-lbl">confidence</div>
+              </div>
+            </div>
+            <div class="agent-row">
+              <div class="agent-icon" style="background:rgba(224,92,0,.1)">
+                <i class="ti ti-chart-line" style="color:var(--axp-orange)" aria-hidden="true"></i>
+              </div>
+              <div class="agent-info">
+                <div class="agent-name">TriageAgent · INC-2845</div>
+                <div class="agent-step">
+                  <i class="ti ti-eye" aria-hidden="true"></i> Monitoring p99 latency
+                </div>
+              </div>
+              <div class="agent-conf">
+                <div class="conf-val">72%</div>
+                <div class="conf-lbl">confidence</div>
+              </div>
+            </div>
+            <div class="agent-row">
+              <div class="agent-icon" style="background:rgba(0,123,64,.1)">
+                <i class="ti ti-message-circle" style="color:var(--axp-green)" aria-hidden="true"></i>
+              </div>
+              <div class="agent-info">
+                <div class="agent-name">CommunicationAgent · All</div>
+                <div class="agent-step">
+                  <i class="ti ti-refresh spin" aria-hidden="true"></i> Updating status page…
+                </div>
+              </div>
+              <div class="agent-conf">
+                <div class="conf-val">—</div>
+                <div class="conf-lbl">comms</div>
+              </div>
+            </div>
+            <div class="agent-row">
+              <div class="agent-icon" style="background:rgba(94,53,177,.1)">
+                <i class="ti ti-file-text" style="color:#5E35B1" aria-hidden="true"></i>
+              </div>
+              <div class="agent-info">
+                <div class="agent-name">PostmortemAgent · INC-2843</div>
+                <div class="agent-step">
+                  <i class="ti ti-check" aria-hidden="true"></i> Draft ready — awaiting review
+                </div>
+              </div>
+              <div class="agent-conf">
+                <div class="conf-val" style="font-size:11px;color:var(--axp-green)">Done</div>
+                <div class="conf-lbl">status</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Alert dedup clusters + MTTR chart -->
+      <div class="two-col">
+
+        <!-- Alert dedup groups -->
+        <div class="panel">
+          <div class="panel-hdr">
+            <i class="ti ti-filter" aria-hidden="true"></i>
+            <div class="panel-hdr-title">Alert Dedup Groups</div>
+            <div class="panel-hdr-sub">9 groups · 843 suppressed</div>
+          </div>
+          <div>
+            <div class="cluster-row">
+              <span class="cluster-count">47</span>
+              <div class="cluster-info">
+                <div class="cluster-title">payment-svc OOMKill / heap exhaustion</div>
+                <div class="cluster-meta">Datadog · P1 · payment-service</div>
+              </div>
+              <span class="sim-score">0.97</span>
+            </div>
+            <div class="cluster-row">
+              <span class="cluster-count">23</span>
+              <div class="cluster-info">
+                <div class="cluster-title">rewards-db replica connection refused</div>
+                <div class="cluster-meta">Prometheus · P1 · rewards-db</div>
+              </div>
+              <span class="sim-score">0.94</span>
+            </div>
+            <div class="cluster-row">
+              <span class="cluster-count">18</span>
+              <div class="cluster-info">
+                <div class="cluster-title">auth-service high p99 latency &gt; 2s</div>
+                <div class="cluster-meta">Datadog · P2 · auth-service</div>
+              </div>
+              <span class="sim-score">0.91</span>
+            </div>
+            <div class="cluster-row">
+              <span class="cluster-count">12</span>
+              <div class="cluster-info">
+                <div class="cluster-title">card-activation webhook 504 timeout</div>
+                <div class="cluster-meta">PagerDuty · P2 · card-activation</div>
+              </div>
+              <span class="sim-score">0.89</span>
+            </div>
+            <div class="cluster-row">
+              <span class="cluster-count">9</span>
+              <div class="cluster-info">
+                <div class="cluster-title">K8s node memory pressure (worker-03)</div>
+                <div class="cluster-meta">Kubernetes · P3 · infra</div>
+              </div>
+              <span class="sim-score">0.88</span>
+            </div>
+            <div class="cluster-row">
+              <span class="cluster-count">5</span>
+              <div class="cluster-info">
+                <div class="cluster-title">fraud-detection model inference slow</div>
+                <div class="cluster-meta">Splunk · P3 · fraud-svc</div>
+              </div>
+              <span class="sim-score">0.88</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- MTTR chart -->
+        <div class="panel">
+          <div class="panel-hdr">
+            <i class="ti ti-chart-bar" aria-hidden="true"></i>
+            <div class="panel-hdr-title">MTTR Trend (7 days)</div>
+            <div class="panel-hdr-sub" style="cursor:pointer;color:var(--axp-blue)" onclick="sendPrompt('Break down MTTR by service team and show me which teams improved most this week')">Drill down ↗</div>
+          </div>
+          <div class="chart-wrap">
+            <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:10px;font-size:11px;color:var(--axp-muted)">
+              <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#C0392B"></span>Manual (P1)</span>
+              <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#006FCF"></span>AI-Assisted</span>
+              <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#27AE60"></span>AI-Resolved</span>
+            </div>
+            <div style="position:relative;width:100%;height:200px">
+              <canvas id="mttrChart" role="img" aria-label="Bar chart showing MTTR trends over 7 days. Manual resolution averages 45 minutes, AI-assisted around 22 minutes, and AI-resolved around 8 minutes.">MTTR 7-day trend: manual P1 ~45min, AI-assisted ~22min, AI-resolved ~8min.</canvas>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom row: auto-resolution gauge + LLM telemetry -->
+      <div class="two-col">
+
+        <!-- Auto-resolution rate -->
+        <div class="panel">
+          <div class="panel-hdr">
+            <i class="ti ti-circle-check" aria-hidden="true"></i>
+            <div class="panel-hdr-title">Auto-Resolution Rate</div>
+            <div class="panel-hdr-sub">P3 &amp; P4 incidents · last 7 days</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--axp-border)">
+            <div style="background:#fff;padding:12px 14px">
+              <div style="font-size:10px;color:var(--axp-muted);font-weight:600;letter-spacing:.5px;margin-bottom:4px">AUTO-RESOLVED</div>
+              <div style="font-size:28px;font-weight:700;color:var(--axp-green)">63%</div>
+              <div style="font-size:11px;color:var(--axp-muted)">+18% vs last week</div>
+            </div>
+            <div style="background:#fff;padding:12px 14px">
+              <div style="font-size:10px;color:var(--axp-muted);font-weight:600;letter-spacing:.5px;margin-bottom:4px">HUMAN-RESOLVED</div>
+              <div style="font-size:28px;font-weight:700;color:var(--axp-blue)">37%</div>
+              <div style="font-size:11px;color:var(--axp-muted)">Down from 55% last week</div>
+            </div>
+          </div>
+          <div style="position:relative;width:100%;height:160px;padding:0 14px 12px">
+            <canvas id="resolveChart" role="img" aria-label="Stacked bar chart showing resolution rate by day over 7 days. Auto-resolution growing from 45% to 63%.">Resolution trend: growing auto-resolution rate from 45% Monday to 63% Sunday.</canvas>
+          </div>
+        </div>
+
+        <!-- LLM telemetry -->
+        <div class="panel">
+          <div class="panel-hdr">
+            <i class="ti ti-cpu" aria-hidden="true"></i>
+            <div class="panel-hdr-title">LLM Telemetry</div>
+            <div class="panel-hdr-sub">Today · all agents</div>
+          </div>
+          <div style="padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+              <div style="background:var(--axp-surface);border-radius:6px;padding:10px;text-align:center;border:1px solid var(--axp-border)">
+                <div style="font-size:18px;font-weight:700;color:var(--axp-navy)">4.2s</div>
+                <div style="font-size:10px;color:var(--axp-muted);margin-top:2px">Avg triage p50</div>
+              </div>
+              <div style="background:var(--axp-surface);border-radius:6px;padding:10px;text-align:center;border:1px solid var(--axp-border)">
+                <div style="font-size:18px;font-weight:700;color:var(--axp-navy)">83%</div>
+                <div style="font-size:10px;color:var(--axp-muted);margin-top:2px">Positive feedback</div>
+              </div>
+              <div style="background:var(--axp-surface);border-radius:6px;padding:10px;text-align:center;border:1px solid var(--axp-border)">
+                <div style="font-size:18px;font-weight:700;color:var(--axp-navy)">2.1M</div>
+                <div style="font-size:10px;color:var(--axp-muted);margin-top:2px">Tokens today</div>
+              </div>
+            </div>
+            <div style="font-size:11px;font-weight:700;color:var(--axp-muted);text-transform:uppercase;letter-spacing:.5px">Model Usage</div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+                  <span style="color:var(--axp-text);font-weight:600">GPT-4o (Complex RCA)</span>
+                  <span style="color:var(--axp-blue);font-weight:700">68%</span>
+                </div>
+                <div style="height:6px;background:var(--axp-surface);border-radius:3px;overflow:hidden"><div style="width:68%;height:100%;background:var(--axp-blue);border-radius:3px"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+                  <span style="color:var(--axp-text);font-weight:600">GPT-4o-mini (Formatting)</span>
+                  <span style="color:var(--axp-teal);font-weight:700">28%</span>
+                </div>
+                <div style="height:6px;background:var(--axp-surface);border-radius:3px;overflow:hidden"><div style="width:28%;height:100%;background:var(--axp-teal);border-radius:3px"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+                  <span style="color:var(--axp-text);font-weight:600">Embedding (Dedup)</span>
+                  <span style="color:var(--axp-muted);font-weight:700">4%</span>
+                </div>
+                <div style="height:6px;background:var(--axp-surface);border-radius:3px;overflow:hidden"><div style="width:4%;height:100%;background:var(--axp-muted);border-radius:3px"></div></div>
+              </div>
+            </div>
+            <div style="font-size:11px;font-weight:700;color:var(--axp-muted);text-transform:uppercase;letter-spacing:.5px;margin-top:4px">Acceptance Rate by Team</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <div style="font-size:11px;display:flex;justify-content:space-between"><span style="color:var(--axp-text)">Payments SRE</span><span style="font-weight:700;color:var(--axp-green)">91%</span></div>
+              <div style="font-size:11px;display:flex;justify-content:space-between"><span style="color:var(--axp-text)">Platform SRE</span><span style="font-weight:700;color:var(--axp-green)">84%</span></div>
+              <div style="font-size:11px;display:flex;justify-content:space-between"><span style="color:var(--axp-text)">Identity SRE</span><span style="font-weight:700;color:var(--axp-orange)">76%</span></div>
+              <div style="font-size:11px;display:flex;justify-content:space-between"><span style="color:var(--axp-text)">Cards SRE</span><span style="font-weight:700;color:var(--axp-orange)">71%</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+new Chart(document.getElementById('mttrChart'),{
+  type:'bar',
+  data:{
+    labels:days,
+    datasets:[
+      {label:'Manual (P1)',data:[48,45,43,44,42,40,39],backgroundColor:'#C0392B',borderRadius:2},
+      {label:'AI-Assisted',data:[28,25,24,22,21,20,18],backgroundColor:'#006FCF',borderRadius:2},
+      {label:'AI-Resolved',data:[12,10,9,8,8,7,6],backgroundColor:'#27AE60',borderRadius:2}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.y}m`}}},
+    scales:{
+      x:{ticks:{font:{size:11},color:'#5C6B8A'},grid:{display:false}},
+      y:{ticks:{font:{size:11},color:'#5C6B8A',callback:v=>v+'m'},grid:{color:'rgba(0,0,0,.05)'}}
+    }
+  }
+});
+new Chart(document.getElementById('resolveChart'),{
+  type:'bar',
+  data:{
+    labels:days,
+    datasets:[
+      {label:'Auto-resolved',data:[45,48,52,55,58,61,63],backgroundColor:'#27AE60',borderRadius:2},
+      {label:'Human-resolved',data:[55,52,48,45,42,39,37],backgroundColor:'#006FCF',borderRadius:2}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.y}%`}}},
+    scales:{
+      x:{stacked:true,ticks:{font:{size:10},color:'#5C6B8A'},grid:{display:false}},
+      y:{stacked:true,max:100,ticks:{font:{size:10},color:'#5C6B8A',callback:v=>v+'%'},grid:{color:'rgba(0,0,0,.05)'}}
+    }
+  }
+});
+</script>
