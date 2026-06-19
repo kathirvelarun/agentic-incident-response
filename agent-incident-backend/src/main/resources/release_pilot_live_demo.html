@@ -1,0 +1,675 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif}
+:root{
+  --navy:#00175A;--blue:#006FCF;--bg:#F0F4FA;--white:#fff;
+  --success:#1A7F54;--warn:#B45309;--danger:#B91C1C;--muted:#6B7280;
+  --border:#D1D9E6;--text:#111827;--sbg:#F8FAFC;
+}
+.app{background:var(--bg);min-height:600px;font-size:13px;color:var(--text)}
+.topnav{background:var(--navy);padding:0 18px;height:48px;display:flex;align-items:center;justify-content:space-between;border-radius:10px 10px 0 0}
+.logo{display:flex;align-items:center;gap:8px}
+.logo-icon{width:26px;height:26px;background:var(--blue);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.logo-text{color:#fff;font-weight:800;font-size:15px;letter-spacing:-0.01em}
+.logo-text span{color:var(--blue)}
+.nav-user{display:flex;align-items:center;gap:8px}
+.avatar{width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;font-weight:700;font-size:11px;display:flex;align-items:center;justify-content:center}
+.nav-name{color:rgba(255,255,255,0.6);font-size:11px}
+.main{padding:16px}
+.page-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.page-title{font-size:18px;font-weight:800;color:var(--navy)}
+.page-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.btn{padding:7px 14px;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;font-family:inherit}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:#005aaa}
+.btn-primary:disabled{background:#D1D5DB;color:var(--muted);cursor:default}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.btn-success{background:#D1FAE5;color:var(--success)}
+.btn-danger{background:#FEE2E2;color:var(--danger);border:1px solid #FCA5A5}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
+.stat-num{font-size:26px;font-weight:800;line-height:1}
+.stat-lbl{font-size:11px;color:var(--muted);margin-top:4px}
+.card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:0.03em;text-transform:uppercase}
+.badge-ip{background:#DBEAFE;color:#1D4ED8}
+.badge-done{background:#D1FAE5;color:var(--success)}
+.badge-pending{background:#F3F4F6;color:var(--muted)}
+.badge-go{background:#D1FAE5;color:var(--success)}
+.badge-nogo{background:#FEE2E2;color:var(--danger)}
+.badge-completed{background:#D1FAE5;color:var(--success)}
+.release-row{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;cursor:pointer;transition:all 0.15s}
+.release-row:hover{border-color:var(--blue);box-shadow:0 3px 12px rgba(0,23,90,0.1)}
+.rel-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.rel-name{font-weight:700;font-size:14px;color:var(--navy)}
+.rel-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.mini-stages{display:flex;gap:6px;margin-bottom:10px}
+.mini-stage{flex:1}
+.mini-stage-lbl{font-size:10px;color:var(--muted);margin-bottom:3px;display:flex;justify-content:space-between;align-items:center}
+.pbar{height:5px;background:#E5E7EB;border-radius:3px;overflow:hidden}
+.pbar-fill{height:100%;border-radius:3px;transition:width 0.4s}
+.detail-hdr{background:var(--navy);padding:16px 18px;border-radius:10px 10px 0 0}
+.back-btn{background:transparent;border:none;color:rgba(255,255,255,0.6);cursor:pointer;font-size:12px;padding:0;margin-bottom:8px;font-family:inherit}
+.detail-title{font-size:17px;font-weight:800;color:#fff}
+.detail-sub{font-size:11px;color:rgba(255,255,255,0.6);margin-top:3px}
+.stepper{display:flex;align-items:center;margin-top:16px}
+.step{display:flex;flex-direction:column;align-items:center;gap:3px}
+.step-circle{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;transition:all 0.2s}
+.step-done{background:var(--success)}
+.step-active{background:var(--blue);border:3px solid rgba(255,255,255,0.8)}
+.step-pending{background:#4B5563}
+.step-lbl{font-size:9px;color:rgba(255,255,255,0.7);white-space:nowrap}
+.step-line{flex:1;height:2px;margin:0 4px 14px;transition:background 0.3s}
+.stage-tabs{display:flex;background:var(--sbg);border-bottom:1px solid var(--border);padding:0 14px}
+.stage-tab{padding:10px 12px;background:transparent;border:none;border-bottom:3px solid transparent;color:var(--muted);font-weight:400;cursor:pointer;font-size:12px;display:flex;align-items:center;gap:5px;font-family:inherit;transition:all 0.15s}
+.stage-tab.active{border-bottom-color:var(--blue);color:var(--blue);font-weight:700}
+.stage-body{padding:14px;background:var(--sbg);min-height:380px}
+.check-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;border:1px solid;margin-bottom:6px;transition:all 0.2s}
+.check-done{background:#F0FDF4;border-color:#BBF7D0}
+.check-pending{background:var(--bg);border-color:var(--border)}
+.auto-tag{font-size:9px;background:#EFF6FF;color:var(--blue);border:1px solid #BFDBFE;border-radius:4px;padding:1px 5px;font-weight:700;letter-spacing:0.03em}
+.check-label{font-size:12px;flex:1}
+.sre-q{margin-bottom:12px}
+.sre-q-text{font-size:12px;font-weight:500;margin-bottom:6px}
+.sre-opts{display:flex;gap:6px}
+.sre-opt{padding:5px 12px;border-radius:6px;border:1.5px solid var(--border);font-size:11px;font-weight:400;cursor:pointer;transition:all 0.15s;background:var(--white);font-family:inherit}
+.sre-opt.yes-sel{background:#D1FAE5;border-color:var(--success);color:var(--success);font-weight:700}
+.sre-opt.no-sel{background:#FEE2E2;border-color:var(--danger);color:var(--danger);font-weight:700}
+.sre-opt.na-sel{background:#F3F4F6;border-color:var(--muted);color:var(--muted);font-weight:700}
+.ver-grid{display:grid;grid-template-columns:1fr 70px 70px 55px;gap:6px;margin-bottom:6px;font-size:12px}
+.ver-hdr{padding:5px 8px;background:var(--bg);border-radius:5px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em}
+.ver-row{padding:7px 8px;border-radius:6px;border:1px solid}
+.ver-match{background:#F0FDF4;border-color:#BBF7D0}
+.ver-diff{background:#FFF7F0;border-color:#FED7AA}
+.ver-name{font-family:monospace;font-weight:500}
+.ver-v{font-family:monospace;color:var(--blue)}
+.ver-v2{font-family:monospace;color:var(--muted)}
+.ver-status-ok{font-weight:700;color:var(--success)}
+.ver-status-diff{font-weight:700;color:var(--warn)}
+.go-panel{border:1.5px solid var(--navy);border-radius:10px;padding:14px;margin-top:12px}
+.go-btns{display:flex;gap:10px;margin-top:10px}
+.go-btn{flex:1;padding:11px 0;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s}
+.go-green{background:var(--success);color:#fff}
+.go-green:disabled{background:#D1D5DB;color:var(--muted);cursor:default}
+.go-red{background:#FEE2E2;color:var(--danger);border:1px solid #FCA5A5}
+.result-card{text-align:center;padding:20px;border-radius:10px;border:2px solid}
+.result-go{background:#F0FDF4;border-color:var(--success)}
+.result-nogo{background:#FEF2F2;border-color:var(--danger)}
+.uat-box{display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:8px;border:1px solid;transition:all 0.2s}
+.uat-pending{border-color:var(--border);background:var(--white)}
+.uat-done{border-color:#BBF7D0;background:#F0FDF4}
+.info-box{padding:10px 12px;border-radius:7px;font-size:12px}
+.info-blue{background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8}
+.spinner{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:4px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.new-form{background:var(--white);border:1.5px solid var(--blue);border-radius:10px;padding:14px;margin-bottom:14px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.form-inp{padding:7px 10px;border:1px solid var(--border);border-radius:7px;font-size:12px;font-family:inherit;width:100%}
+.completed-banner{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;margin-bottom:10px}
+.tabs-row{display:flex;gap:6px;margin-bottom:14px}
+.flow-tab{padding:6px 12px;border-radius:6px;border:1.5px solid var(--border);font-size:12px;font-weight:600;cursor:pointer;background:var(--white);color:var(--muted);transition:all 0.15s;font-family:inherit}
+.flow-tab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+</style>
+
+<h2 class="sr-only">Release Pilot — interactive demo covering dashboard, code review, SRE walkthrough, and retrospect flows</h2>
+
+<div class="app" id="app"></div>
+
+<script>
+const S={
+  view:'dashboard',
+  selectedRelease:null,
+  activeStage:'code_review',
+  showNewForm:false,
+  newForm:{name:'',version:'',squad:'',owner:'',date:''},
+  uploading:false,
+  uatDone:false,
+  submitting:false,
+  sreAnswers:{s1:'yes',s2:'yes',s3:'',s4:'',s5:'yes',s6:''},
+  sreSaving:false,
+  reconciling:false,
+  reconDone:false,
+  deciding:false,
+  goResult:null,
+  activeFlow:'dashboard',
+  releases:[
+    {
+      id:'REL-2024-047',name:'Payment Gateway v2.3.1',version:'2.3.1',
+      squad:'Payments Core',owner:'Arjun Nair',scheduledDate:'2024-06-21',
+      status:'in_progress',currentStage:'sre_walkthrough',
+      stages:{
+        code_review:{status:'completed',reviewer:'Arun Kumar (Admin)',completedAt:'2024-06-18T10:30:00Z',notes:'All checks passed. Approved for SRE walkthrough.',
+          checklist:[
+            {id:'cr1',label:'Security vulnerabilities scan',done:true,auto:true},
+            {id:'cr2',label:'Code coverage ≥ 80%',done:true,auto:true},
+            {id:'cr3',label:'No critical SonarQube issues',done:true,auto:true},
+            {id:'cr4',label:'API contract tests passing',done:true,auto:true},
+            {id:'cr5',label:'Architect sign-off',done:true,auto:false},
+            {id:'cr6',label:'PR merged to release branch',done:true,auto:true},
+          ],formSubmitted:true,uatSignOffUploaded:true},
+        sre_walkthrough:{status:'in_progress',
+          questions:[
+            {id:'s1',q:'Rollback plan documented?',ans:'yes',auto:false},
+            {id:'s2',q:'Feature flags in place?',ans:'yes',auto:false},
+            {id:'s3',q:'DB migration backward-compatible?',ans:'',auto:false},
+            {id:'s4',q:'Monitoring dashboards updated?',ans:'',auto:false},
+            {id:'s5',q:'Runbook published in Confluence?',ans:'yes',auto:true},
+            {id:'s6',q:'Latency p99 within SLA?',ans:'',auto:true},
+          ]},
+        retrospect:{status:'pending',checks:[
+          {id:'r1',label:'Dev version matches UAT tag',done:false,auto:true},
+          {id:'r2',label:'All component versions reconciled',done:false,auto:true},
+          {id:'r3',label:'Confluence version page updated',done:false,auto:false},
+          {id:'r4',label:'Changelog committed',done:false,auto:true},
+          {id:'r5',label:'Smoke test suite green',done:false,auto:true},
+        ],goNoGo:null}
+      },
+      components:[
+        {name:'payment-service',dev:'2.3.1',uat:'2.3.1',match:true},
+        {name:'fraud-engine',dev:'1.8.4',uat:'1.8.4',match:true},
+        {name:'notification-svc',dev:'3.1.0',uat:'3.0.9',match:false},
+        {name:'config-service',dev:'1.2.1',uat:'1.2.1',match:true},
+      ]
+    },
+    {
+      id:'REL-2024-046',name:'Rewards Engine v5.0.0',version:'5.0.0',
+      squad:'Rewards Platform',owner:'Deepa Subramaniam',scheduledDate:'2024-06-14',
+      status:'completed',currentStage:'done',
+      stages:{
+        code_review:{status:'completed'},
+        sre_walkthrough:{status:'completed'},
+        retrospect:{status:'completed',goNoGo:'go'}
+      },
+      components:[
+        {name:'rewards-core',dev:'5.0.0',uat:'5.0.0',match:true},
+        {name:'points-svc',dev:'4.2.1',uat:'4.2.1',match:true},
+      ]
+    },
+    {
+      id:'REL-2024-048',name:'Mobile Auth SDK v1.5.0',version:'1.5.0',
+      squad:'Identity',owner:'Karthik Iyer',scheduledDate:'2024-06-28',
+      status:'pending',currentStage:'code_review',
+      stages:{
+        code_review:{status:'pending',
+          checklist:[
+            {id:'cr1',label:'Security vulnerabilities scan',done:false,auto:true},
+            {id:'cr2',label:'Code coverage ≥ 80%',done:false,auto:true},
+            {id:'cr3',label:'No critical SonarQube issues',done:true,auto:true},
+            {id:'cr4',label:'API contract tests passing',done:false,auto:true},
+            {id:'cr5',label:'Architect sign-off',done:false,auto:false},
+            {id:'cr6',label:'PR merged to release branch',done:true,auto:true},
+          ],formSubmitted:false,uatSignOffUploaded:false},
+        sre_walkthrough:{status:'pending',questions:[]},
+        retrospect:{status:'pending',checks:[],goNoGo:null}
+      },
+      components:[
+        {name:'auth-sdk',dev:'1.5.0',uat:'1.5.0',match:true},
+        {name:'session-store',dev:'2.0.0',uat:'1.9.8',match:false},
+      ]
+    }
+  ]
+};
+
+function badge(status){
+  const m={completed:'badge-completed',in_progress:'badge-ip',pending:'badge-pending',done:'badge-go',go:'badge-go',no_go:'badge-nogo'};
+  const l={completed:'Completed',in_progress:'In Progress',pending:'Pending',done:'Released',go:'GO',no_go:'NO-GO'};
+  return `<span class="badge ${m[status]||'badge-pending'}">${l[status]||status}</span>`;
+}
+function pbar(val,color){
+  return `<div class="pbar"><div class="pbar-fill" style="width:${val}%;background:${color}"></div></div>`;
+}
+function stageColor(s){
+  return s==='completed'?'#1A7F54':s==='in_progress'?'#006FCF':'#9CA3AF';
+}
+
+function renderDashboard(){
+  const stats=[
+    {n:S.releases.length,l:'Total Releases',c:'#00175A',e:'📦'},
+    {n:S.releases.filter(r=>r.status==='in_progress').length,l:'In Progress',c:'#006FCF',e:'⚡'},
+    {n:S.releases.filter(r=>r.status==='completed').length,l:'Completed',c:'#1A7F54',e:'✅'},
+    {n:S.releases.filter(r=>r.status==='pending').length,l:'Pending',c:'#B45309',e:'🕐'},
+  ];
+  let html=`
+  <div class="stat-grid">
+    ${stats.map(s=>`<div class="stat-card"><div>${s.e}</div><div class="stat-num" style="color:${s.c}">${s.n}</div><div class="stat-lbl">${s.l}</div></div>`).join('')}
+  </div>`;
+
+  if(S.showNewForm){
+    html+=`<div class="new-form">
+      <div style="font-weight:700;font-size:13px;color:#00175A;margin-bottom:10px">New Release</div>
+      <div class="form-grid">
+        <input class="form-inp" placeholder="Release name" id="nf-name" value="${S.newForm.name}" oninput="S.newForm.name=this.value">
+        <input class="form-inp" placeholder="Version" id="nf-ver" value="${S.newForm.version}" oninput="S.newForm.version=this.value">
+        <input class="form-inp" placeholder="Squad" id="nf-squad" value="${S.newForm.squad}" oninput="S.newForm.squad=this.value">
+        <input class="form-inp" placeholder="Owner" id="nf-owner" value="${S.newForm.owner}" oninput="S.newForm.owner=this.value">
+        <input class="form-inp" type="date" id="nf-date" value="${S.newForm.date}" oninput="S.newForm.date=this.value">
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary" onclick="createRelease()">Create Release →</button>
+        <button class="btn btn-ghost" onclick="S.showNewForm=false;render()">Cancel</button>
+      </div>
+    </div>`;
+  }
+
+  html+=`<div style="font-weight:700;font-size:14px;color:#00175A;margin-bottom:10px">Active & Upcoming Releases</div>`;
+
+  S.releases.forEach((r,i)=>{
+    const stages=['code_review','sre_walkthrough','retrospect'];
+    const icons={code_review:'🔍',sre_walkthrough:'🛡️',retrospect:'✅'};
+    const stageLabels={code_review:'Code Review',sre_walkthrough:'SRE',retrospect:'Retrospect'};
+    html+=`<div class="release-row" onclick="openRelease(${i})">
+      <div class="rel-hdr">
+        <div>
+          <div class="rel-name">${r.name}</div>
+          <div class="rel-meta">${r.id} · ${r.squad} · ${r.owner}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+          ${badge(r.status)}
+          <span style="font-size:10px;color:#6B7280">📅 ${r.scheduledDate}</span>
+        </div>
+      </div>
+      <div class="mini-stages">
+        ${stages.map(s=>{
+          const st=r.stages[s]?.status||'pending';
+          const pval=st==='completed'?100:st==='in_progress'?50:0;
+          return `<div class="mini-stage">
+            <div class="mini-stage-lbl"><span>${icons[s]} ${stageLabels[s]}</span>${badge(st)}</div>
+            ${pbar(pval,stageColor(st))}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  });
+  return html;
+}
+
+function renderStepper(rel){
+  const stages=['code_review','sre_walkthrough','retrospect'];
+  const labels=['Code Review','SRE','Retrospect'];
+  let html='<div class="stepper">';
+  stages.forEach((s,i)=>{
+    const st=rel.stages[s]?.status||'pending';
+    const isDone=st==='completed';
+    const isActive=s===S.activeStage;
+    html+=`<div class="step">
+      <div class="step-circle ${isDone?'step-done':isActive?'step-active':'step-pending'}">${isDone?'✓':i+1}</div>
+      <div class="step-lbl">${labels[i]}</div>
+    </div>`;
+    if(i<2) html+=`<div class="step-line" style="background:${isDone?'#1A7F54':'#4B5563'}"></div>`;
+  });
+  return html+'</div>';
+}
+
+function renderCodeReview(rel){
+  const stage=rel.stages.code_review;
+  if(stage.status==='completed'){
+    return `<div class="completed-banner">
+      <span style="font-size:22px">✅</span>
+      <div>
+        <div style="font-weight:700;color:#1A7F54;font-size:13px">Code Review Completed</div>
+        <div style="font-size:11px;color:#6B7280">Reviewed by ${stage.reviewer} · ${new Date(stage.completedAt).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</div>
+      </div>
+    </div>
+    <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:7px;padding:10px;font-size:12px;color:#166534;margin-bottom:10px">${stage.notes}</div>
+    <div style="font-size:11px;color:#6B7280">✓ Form submitted to ITSM &nbsp;·&nbsp; ✓ UAT sign-off uploaded</div>`;
+  }
+
+  const auto=stage.checklist.filter(c=>c.auto);
+  const manual=stage.checklist.filter(c=>!c.auto);
+  const allDone=stage.checklist.every(c=>c.done);
+  const uatDone=S.uatDone||stage.uatSignOffUploaded;
+
+  return `
+  <div class="card" style="margin-bottom:10px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div style="font-weight:600;font-size:13px">Automated gate checks</div>
+      <span style="font-size:11px;color:#6B7280">${auto.filter(c=>c.done).length}/${auto.length} passed</span>
+    </div>
+    ${pbar(Math.round(auto.filter(c=>c.done).length/auto.length*100),'#1A7F54')}
+    <div style="margin-top:10px">
+      ${auto.map(c=>`<div class="check-item ${c.done?'check-done':'check-pending'}">
+        <span style="font-size:14px">${c.done?'✅':'⏳'}</span>
+        <span class="check-label">${c.label}</span>
+        <span class="auto-tag">AUTO</span>
+      </div>`).join('')}
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:10px">
+    <div style="font-weight:600;font-size:13px;margin-bottom:10px">Manual review checklist</div>
+    ${manual.map(c=>`<label class="check-item ${c.done?'check-done':'check-pending'}" style="cursor:pointer" onclick="toggleCheck('${rel.id}','${c.id}')">
+      <input type="checkbox" ${c.done?'checked':''} style="width:14px;height:14px;accent-color:#006FCF;pointer-events:none">
+      <span class="check-label">${c.label}</span>
+    </label>`).join('')}
+  </div>
+  <div class="uat-box ${uatDone?'uat-done':'uat-pending'}" style="margin-bottom:10px">
+    <div>
+      <div style="font-weight:600;font-size:13px;margin-bottom:2px">UAT sign-off document</div>
+      <div style="font-size:11px;color:#6B7280">Upload signed UAT approval from QA lead</div>
+    </div>
+    ${uatDone
+      ?`<span style="color:#1A7F54;font-weight:700;font-size:12px">✓ Uploaded</span>`
+      :`<button class="btn btn-navy" onclick="uploadUAT()" ${S.uploading?'disabled':''}>
+          ${S.uploading?'<span class="spinner"></span>Uploading…':'📎 Upload PDF'}
+        </button>`
+    }
+  </div>
+  <div class="card">
+    <div style="font-weight:600;font-size:13px;margin-bottom:8px">Architect notes</div>
+    <textarea id="cr-notes" placeholder="Add review notes…" style="width:100%;min-height:60px;border:1px solid #D1D9E6;border-radius:7px;padding:8px;font-size:12px;font-family:inherit;resize:vertical">${stage.notes||''}</textarea>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+      <span style="font-size:11px;color:#6B7280">${allDone&&uatDone?'Ready to submit':'Complete all checks to submit'}</span>
+      <button class="btn btn-primary" onclick="submitCR('${rel.id}')" ${(!allDone||!uatDone||S.submitting)?'disabled':''}>
+        ${S.submitting?'<span class="spinner"></span>Submitting…':'Submit & Advance →'}
+      </button>
+    </div>
+  </div>`;
+}
+
+function renderSRE(rel){
+  const stage=rel.stages.sre_walkthrough;
+  if(stage.status==='completed'){
+    return `<div class="completed-banner">
+      <span style="font-size:22px">🛡️</span>
+      <div>
+        <div style="font-weight:700;color:#1A7F54;font-size:13px">SRE Walkthrough Completed</div>
+        <div style="font-size:11px;color:#6B7280">All ${stage.questions.length} questions answered</div>
+      </div>
+    </div>
+    ${stage.questions.map(q=>`<div style="display:flex;gap:8px;padding:7px 10px;background:#F9FAFB;border-radius:6px;font-size:12px;margin-bottom:5px">
+      <span style="color:#1A7F54">✓</span>
+      <span style="flex:1;color:#6B7280">${q.q}</span>
+      <span style="font-weight:700;color:#00175A;text-transform:uppercase;font-size:11px">${q.ans}</span>
+    </div>`).join('')}`;
+  }
+
+  const ans=S.sreAnswers;
+  const answered=stage.questions.filter(q=>ans[q.id]!=='').length;
+
+  let html=`<div class="info-box info-blue" style="margin-bottom:12px">
+    <strong>SRE Walkthrough in progress</strong> — ${answered}/${stage.questions.length} questions answered. Auto-populated answers are pre-filled from pipeline and Confluence.
+  </div>`;
+
+  const autoQs=stage.questions.filter(q=>q.auto);
+  const manQs=stage.questions.filter(q=>!q.auto);
+
+  if(autoQs.length){
+    html+=`<div class="card" style="margin-bottom:10px">
+      <div style="font-weight:600;font-size:13px;margin-bottom:10px;display:flex;align-items:center;gap:6px">Auto-populated answers <span class="auto-tag">AUTO</span></div>
+      ${autoQs.map(q=>renderSREQuestion(q,ans[q.id],true)).join('')}
+    </div>`;
+  }
+  if(manQs.length){
+    html+=`<div class="card" style="margin-bottom:10px">
+      <div style="font-weight:600;font-size:13px;margin-bottom:10px">Manual questions</div>
+      ${manQs.map(q=>renderSREQuestion(q,ans[q.id],false)).join('')}
+    </div>`;
+  }
+  html+=`<button class="btn btn-primary" style="width:100%;padding:10px" onclick="saveSRE('${rel.id}')">
+    ${S.sreSaving?'<span class="spinner"></span>Saving…':'Save Answers & Continue →'}
+  </button>`;
+  return html;
+}
+
+function renderSREQuestion(q,val,auto){
+  return `<div class="sre-q">
+    <div class="sre-q-text">${q.q}</div>
+    <div class="sre-opts">
+      ${['yes','no','n/a'].map(opt=>`<button class="sre-opt ${val===opt?(opt==='yes'?'yes-sel':opt==='no'?'no-sel':'na-sel'):''}" onclick="setSREAnswer('${q.id}','${opt}')">${opt==='yes'?'✓ YES':opt==='no'?'✗ NO':'— N/A'}</button>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderRetrospect(rel){
+  const stage=rel.stages.retrospect;
+  if(stage.goNoGo){
+    return `<div class="result-card ${stage.goNoGo==='go'?'result-go':'result-nogo'}">
+      <div style="font-size:48px">${stage.goNoGo==='go'?'🚀':'🛑'}</div>
+      <div style="font-size:22px;font-weight:800;color:${stage.goNoGo==='go'?'#1A7F54':'#B91C1C'};margin-top:8px">
+        ${stage.goNoGo==='go'?'GO — Release Approved':'NO-GO — Release Blocked'}
+      </div>
+      <div style="font-size:12px;color:#6B7280;margin-top:6px">Decision by Arun Kumar (Staff Architect)</div>
+    </div>`;
+  }
+
+  const reconDone=S.reconDone;
+  const comps=rel.components;
+  const allMatch=comps.every(c=>c.match);
+  const checks=reconDone?stage.checks.map(c=>({...c,done:true})):stage.checks;
+  const allChecks=checks.every(c=>c.done);
+  const canDecide=reconDone&&allMatch&&allChecks;
+
+  return `
+  <div class="card" style="margin-bottom:10px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div style="font-weight:600;font-size:13px">Version reconciliation</div>
+      <button class="btn btn-navy" onclick="runReconcile()" ${S.reconciling?'disabled':''} style="font-size:11px;padding:5px 12px">
+        ${S.reconciling?'<span class="spinner"></span>Running…':'🔄 Run auto-check'}
+      </button>
+    </div>
+    <div class="ver-grid">
+      <div class="ver-hdr">Component</div>
+      <div class="ver-hdr">Dev</div>
+      <div class="ver-hdr">UAT</div>
+      <div class="ver-hdr">Match</div>
+    </div>
+    ${comps.map(c=>`<div class="ver-grid">
+      <div class="ver-row ${c.match?'ver-match':'ver-diff'} ver-name">${c.name}</div>
+      <div class="ver-row ${c.match?'ver-match':'ver-diff'} ver-v">${c.dev}</div>
+      <div class="ver-row ${c.match?'ver-match':'ver-diff'} ver-v2">${c.uat}</div>
+      <div class="ver-row ${c.match?'ver-match':'ver-diff'} ${c.match?'ver-status-ok':'ver-status-diff'}">${c.match?'✓':'⚠ DIFF'}</div>
+    </div>`).join('')}
+    ${!allMatch?`<div style="margin-top:8px;padding:8px;background:#FFF7F0;border-radius:6px;border:1px solid #FED7AA;font-size:11px;color:#B45309">⚠ Version mismatch in notification-svc. Resolve before Go/No-Go.</div>`:''}
+  </div>
+  <div class="card" style="margin-bottom:10px">
+    <div style="font-weight:600;font-size:13px;margin-bottom:10px">Final release checks</div>
+    ${checks.map(c=>`<div class="check-item ${c.done?'check-done':'check-pending'}">
+      <span style="font-size:14px">${c.done?'✅':'⬜'}</span>
+      <span class="check-label">${c.label}</span>
+      ${c.auto?'<span class="auto-tag">AUTO</span>':''}
+    </div>`).join('')}
+  </div>
+  <div class="go-panel">
+    <div style="font-weight:700;font-size:14px;color:#00175A;margin-bottom:4px">Go / No-Go decision</div>
+    <div style="font-size:12px;color:#6B7280">${canDecide?'All checks passed. Release is ready.':'Run version reconciliation and resolve mismatches first.'}</div>
+    <div class="go-btns">
+      <button class="go-btn go-green" onclick="makeDecision('go')" ${(!canDecide||S.deciding)?'disabled':''}>
+        ${S.deciding?'<span class="spinner"></span>Processing…':'🚀 GO — Approve Release'}
+      </button>
+      <button class="go-btn go-red" onclick="makeDecision('no_go')" ${S.deciding?'disabled':''}>🛑 NO-GO — Block</button>
+    </div>
+  </div>`;
+}
+
+function renderDetail(rel){
+  const stages=['code_review','sre_walkthrough','retrospect'];
+  const icons={code_review:'🔍',sre_walkthrough:'🛡️',retrospect:'✅'};
+  const labels={code_review:'Code Review',sre_walkthrough:'SRE Walkthrough',retrospect:'Retrospect'};
+
+  return `
+  <div class="detail-hdr">
+    <button class="back-btn" onclick="goBack()">← Back to dashboard</button>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between">
+      <div>
+        <div class="detail-title">${rel.name}</div>
+        <div class="detail-sub">${rel.id} · ${rel.squad} · Scheduled ${rel.scheduledDate}</div>
+      </div>
+      ${badge(rel.status)}
+    </div>
+    ${renderStepper(rel)}
+  </div>
+  <div class="stage-tabs">
+    ${stages.map(s=>`<button class="stage-tab ${s===S.activeStage?'active':''}" onclick="setStage('${s}')">
+      ${icons[s]} ${labels[s]} ${badge(rel.stages[s]?.status||'pending')}
+    </button>`).join('')}
+  </div>
+  <div class="stage-body">
+    ${S.activeStage==='code_review'?renderCodeReview(rel):''}
+    ${S.activeStage==='sre_walkthrough'?renderSRE(rel):''}
+    ${S.activeStage==='retrospect'?renderRetrospect(rel):''}
+  </div>`;
+}
+
+function renderFlowTabs(){
+  const flows=[
+    {id:'dashboard',label:'📊 Dashboard'},
+    {id:'code_review',label:'🔍 Code Review'},
+    {id:'sre',label:'🛡️ SRE Walkthrough'},
+    {id:'retrospect',label:'✅ Retrospect'},
+  ];
+  return `<div class="tabs-row">
+    ${flows.map(f=>`<button class="flow-tab ${S.activeFlow===f.id?'active':''}" onclick="switchFlow('${f.id}')">${f.label}</button>`).join('')}
+  </div>`;
+}
+
+function render(){
+  const app=document.getElementById('app');
+  const rel=S.releases[0];
+
+  let content='';
+  if(S.view==='dashboard'){
+    content=`
+      <div class="topnav">
+        <div class="logo"><div class="logo-icon">🚀</div><div class="logo-text">Release<span>Pilot</span></div><span style="color:rgba(255,255,255,0.3);font-size:11px;margin-left:4px">| AmEx India</span></div>
+        <div class="nav-user"><span class="nav-name">Staff Architect · Arun Kumar</span><div class="avatar">AK</div></div>
+      </div>
+      <div class="main">
+        ${renderFlowTabs()}
+        <div class="page-hdr">
+          <div><div class="page-title">Release Dashboard</div><div class="page-sub">Weekly production release management</div></div>
+          <button class="btn btn-primary" onclick="S.showNewForm=!S.showNewForm;render()">+ New Release</button>
+        </div>
+        ${renderDashboard()}
+      </div>`;
+  } else {
+    content=`
+      <div class="topnav">
+        <div class="logo"><div class="logo-icon">🚀</div><div class="logo-text">Release<span>Pilot</span></div><span style="color:rgba(255,255,255,0.3);font-size:11px;margin-left:4px">| AmEx India</span></div>
+        <div class="nav-user"><span class="nav-name">Staff Architect · Arun Kumar</span><div class="avatar">AK</div></div>
+      </div>
+      <div class="main">
+        ${renderFlowTabs()}
+        <div class="card" style="padding:0;overflow:hidden">
+          ${renderDetail(rel)}
+        </div>
+      </div>`;
+  }
+  app.innerHTML=content;
+}
+
+function switchFlow(id){
+  S.activeFlow=id;
+  if(id==='dashboard'){S.view='dashboard';}
+  else if(id==='code_review'){S.view='detail';S.activeStage='code_review';}
+  else if(id==='sre'){S.view='detail';S.activeStage='sre_walkthrough';}
+  else if(id==='retrospect'){S.view='detail';S.activeStage='retrospect';}
+  render();
+}
+function openRelease(i){S.view='detail';S.selectedRelease=i;S.activeStage=S.releases[i].currentStage==='done'?'retrospect':S.releases[i].currentStage;render();}
+function goBack(){S.view='dashboard';S.activeFlow='dashboard';render();}
+function setStage(s){S.activeStage=s;render();}
+
+function toggleCheck(relId,checkId){
+  const rel=S.releases.find(r=>r.id===relId);
+  const c=rel.stages.code_review.checklist.find(c=>c.id===checkId);
+  if(c&&!c.auto) c.done=!c.done;
+  render();
+}
+function uploadUAT(){
+  S.uploading=true;render();
+  setTimeout(()=>{S.uploading=false;S.uatDone=true;render();},1400);
+}
+function submitCR(relId){
+  S.submitting=true;render();
+  setTimeout(()=>{
+    const rel=S.releases.find(r=>r.id===relId);
+    rel.stages.code_review.status='completed';
+    rel.stages.code_review.completedAt=new Date().toISOString();
+    rel.stages.code_review.reviewer='Arun Kumar (Staff Architect)';
+    rel.stages.code_review.notes=document.getElementById('cr-notes')?.value||'All checks passed.';
+    rel.currentStage='sre_walkthrough';
+    rel.stages.sre_walkthrough.status='in_progress';
+    S.submitting=false;S.activeStage='sre_walkthrough';
+    render();
+  },1800);
+}
+function setSREAnswer(qId,val){
+  S.sreAnswers[qId]=S.sreAnswers[qId]===val?'':val;
+  render();
+}
+function saveSRE(relId){
+  S.sreSaving=true;render();
+  setTimeout(()=>{
+    const rel=S.releases.find(r=>r.id===relId);
+    const allAns=rel.stages.sre_walkthrough.questions.every(q=>S.sreAnswers[q.id]!=='');
+    if(allAns){
+      rel.stages.sre_walkthrough.status='completed';
+      rel.currentStage='retrospect';
+      rel.stages.retrospect.status='in_progress';
+      S.activeStage='retrospect';
+    }
+    S.sreSaving=false;render();
+  },1200);
+}
+function runReconcile(){
+  S.reconciling=true;render();
+  setTimeout(()=>{S.reconciling=false;S.reconDone=true;render();},2000);
+}
+function makeDecision(d){
+  S.deciding=true;render();
+  setTimeout(()=>{
+    const rel=S.releases[0];
+    rel.stages.retrospect.goNoGo=d;
+    rel.stages.retrospect.status='completed';
+    rel.status=d==='go'?'completed':'cancelled';
+    rel.currentStage='done';
+    S.deciding=false;
+    S.goResult=d;
+    render();
+  },1500);
+}
+function createRelease(){
+  const n={
+    id:`REL-2024-0${50+S.releases.length}`,
+    name:S.newForm.name||'New Release',
+    version:S.newForm.version||'1.0.0',
+    squad:S.newForm.squad||'Platform',
+    owner:S.newForm.owner||'Arun Kumar',
+    scheduledDate:S.newForm.date||'2024-07-01',
+    status:'pending',currentStage:'code_review',
+    stages:{
+      code_review:{status:'pending',checklist:[
+        {id:'cr1',label:'Security vulnerabilities scan',done:false,auto:true},
+        {id:'cr2',label:'Code coverage ≥ 80%',done:false,auto:true},
+        {id:'cr3',label:'No critical SonarQube issues',done:false,auto:true},
+        {id:'cr4',label:'API contract tests passing',done:false,auto:true},
+        {id:'cr5',label:'Architect sign-off',done:false,auto:false},
+        {id:'cr6',label:'PR merged to release branch',done:false,auto:true},
+      ],formSubmitted:false,uatSignOffUploaded:false,notes:''},
+      sre_walkthrough:{status:'pending',questions:[
+        {id:'s1',q:'Rollback plan documented?',ans:'',auto:false},
+        {id:'s2',q:'Feature flags in place?',ans:'',auto:false},
+        {id:'s3',q:'DB migration backward-compatible?',ans:'',auto:false},
+        {id:'s4',q:'Monitoring dashboards updated?',ans:'',auto:false},
+        {id:'s5',q:'Runbook published in Confluence?',ans:'',auto:true},
+        {id:'s6',q:'Latency p99 within SLA?',ans:'',auto:true},
+      ]},
+      retrospect:{status:'pending',checks:[
+        {id:'r1',label:'Dev version matches UAT tag',done:false,auto:true},
+        {id:'r2',label:'All component versions reconciled',done:false,auto:true},
+        {id:'r3',label:'Confluence version page updated',done:false,auto:false},
+        {id:'r4',label:'Changelog committed',done:false,auto:true},
+        {id:'r5',label:'Smoke test suite green',done:false,auto:true},
+      ],goNoGo:null}
+    },
+    components:[{name:'new-service',dev:'1.0.0',uat:'1.0.0',match:true}]
+  };
+  S.releases.unshift(n);
+  S.showNewForm=false;
+  S.newForm={name:'',version:'',squad:'',owner:'',date:''};
+  render();
+}
+
+render();
+</script>

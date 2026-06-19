@@ -1,0 +1,1030 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,'Helvetica Neue',Arial,sans-serif}
+:root{
+  --n:#00175A;--b:#006FCF;--t:#00827F;--g:#007B40;--am:#E07B00;--rd:#B91C1C;
+  --or:#C2410C;--pu:#5B21B6;--sf:#F5F7FA;--br:#D0DBE8;--tx:#1A2744;--mu:#5C6B8A;
+  --wh:#fff
+}
+
+.screen{background:var(--sf);border:1px solid var(--br);border-radius:10px;overflow:hidden;margin-bottom:32px}
+.screen-label{background:var(--n);color:var(--wh);font-size:11px;font-weight:700;letter-spacing:1px;padding:6px 14px;display:flex;align-items:center;gap:8px;text-transform:uppercase}
+.screen-label i{font-size:14px;opacity:.8}
+
+.topbar{background:var(--n);height:40px;display:flex;align-items:center;padding:0 16px;gap:16px;border-bottom:2px solid var(--b)}
+.tb-logo{display:flex;align-items:center;gap:8px}
+.tb-box{background:var(--b);color:var(--wh);font-size:10px;font-weight:900;padding:2px 6px;border-radius:3px;letter-spacing:1px}
+.tb-nav{display:flex;gap:1px;margin-left:8px}
+.tb-link{font-size:11px;color:rgba(255,255,255,.6);padding:5px 10px;border-radius:3px;cursor:pointer;border:none;background:none}
+.tb-link.cur{color:var(--wh);background:rgba(255,255,255,.12);font-weight:700}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.env-tag{background:rgba(0,111,207,.35);color:#8FC3FF;font-size:9px;font-weight:700;padding:1px 6px;border-radius:8px;letter-spacing:.5px}
+.av{width:24px;height:24px;border-radius:50%;background:var(--b);color:var(--wh);font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center}
+
+.toolbar{background:var(--wh);border-bottom:1px solid var(--br);padding:8px 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.page-title{font-size:14px;font-weight:700;color:var(--n);display:flex;align-items:center;gap:6px}
+.page-title i{color:var(--b);font-size:17px}
+.tbtn{font-size:11px;font-weight:600;padding:5px 12px;border-radius:5px;cursor:pointer;border:1px solid var(--br);background:var(--wh);color:var(--mu);display:flex;align-items:center;gap:5px}
+.tbtn i{font-size:13px}
+.tbtn.prim{background:var(--b);color:var(--wh);border-color:var(--b)}
+.tbtn.danger{background:var(--rd);color:var(--wh);border-color:var(--rd)}
+.tbtn.success{background:var(--g);color:var(--wh);border-color:var(--g)}
+.ml-auto{margin-left:auto}
+.srch{font-size:11px;padding:5px 10px;border:1px solid var(--br);border-radius:5px;background:var(--sf);color:var(--tx);width:160px}
+
+.layout{display:grid;gap:0}
+.layout-2col{grid-template-columns:260px 1fr}
+.layout-sidebar-right{grid-template-columns:1fr 300px}
+
+.sidebar{background:var(--wh);border-right:1px solid var(--br);padding:10px 0}
+.sb-hdr{font-size:9px;font-weight:700;color:var(--mu);letter-spacing:1px;padding:6px 12px 4px;text-transform:uppercase}
+.sb-item{display:flex;align-items:center;gap:8px;padding:7px 12px;font-size:12px;color:var(--tx);cursor:pointer}
+.sb-item:hover{background:var(--sf)}
+.sb-item.active{background:rgba(0,111,207,.07);color:var(--b);font-weight:600;border-right:2px solid var(--b)}
+.sb-item i{font-size:14px;opacity:.75}
+.sb-cnt{margin-left:auto;font-size:10px;font-weight:700;padding:1px 5px;border-radius:8px}
+.cnt-r{background:#FDEAEA;color:var(--rd)}.cnt-o{background:#FEF0E7;color:var(--or)}
+.cnt-b{background:#E6F1FB;color:var(--b)}.cnt-g{background:#ECFDF5;color:var(--g)}
+.cnt-mu{background:var(--sf);color:var(--mu)}
+.sb-div{border:none;border-top:1px solid var(--br);margin:6px 0}
+
+.content{background:var(--sf);padding:14px;overflow:auto;display:flex;flex-direction:column;gap:12px}
+
+.panel{background:var(--wh);border:1px solid var(--br);border-radius:7px;overflow:hidden}
+.ph{display:flex;align-items:center;gap:7px;padding:10px 14px;border-bottom:1px solid var(--br);background:#FAFBFC}
+.ph-title{font-size:12px;font-weight:700;color:var(--n);flex:1}
+.ph i{font-size:15px;color:var(--b)}
+.ph-sub{font-size:10px;color:var(--mu)}
+.ph-act{display:flex;gap:6px}
+
+.sev{font-size:9px;font-weight:800;padding:3px 6px;border-radius:4px;letter-spacing:.5px;white-space:nowrap}
+.sP1{background:#FDEAEA;color:var(--rd)}.sP2{background:#FEF0E7;color:var(--or)}
+.sP3{background:#FEFCE8;color:#92400E}.sP4{background:#ECFDF5;color:var(--g)}
+
+.status-pill{font-size:9px;font-weight:700;padding:3px 8px;border-radius:10px;white-space:nowrap;display:inline-flex;align-items:center;gap:3px}
+.sp-dot{width:5px;height:5px;border-radius:50%}
+.st-active{background:#FDEAEA;color:var(--rd)}.st-active .sp-dot{background:var(--rd)}
+.st-inv{background:#FEF0E7;color:var(--or)}.st-inv .sp-dot{background:var(--or)}
+.st-mon{background:#FEFCE8;color:#92400E}.st-mon .sp-dot{background:#D97706}
+.st-res{background:#ECFDF5;color:var(--g)}.st-res .sp-dot{background:var(--g)}
+.st-draft{background:#EDE9FE;color:var(--pu)}.st-draft .sp-dot{background:var(--pu)}
+.st-pub{background:#ECFDF5;color:var(--g)}.st-pub .sp-dot{background:var(--g)}
+
+.auto-lv{font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px}
+.lv1{background:#E6F1FB;color:#0C447C}.lv2{background:#ECFDF5;color:#166534}
+.lv3{background:#EDE9FE;color:#4C1D95}
+
+.row{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--br);cursor:pointer;transition:background .1s}
+.row:last-child{border-bottom:none}
+.row:hover{background:var(--sf)}
+.row-sel{background:rgba(0,111,207,.04);border-left:2px solid var(--b) !important}
+
+.inc-detail{background:var(--wh);border-left:1px solid var(--br);padding:0;display:flex;flex-direction:column}
+.id-hdr{padding:12px 14px;border-bottom:1px solid var(--br)}
+.id-title{font-size:13px;font-weight:700;color:var(--n);margin-bottom:4px}
+.id-meta{display:flex;gap:8px;flex-wrap:wrap}
+.meta-chip{font-size:10px;color:var(--mu);display:flex;align-items:center;gap:3px}
+.meta-chip i{font-size:12px}
+.id-body{padding:12px 14px;display:flex;flex-direction:column;gap:10px;flex:1;overflow-y:auto}
+.rca-box{background:rgba(0,111,207,.05);border-left:3px solid var(--b);padding:9px 12px;border-radius:0 6px 6px 0}
+.rca-lbl{font-size:9px;font-weight:700;color:var(--b);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.rca-txt{font-size:11.5px;color:var(--tx);line-height:1.5}
+.conf-row{display:flex;align-items:center;gap:8px}
+.conf-bar{flex:1;height:6px;background:var(--sf);border-radius:3px;overflow:hidden}
+.conf-fill{height:100%;border-radius:3px;background:var(--b)}
+.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.mini-card{background:var(--sf);border:1px solid var(--br);border-radius:5px;padding:7px 9px}
+.mc-lbl{font-size:9px;color:var(--mu);font-weight:600;letter-spacing:.3px}
+.mc-val{font-size:11.5px;font-weight:700;color:var(--tx);margin-top:2px}
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:10px;padding:5px 0}
+.tl-dot{width:8px;height:8px;border-radius:50%;margin-top:3px;flex-shrink:0}
+.tl-line{width:1px;background:var(--br);margin:0 3.5px;height:100%}
+.tl-content{}
+.tl-time{font-size:10px;color:var(--mu)}
+.tl-text{font-size:11.5px;color:var(--tx);font-weight:500}
+.action-btns{display:flex;gap:6px;padding:12px 14px;border-top:1px solid var(--br)}
+
+.tag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;white-space:nowrap}
+.tag-src{background:#E6F1FB;color:#0C447C}
+.tag-team{background:#F0FDF4;color:#166534}
+.tag-svc{background:#FDF4FF;color:#6B21A8}
+
+.alert-bar{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid var(--br);cursor:pointer}
+.alert-bar:hover{background:var(--sf)}
+.alert-bar:last-child{border-bottom:none}
+.ab-icon{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.ab-body{flex:1;min-width:0}
+.ab-title{font-size:12px;font-weight:600;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ab-meta{font-size:10px;color:var(--mu);display:flex;gap:8px;margin-top:1px}
+.ab-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.ab-time{font-size:10px;color:var(--mu)}
+.dedup-count{font-size:10px;font-weight:700;background:var(--n);color:var(--wh);padding:2px 7px;border-radius:10px}
+.sim{font-size:10px;font-weight:700;color:var(--t)}
+.suppressed{opacity:.5}
+
+.rb-card{padding:10px 14px;border-bottom:1px solid var(--br);cursor:pointer}
+.rb-card:last-child{border-bottom:none}
+.rb-card:hover{background:var(--sf)}
+.rb-title{font-size:12.5px;font-weight:700;color:var(--tx);margin-bottom:4px}
+.rb-desc{font-size:11px;color:var(--mu);line-height:1.4;margin-bottom:5px}
+.rb-tags{display:flex;gap:5px;flex-wrap:wrap}
+.rb-meta{display:flex;gap:12px;font-size:10px;color:var(--mu);margin-top:5px}
+.rb-detail{padding:14px;display:flex;flex-direction:column;gap:10px}
+.step-list{display:flex;flex-direction:column;gap:4px}
+.step-item{display:flex;gap:10px;align-items:flex-start;padding:7px 10px;background:var(--sf);border-radius:5px;border:1px solid var(--br)}
+.step-num{width:20px;height:20px;border-radius:50%;background:var(--b);color:var(--wh);font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-txt{font-size:11.5px;color:var(--tx);line-height:1.4}
+.step-tool{font-size:9px;font-family:monospace;background:var(--br);padding:1px 5px;border-radius:3px;color:var(--n);margin-top:2px;display:inline-block}
+.criteria-box{background:#ECFDF5;border:1px solid #A7F3D0;border-radius:5px;padding:9px 12px}
+.criteria-lbl{font-size:9px;font-weight:700;color:#065F46;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.criteria-txt{font-size:11px;color:#064E3B}
+
+.pm-card{padding:10px 14px;border-bottom:1px solid var(--br);cursor:pointer}
+.pm-card:hover{background:var(--sf)}
+.pm-card:last-child{border-bottom:none}
+.pm-title{font-size:12.5px;font-weight:700;color:var(--tx);margin-bottom:3px}
+.pm-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:4px}
+.pm-excerpt{font-size:11px;color:var(--mu);line-height:1.4}
+.pm-detail{padding:14px;display:flex;flex-direction:column;gap:10px;overflow-y:auto}
+.pm-section-lbl{font-size:9px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;display:flex;align-items:center;gap:5px}
+.pm-section-lbl i{font-size:12px;color:var(--b)}
+.pm-text{font-size:11.5px;color:var(--tx);line-height:1.6}
+.action-item{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--br)}
+.action-item:last-child{border-bottom:none}
+.ai-check{width:14px;height:14px;border:1.5px solid var(--br);border-radius:3px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center}
+.ai-check.done{background:var(--g);border-color:var(--g);color:var(--wh);font-size:9px}
+.ai-text{font-size:11.5px;color:var(--tx)}
+.ai-owner{font-size:10px;color:var(--b);font-weight:600}
+.ai-due{font-size:10px;color:var(--mu)}
+.timeline-visual{display:flex;flex-direction:column;gap:2px}
+.tv-item{display:grid;grid-template-columns:60px 10px 1fr;gap:6px;align-items:start;padding:3px 0}
+.tv-time{font-size:10px;color:var(--mu);text-align:right;padding-top:1px}
+.tv-dot-col{display:flex;flex-direction:column;align-items:center}
+.tv-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.tv-stem{flex:1;width:1px;background:var(--br);margin:2px 0}
+.tv-body{font-size:11px;color:var(--tx);padding-bottom:6px}
+.tv-event{font-weight:600;margin-bottom:1px}
+.tv-desc{color:var(--mu);font-size:10.5px}
+
+.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rpt-stat{background:var(--wh);border:1px solid var(--br);border-radius:7px;padding:12px 14px;position:relative;overflow:hidden}
+.rpt-stat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--rs-c,var(--b))}
+.rs-lbl{font-size:9px;color:var(--mu);font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px}
+.rs-val{font-size:22px;font-weight:700;color:var(--n)}
+.rs-sub{font-size:10px;color:var(--mu);margin-top:2px;display:flex;align-items:center;gap:3px}
+.rs-up{color:var(--g)}.rs-dn{color:var(--rd)}
+.chart-h{padding:12px 14px}
+.chart-legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.leg-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--mu)}
+.leg-sq{width:9px;height:9px;border-radius:2px}
+
+.mttr-bar-group{display:flex;flex-direction:column;gap:8px;padding:0 14px 12px}
+.mttr-row{display:grid;grid-template-columns:90px 1fr 36px;align-items:center;gap:8px}
+.mttr-label{font-size:11px;color:var(--tx);font-weight:600}
+.mttr-track{height:10px;background:var(--sf);border-radius:5px;overflow:hidden;position:relative}
+.mttr-fill{height:100%;border-radius:5px}
+.mttr-val{font-size:11px;font-weight:700}
+
+.heatmap-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;padding:12px 14px}
+.hm-cell{height:24px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600}
+.hm-label{font-size:9px;color:var(--mu);text-align:center;padding:0 14px 4px}
+.hm-days{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;padding:0 14px 4px}
+
+.team-perf{display:flex;flex-direction:column;gap:0}
+.tp-row{display:grid;grid-template-columns:100px 1fr 40px 40px 40px;align-items:center;gap:8px;padding:7px 14px;border-bottom:1px solid var(--br)}
+.tp-row:last-child{border-bottom:none}
+.tp-hdr{font-size:9px;color:var(--mu);font-weight:700;text-transform:uppercase;letter-spacing:.5px;background:var(--sf)}
+.tp-team{font-size:11.5px;font-weight:600;color:var(--tx)}
+.tp-bar-wrap{display:flex;align-items:center;gap:6px}
+.tp-bar{height:7px;border-radius:3px}
+.tp-num{font-size:11px;font-weight:700;text-align:right}
+</style>
+
+<h2 class="sr-only">AIR — Five screens: Incidents war room, Alerts explorer, Runbooks, Postmortems, and Reports</h2>
+
+<div id="nav-tabs" style="display:flex;gap:4px;padding:0 0 16px;flex-wrap:wrap">
+  <button onclick="showScreen('incidents')" id="tab-incidents" class="tbtn prim" style="font-size:12px;padding:7px 14px"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Incidents</button>
+  <button onclick="showScreen('alerts')" id="tab-alerts" class="tbtn" style="font-size:12px;padding:7px 14px"><i class="ti ti-bell" aria-hidden="true"></i> Alerts</button>
+  <button onclick="showScreen('runbooks')" id="tab-runbooks" class="tbtn" style="font-size:12px;padding:7px 14px"><i class="ti ti-book" aria-hidden="true"></i> Runbooks</button>
+  <button onclick="showScreen('postmortems')" id="tab-postmortems" class="tbtn" style="font-size:12px;padding:7px 14px"><i class="ti ti-file-text" aria-hidden="true"></i> Postmortems</button>
+  <button onclick="showScreen('reports')" id="tab-reports" class="tbtn" style="font-size:12px;padding:7px 14px"><i class="ti ti-chart-bar" aria-hidden="true"></i> Reports</button>
+</div>
+
+<div id="screen-incidents" class="screen">
+  <div class="screen-label"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Incidents — War Room View</div>
+  <div class="topbar">
+    <div class="tb-logo"><div class="tb-box">AIR</div><span style="color:rgba(255,255,255,.8);font-size:11px">Agentic IR</span></div>
+    <div class="tb-nav">
+      <button class="tb-link">Dashboard</button><button class="tb-link cur">Incidents</button>
+      <button class="tb-link">Alerts</button><button class="tb-link">Runbooks</button>
+      <button class="tb-link">Reports</button>
+    </div>
+    <div class="tb-right"><div class="env-tag">PROD</div><div class="av">SL</div></div>
+  </div>
+  <div class="toolbar">
+    <div class="page-title"><i class="ti ti-alert-triangle" aria-hidden="true"></i>Incidents</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap">
+      <span class="tbtn" style="background:var(--rd);color:var(--wh);border-color:var(--rd)">Active (4)</span>
+      <span class="tbtn">Monitoring (2)</span><span class="tbtn">Resolved (18)</span><span class="tbtn">All (24)</span>
+    </div>
+    <div class="ml-auto" style="display:flex;gap:6px">
+      <input class="srch" placeholder="Search incidents…">
+      <button class="tbtn prim" onclick="sendPrompt('Create a new P2 incident for card-activation service degradation')"><i class="ti ti-plus" aria-hidden="true"></i> New Incident ↗</button>
+    </div>
+  </div>
+  <div class="layout layout-2col" style="min-height:560px">
+    <div style="display:flex;flex-direction:column;background:var(--wh);border-right:1px solid var(--br)">
+      <div class="ph" style="padding:8px 14px"><span class="ph-title" style="font-size:11px">4 active · sorted by severity</span></div>
+      <div class="row row-sel">
+        <span class="sev sP1">P1</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:600;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Payment API — OOMKill (payment-svc-v2)</div>
+          <div style="font-size:10px;color:var(--mu);display:flex;gap:8px;margin-top:1px">
+            <span><i class="ti ti-clock" style="font-size:11px" aria-hidden="true"></i> 14m</span>
+            <span>INC-2847</span><span class="auto-lv lv2">L2</span>
+          </div>
+        </div>
+        <span class="status-pill st-active"><span class="sp-dot"></span>Active</span>
+      </div>
+      <div class="row">
+        <span class="sev sP1">P1</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:600;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Rewards DB replica offline</div>
+          <div style="font-size:10px;color:var(--mu);display:flex;gap:8px;margin-top:1px">
+            <span><i class="ti ti-clock" style="font-size:11px" aria-hidden="true"></i> 32m</span>
+            <span>INC-2846</span><span class="auto-lv lv3">L3</span>
+          </div>
+        </div>
+        <span class="status-pill st-inv"><span class="sp-dot"></span>Investigating</span>
+      </div>
+      <div class="row">
+        <span class="sev sP2">P2</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:600;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Auth service p99 latency &gt; 2s</div>
+          <div style="font-size:10px;color:var(--mu);display:flex;gap:8px;margin-top:1px">
+            <span><i class="ti ti-clock" style="font-size:11px" aria-hidden="true"></i> 1h 2m</span>
+            <span>INC-2845</span><span class="auto-lv lv2">L2</span>
+          </div>
+        </div>
+        <span class="status-pill st-mon"><span class="sp-dot"></span>Monitoring</span>
+      </div>
+      <div class="row">
+        <span class="sev sP2">P2</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:600;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Card-activation webhook timeout</div>
+          <div style="font-size:10px;color:var(--mu);display:flex;gap:8px;margin-top:1px">
+            <span><i class="ti ti-clock" style="font-size:11px" aria-hidden="true"></i> 2h 18m</span>
+            <span>INC-2844</span><span class="auto-lv lv1">L1</span>
+          </div>
+        </div>
+        <span class="status-pill st-inv"><span class="sp-dot"></span>Investigating</span>
+      </div>
+      <div style="padding:8px 14px;border-top:1px solid var(--br);margin-top:auto">
+        <div class="ph-sub" style="font-size:10px;color:var(--mu)">Recent resolved</div>
+      </div>
+      <div class="row" style="opacity:.6">
+        <span class="sev sP3">P3</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:600;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Fraud model inference slow</div>
+          <div style="font-size:10px;color:var(--mu)"><span>INC-2843</span> · resolved 1h ago</div>
+        </div>
+        <span class="status-pill st-res"><span class="sp-dot"></span>Resolved</span>
+      </div>
+      <div class="row" style="opacity:.6">
+        <span class="sev sP3">P3</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:600;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">K8s node memory pressure</div>
+          <div style="font-size:10px;color:var(--mu)"><span>INC-2842</span> · resolved 3h ago</div>
+        </div>
+        <span class="status-pill st-res"><span class="sp-dot"></span>Resolved</span>
+      </div>
+    </div>
+
+    <div class="inc-detail">
+      <div class="id-hdr">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <span class="sev sP1">P1</span>
+          <span style="font-size:13px;font-weight:700;color:var(--n)">INC-2847 — Payment API OOMKill</span>
+          <span class="status-pill st-active" style="margin-left:auto"><span class="sp-dot"></span>Active</span>
+        </div>
+        <div class="id-meta">
+          <span class="meta-chip"><i class="ti ti-server" aria-hidden="true"></i> payment-svc-v2</span>
+          <span class="meta-chip"><i class="ti ti-users" aria-hidden="true"></i> Payments SRE</span>
+          <span class="meta-chip"><i class="ti ti-clock" aria-hidden="true"></i> Opened 12:17 UTC</span>
+          <span class="meta-chip"><i class="ti ti-robot" aria-hidden="true"></i> L2 Agent</span>
+          <span class="auto-lv lv2">APPROVAL NEEDED</span>
+        </div>
+      </div>
+      <div class="id-body">
+        <div class="rca-box">
+          <div class="rca-lbl">AI Root Cause Analysis</div>
+          <div class="rca-txt">Memory leak introduced in <strong>payment-svc v5.2.1</strong> (deployed 12:03 UTC). Heap exhaustion triggered OOMKill on 3/6 pods after 847 requests. Pattern matches INC-2801, INC-2756, INC-2734 — all resolved by rollback.</div>
+          <div class="conf-row" style="margin-top:7px">
+            <span style="font-size:10px;color:var(--mu);font-weight:600">Confidence</span>
+            <div class="conf-bar"><div class="conf-fill" style="width:94%"></div></div>
+            <span style="font-size:12px;font-weight:700;color:var(--b)">94%</span>
+          </div>
+        </div>
+        <div class="mini-grid">
+          <div class="mini-card"><div class="mc-lbl">Trigger</div><div class="mc-val">Heap OOM @ 12:17</div></div>
+          <div class="mini-card"><div class="mc-lbl">Deploy</div><div class="mc-val">v5.2.1 — 12:03</div></div>
+          <div class="mini-card"><div class="mc-lbl">Pods affected</div><div class="mc-val">3 / 6 OOMKilled</div></div>
+          <div class="mini-card"><div class="mc-lbl">Error rate</div><div class="mc-val" style="color:var(--rd)">34% requests</div></div>
+        </div>
+        <div>
+          <div class="pm-section-lbl"><i class="ti ti-list" aria-hidden="true"></i>Incident timeline</div>
+          <div class="timeline-visual">
+            <div class="tv-item">
+              <div class="tv-time">12:03</div>
+              <div class="tv-dot-col"><div class="tv-dot" style="background:var(--or)"></div><div class="tv-stem"></div></div>
+              <div class="tv-body"><div class="tv-event">Deploy v5.2.1 pushed</div><div class="tv-desc">payment-svc — GitHub Actions pipeline</div></div>
+            </div>
+            <div class="tv-item">
+              <div class="tv-time">12:17</div>
+              <div class="tv-dot-col"><div class="tv-dot" style="background:var(--rd)"></div><div class="tv-stem"></div></div>
+              <div class="tv-body"><div class="tv-event">OOMKill detected — 3 pods</div><div class="tv-desc">Prometheus alert fired → AIR ingested</div></div>
+            </div>
+            <div class="tv-item">
+              <div class="tv-time">12:17</div>
+              <div class="tv-dot-col"><div class="tv-dot" style="background:var(--b)"></div><div class="tv-stem"></div></div>
+              <div class="tv-body"><div class="tv-event">AI triage started (L2 agent)</div><div class="tv-desc">Context assembled: logs, metrics, deploy history</div></div>
+            </div>
+            <div class="tv-item">
+              <div class="tv-time">12:19</div>
+              <div class="tv-dot-col"><div class="tv-dot" style="background:var(--b)"></div><div class="tv-stem"></div></div>
+              <div class="tv-body"><div class="tv-event">RCA posted to Slack — 94% confidence</div><div class="tv-desc">Rollback to v5.2.0 proposed, awaiting approval</div></div>
+            </div>
+            <div class="tv-item">
+              <div class="tv-time">12:19</div>
+              <div class="tv-dot-col"><div class="tv-dot" style="background:var(--g)"></div></div>
+              <div class="tv-body"><div class="tv-event">Approved by Ravi S. — rollback executing</div><div class="tv-desc">k8s_rollout_undo payment-svc in progress</div></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="pm-section-lbl"><i class="ti ti-shield-bolt" aria-hidden="true"></i>Proposed actions (L2 — approved)</div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div class="step-item"><div class="step-num">1</div><div class="step-txt">Rollback payment-svc → v5.2.0<br><span class="step-tool">k8s_rollout_undo payment-svc</span></div></div>
+            <div class="step-item"><div class="step-num">2</div><div class="step-txt">Restart 3 OOMKilled pods, verify readiness</div></div>
+            <div class="step-item"><div class="step-num">3</div><div class="step-txt">Monitor error rate for 5 min, auto-rollback if &gt; 5%</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="action-btns">
+        <button class="tbtn success" onclick="sendPrompt('Mark INC-2847 as resolved and trigger postmortem generation')"><i class="ti ti-check" aria-hidden="true"></i> Resolve ↗</button>
+        <button class="tbtn" onclick="sendPrompt('Escalate INC-2847 to P0 and page the engineering director')"><i class="ti ti-arrow-up" aria-hidden="true"></i> Escalate ↗</button>
+        <button class="tbtn" onclick="sendPrompt('Generate postmortem draft for INC-2847')"><i class="ti ti-file-text" aria-hidden="true"></i> Postmortem ↗</button>
+        <button class="tbtn ml-auto"><i class="ti ti-brand-slack" aria-hidden="true"></i> Open Slack</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="screen-alerts" class="screen">
+  <div class="screen-label"><i class="ti ti-bell" aria-hidden="true"></i> Alerts — Intelligent Feed & Dedup Explorer</div>
+  <div class="topbar">
+    <div class="tb-logo"><div class="tb-box">AIR</div><span style="color:rgba(255,255,255,.8);font-size:11px">Agentic IR</span></div>
+    <div class="tb-nav">
+      <button class="tb-link">Dashboard</button><button class="tb-link">Incidents</button>
+      <button class="tb-link cur">Alerts</button><button class="tb-link">Runbooks</button><button class="tb-link">Reports</button>
+    </div>
+    <div class="tb-right"><div class="env-tag">PROD</div><div class="av">SL</div></div>
+  </div>
+  <div class="toolbar">
+    <div class="page-title"><i class="ti ti-bell" aria-hidden="true"></i>Alert Feed</div>
+    <div style="display:flex;gap:5px">
+      <span class="tbtn" style="background:var(--b);color:var(--wh);border-color:var(--b)">Live (127)</span>
+      <span class="tbtn">Dedup Groups (9)</span>
+      <span class="tbtn">Suppressed (843)</span>
+    </div>
+    <div class="ml-auto" style="display:flex;gap:6px;align-items:center">
+      <span style="font-size:10px;color:var(--mu)">Source:</span>
+      <select style="font-size:11px;padding:4px 8px;border:1px solid var(--br);border-radius:5px;background:var(--sf);color:var(--tx)"><option>All sources</option><option>Datadog</option><option>Prometheus</option><option>PagerDuty</option></select>
+      <input class="srch" placeholder="Search alerts…">
+    </div>
+  </div>
+  <div class="layout layout-2col" style="min-height:540px">
+    <div style="background:var(--wh);border-right:1px solid var(--br);overflow-y:auto">
+      <div class="ph" style="padding:8px 14px"><span class="ph-title" style="font-size:11px;color:var(--rd)">● 127 live alerts · 9 dedup groups</span><span class="ph-sub" style="margin-left:auto">843 suppressed today</span></div>
+
+      <div style="background:#FDEAEA;padding:6px 14px;border-bottom:1px solid #FECACA">
+        <span style="font-size:10px;font-weight:700;color:var(--rd);text-transform:uppercase;letter-spacing:.5px">Dedup group · 47 alerts</span>
+      </div>
+      <div class="alert-bar">
+        <div class="ab-icon" style="background:#FDEAEA"><i class="ti ti-bolt" style="color:var(--rd)" aria-hidden="true"></i></div>
+        <div class="ab-body">
+          <div class="ab-title">payment-svc OOMKill — heap exhaustion</div>
+          <div class="ab-meta"><span class="tag tag-src">Datadog</span><span class="tag tag-svc">payment-svc</span></div>
+        </div>
+        <div class="ab-right"><span class="sev sP1">P1</span><span class="dedup-count">×47</span><span class="sim">sim 0.97</span><span class="ab-time">12:17</span></div>
+      </div>
+
+      <div style="background:#FEF0E7;padding:6px 14px;border-bottom:1px solid #FED7AA;border-top:1px solid var(--br)">
+        <span style="font-size:10px;font-weight:700;color:var(--or);text-transform:uppercase;letter-spacing:.5px">Dedup group · 23 alerts</span>
+      </div>
+      <div class="alert-bar">
+        <div class="ab-icon" style="background:#FEF0E7"><i class="ti ti-database" style="color:var(--or)" aria-hidden="true"></i></div>
+        <div class="ab-body">
+          <div class="ab-title">rewards-db read replica — connection refused</div>
+          <div class="ab-meta"><span class="tag tag-src">Prometheus</span><span class="tag tag-svc">rewards-db</span></div>
+        </div>
+        <div class="ab-right"><span class="sev sP1">P1</span><span class="dedup-count">×23</span><span class="sim">sim 0.94</span><span class="ab-time">11:49</span></div>
+      </div>
+
+      <div style="background:#FEF0E7;padding:6px 14px;border-bottom:1px solid #FED7AA;border-top:1px solid var(--br)">
+        <span style="font-size:10px;font-weight:700;color:var(--or);text-transform:uppercase;letter-spacing:.5px">Dedup group · 18 alerts</span>
+      </div>
+      <div class="alert-bar">
+        <div class="ab-icon" style="background:#FEF0E7"><i class="ti ti-activity" style="color:var(--or)" aria-hidden="true"></i></div>
+        <div class="ab-body">
+          <div class="ab-title">auth-service p99 latency elevated &gt; 2s</div>
+          <div class="ab-meta"><span class="tag tag-src">Datadog</span><span class="tag tag-svc">auth-service</span></div>
+        </div>
+        <div class="ab-right"><span class="sev sP2">P2</span><span class="dedup-count">×18</span><span class="sim">sim 0.91</span><span class="ab-time">11:29</span></div>
+      </div>
+
+      <div style="padding:6px 14px;border-top:1px solid var(--br);border-bottom:1px solid var(--br);background:var(--sf)">
+        <span style="font-size:10px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.5px">Individual alerts</span>
+      </div>
+      <div class="alert-bar">
+        <div class="ab-icon" style="background:#FEFCE8"><i class="ti ti-clock" style="color:#92400E" aria-hidden="true"></i></div>
+        <div class="ab-body">
+          <div class="ab-title">card-activation webhook timeout (504)</div>
+          <div class="ab-meta"><span class="tag tag-src">PagerDuty</span><span class="tag tag-svc">card-activation</span></div>
+        </div>
+        <div class="ab-right"><span class="sev sP2">P2</span><span class="ab-time">10:13</span></div>
+      </div>
+      <div class="alert-bar">
+        <div class="ab-icon" style="background:#ECFDF5"><i class="ti ti-server" style="color:var(--g)" aria-hidden="true"></i></div>
+        <div class="ab-body">
+          <div class="ab-title">K8s worker-03 memory pressure warning</div>
+          <div class="ab-meta"><span class="tag tag-src">Kubernetes</span><span class="tag tag-team">infra</span></div>
+        </div>
+        <div class="ab-right"><span class="sev sP3">P3</span><span class="ab-time">09:55</span></div>
+      </div>
+      <div class="alert-bar suppressed">
+        <div class="ab-icon" style="background:var(--sf)"><i class="ti ti-ban" style="color:var(--mu)" aria-hidden="true"></i></div>
+        <div class="ab-body">
+          <div class="ab-title">payment-svc CPU &gt; 80% (suppressed — duplicate)</div>
+          <div class="ab-meta"><span class="tag tag-src">Datadog</span></div>
+        </div>
+        <div class="ab-right"><span style="font-size:9px;background:var(--sf);color:var(--mu);padding:2px 6px;border-radius:8px;font-weight:700">SUPPRESSED</span><span class="ab-time">12:17</span></div>
+      </div>
+      <div class="alert-bar suppressed">
+        <div class="ab-icon" style="background:var(--sf)"><i class="ti ti-ban" style="color:var(--mu)" aria-hidden="true"></i></div>
+        <div class="ab-body">
+          <div class="ab-title">payment-svc heap &gt; 90% (suppressed — ×43 more)</div>
+          <div class="ab-meta"><span class="tag tag-src">Datadog</span></div>
+        </div>
+        <div class="ab-right"><span style="font-size:9px;background:var(--sf);color:var(--mu);padding:2px 6px;border-radius:8px;font-weight:700">×43 SUPPRESSED</span><span class="ab-time">12:17</span></div>
+      </div>
+    </div>
+
+    <div style="background:var(--wh);padding:0;display:flex;flex-direction:column">
+      <div class="ph"><i class="ti ti-search" aria-hidden="true"></i><div class="ph-title">Dedup Group Detail — payment-svc OOMKill</div></div>
+      <div style="padding:12px 14px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="sev sP1">P1</span>
+          <span style="font-size:13px;font-weight:700;color:var(--n)">payment-svc OOMKill cluster</span>
+          <span style="font-size:10px;font-weight:700;background:var(--n);color:var(--wh);padding:2px 8px;border-radius:10px;margin-left:auto">47 alerts merged</span>
+        </div>
+        <div class="rca-box">
+          <div class="rca-lbl">Why these were grouped</div>
+          <div class="rca-txt">All 47 alerts share semantic similarity score &gt; 0.88 via cosine distance on text-embedding-ada-002 vectors. They describe the same root event: heap exhaustion on payment-svc pods causing OOMKill between 12:17–12:31 UTC.</div>
+        </div>
+        <div class="mini-grid">
+          <div class="mini-card"><div class="mc-lbl">Cosine similarity</div><div class="mc-val" style="color:var(--t)">0.97 avg</div></div>
+          <div class="mini-card"><div class="mc-lbl">Timespan</div><div class="mc-val">12:17 – 12:31</div></div>
+          <div class="mini-card"><div class="mc-lbl">Sources</div><div class="mc-val">Datadog, Prometheus</div></div>
+          <div class="mini-card"><div class="mc-lbl">Linked incident</div><div class="mc-val" style="color:var(--b)">INC-2847</div></div>
+        </div>
+        <div>
+          <div class="pm-section-lbl"><i class="ti ti-list" aria-hidden="true"></i>Sample alerts in group</div>
+          <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed">
+            <thead><tr style="background:var(--sf)">
+              <th style="padding:5px 8px;text-align:left;color:var(--mu);font-weight:700;font-size:10px;border-bottom:1px solid var(--br);width:110px">Source</th>
+              <th style="padding:5px 8px;text-align:left;color:var(--mu);font-weight:700;font-size:10px;border-bottom:1px solid var(--br)">Message</th>
+              <th style="padding:5px 8px;text-align:right;color:var(--mu);font-weight:700;font-size:10px;border-bottom:1px solid var(--br);width:50px">Time</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:5px 8px;border-bottom:1px solid var(--br)"><span class="tag tag-src">Datadog</span></td><td style="padding:5px 8px;border-bottom:1px solid var(--br);color:var(--tx)">payment-svc-v2 pod-1 OOMKilled</td><td style="padding:5px 8px;border-bottom:1px solid var(--br);color:var(--mu);text-align:right">12:17</td></tr>
+              <tr style="background:var(--sf)"><td style="padding:5px 8px;border-bottom:1px solid var(--br)"><span class="tag tag-src">Prometheus</span></td><td style="padding:5px 8px;border-bottom:1px solid var(--br);color:var(--tx)">container_oom_events_total spike — payment-svc</td><td style="padding:5px 8px;border-bottom:1px solid var(--br);color:var(--mu);text-align:right">12:17</td></tr>
+              <tr><td style="padding:5px 8px;border-bottom:1px solid var(--br)"><span class="tag tag-src">Datadog</span></td><td style="padding:5px 8px;border-bottom:1px solid var(--br);color:var(--tx)">payment-svc heap usage 99.8% before kill</td><td style="padding:5px 8px;border-bottom:1px solid var(--br);color:var(--mu);text-align:right">12:18</td></tr>
+              <tr style="background:var(--sf)"><td style="padding:5px 8px"><span class="tag tag-src">Prometheus</span></td><td style="padding:5px 8px;color:var(--tx)">jvm_memory_used_bytes exceeds limit ×3</td><td style="padding:5px 8px;color:var(--mu);text-align:right">12:19</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="tbtn prim" onclick="sendPrompt('Create incident from this payment-svc alert dedup group')"><i class="ti ti-plus" aria-hidden="true"></i> Create Incident ↗</button>
+          <button class="tbtn" onclick="sendPrompt('Show me the embedding vectors for the payment-svc alert cluster')"><i class="ti ti-chart-scatter" aria-hidden="true"></i> View Embeddings ↗</button>
+          <button class="tbtn ml-auto"><i class="ti ti-ban" aria-hidden="true"></i> Suppress Group</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="screen-runbooks" class="screen">
+  <div class="screen-label"><i class="ti ti-book" aria-hidden="true"></i> Runbooks — Knowledge Base</div>
+  <div class="topbar">
+    <div class="tb-logo"><div class="tb-box">AIR</div><span style="color:rgba(255,255,255,.8);font-size:11px">Agentic IR</span></div>
+    <div class="tb-nav">
+      <button class="tb-link">Dashboard</button><button class="tb-link">Incidents</button>
+      <button class="tb-link">Alerts</button><button class="tb-link cur">Runbooks</button><button class="tb-link">Reports</button>
+    </div>
+    <div class="tb-right"><div class="env-tag">PROD</div><div class="av">SL</div></div>
+  </div>
+  <div class="toolbar">
+    <div class="page-title"><i class="ti ti-book" aria-hidden="true"></i>Runbooks</div>
+    <div style="display:flex;gap:5px">
+      <span class="tbtn" style="background:var(--b);color:var(--wh);border-color:var(--b)">All (47)</span>
+      <span class="tbtn">Payments (12)</span><span class="tbtn">Platform (9)</span><span class="tbtn">Identity (8)</span>
+    </div>
+    <div class="ml-auto" style="display:flex;gap:6px">
+      <input class="srch" placeholder="Search runbooks…" style="width:180px">
+      <button class="tbtn prim" onclick="sendPrompt('Create a new runbook for payment-service memory leak remediation')"><i class="ti ti-plus" aria-hidden="true"></i> New Runbook ↗</button>
+    </div>
+  </div>
+  <div class="layout layout-2col" style="min-height:580px">
+    <div style="background:var(--wh);border-right:1px solid var(--br);overflow-y:auto">
+      <div class="ph" style="padding:8px 14px"><span class="ph-title" style="font-size:11px">47 runbooks · sorted by usage</span></div>
+      <div class="rb-card row-sel">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+          <span class="tag tag-svc">payment-svc</span>
+          <span class="auto-lv lv2" style="margin-left:auto">L2 auto</span>
+          <span style="font-size:10px;font-weight:700;background:#ECFDF5;color:var(--g);padding:2px 6px;border-radius:3px">×34 used</span>
+        </div>
+        <div class="rb-title">OOMKill — Rollback &amp; Pod Restart</div>
+        <div class="rb-desc">Remediates heap exhaustion OOMKills in payment-service by rolling back to the last known good deployment and restarting affected pods.</div>
+        <div class="rb-tags">
+          <span class="tag tag-src">Kubernetes</span><span class="tag tag-src">Java / JVM</span><span class="tag tag-team">Payments SRE</span>
+        </div>
+        <div class="rb-meta">
+          <span><i class="ti ti-clock" style="font-size:11px" aria-hidden="true"></i> Last used: 14m ago</span>
+          <span><i class="ti ti-check" style="font-size:11px" aria-hidden="true"></i> 97% success rate</span>
+        </div>
+      </div>
+      <div class="rb-card">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+          <span class="tag tag-svc">rewards-db</span>
+          <span class="auto-lv lv3" style="margin-left:auto">L3 auto</span>
+          <span style="font-size:10px;font-weight:700;background:#ECFDF5;color:var(--g);padding:2px 6px;border-radius:3px">×21 used</span>
+        </div>
+        <div class="rb-title">DB Replica Failover &amp; Promote</div>
+        <div class="rb-desc">Detects offline read replica, promotes standby, updates connection pool routing, verifies replication lag.</div>
+        <div class="rb-tags"><span class="tag tag-src">PostgreSQL</span><span class="tag tag-src">AWS RDS</span></div>
+        <div class="rb-meta"><span><i class="ti ti-clock" style="font-size:11px" aria-hidden="true"></i> Last used: 32m ago</span><span><i class="ti ti-check" style="font-size:11px" aria-hidden="true"></i> 91% success</span></div>
+      </div>
+      <div class="rb-card">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+          <span class="tag tag-svc">auth-service</span>
+          <span class="auto-lv lv2" style="margin-left:auto">L2 auto</span>
+          <span style="font-size:10px;font-weight:700;background:#ECFDF5;color:var(--g);padding:2px 6px;border-radius:3px">×18 used</span>
+        </div>
+        <div class="rb-title">High Latency — Cache Flush &amp; Scale</div>
+        <div class="rb-desc">Flushes Redis cache for auth tokens, scales auth-service horizontally to handle traffic spike.</div>
+        <div class="rb-tags"><span class="tag tag-src">Redis</span><span class="tag tag-src">Kubernetes</span></div>
+        <div class="rb-meta"><span><i class="ti ti-clock" style="font-size:11px" aria-hidden="true"></i> Last used: 1h ago</span><span><i class="ti ti-check" style="font-size:11px" aria-hidden="true"></i> 88% success</span></div>
+      </div>
+      <div class="rb-card">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+          <span class="tag tag-svc">card-activation</span>
+          <span class="auto-lv lv1" style="margin-left:auto">L1 advisory</span>
+          <span style="font-size:10px;font-weight:700;background:#ECFDF5;color:var(--g);padding:2px 6px;border-radius:3px">×12 used</span>
+        </div>
+        <div class="rb-title">Webhook Timeout — Circuit Breaker Reset</div>
+        <div class="rb-desc">Investigates 3rd-party webhook timeouts, provides manual steps to reset circuit breaker and re-enable processing.</div>
+        <div class="rb-tags"><span class="tag tag-src">3rd Party</span><span class="tag tag-team">Cards SRE</span></div>
+        <div class="rb-meta"><span><i class="ti ti-clock" style="font-size:11px" aria-hidden="true"></i> Last used: 2h ago</span><span><i class="ti ti-check" style="font-size:11px" aria-hidden="true"></i> 79% success</span></div>
+      </div>
+      <div class="rb-card">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+          <span class="tag tag-svc">fraud-svc</span>
+          <span class="auto-lv lv1" style="margin-left:auto">L1 advisory</span>
+          <span style="font-size:10px;font-weight:700;background:#ECFDF5;color:var(--g);padding:2px 6px;border-radius:3px">×9 used</span>
+        </div>
+        <div class="rb-title">ML Model Inference Timeout</div>
+        <div class="rb-desc">Diagnoses slow model inference, provides steps to reload model from blob store or switch to fallback scoring.</div>
+        <div class="rb-tags"><span class="tag tag-src">Python</span><span class="tag tag-src">GCP</span></div>
+        <div class="rb-meta"><span><i class="ti ti-clock" style="font-size:11px" aria-hidden="true"></i> Last used: 3h ago</span><span><i class="ti ti-check" style="font-size:11px" aria-hidden="true"></i> 83% success</span></div>
+      </div>
+    </div>
+
+    <div style="background:var(--wh);overflow-y:auto">
+      <div class="ph"><i class="ti ti-book" aria-hidden="true"></i><div class="ph-title">OOMKill — Rollback &amp; Pod Restart</div><span class="auto-lv lv2">L2 auto</span></div>
+      <div class="rb-detail">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="tag tag-svc">payment-svc</span><span class="tag tag-src">Kubernetes</span><span class="tag tag-src">Java / JVM</span><span class="tag tag-team">Payments SRE</span>
+          <span style="font-size:10px;color:var(--mu);margin-left:auto;display:flex;align-items:center;gap:4px"><i class="ti ti-check" aria-hidden="true"></i> 97% success · ×34 used</span>
+        </div>
+        <div class="rca-box">
+          <div class="rca-lbl">When to trigger</div>
+          <div class="rca-txt">OOMKill events on payment-svc pods where heap exhaustion precedes the kill and a recent deployment (&lt;2h) correlates with the spike. AI confidence must be &gt; 80% before L2 execution.</div>
+        </div>
+        <div>
+          <div class="pm-section-lbl"><i class="ti ti-list-numbers" aria-hidden="true"></i>Remediation steps</div>
+          <div class="step-list">
+            <div class="step-item"><div class="step-num">1</div><div><div class="step-txt">Check current deployment revision and OOMKill count</div><span class="step-tool">k8s_get_pod_status(service="payment-svc")</span></div></div>
+            <div class="step-item"><div class="step-num">2</div><div><div class="step-txt">Initiate rollback to previous stable revision</div><span class="step-tool">k8s_rollout_undo(deployment="payment-svc")</span></div></div>
+            <div class="step-item"><div class="step-num">3</div><div><div class="step-txt">Wait 90s for pods to become Ready, then verify</div><span class="step-tool">k8s_get_pod_status(wait=90)</span></div></div>
+            <div class="step-item"><div class="step-num">4</div><div><div class="step-txt">Query error rate — must be &lt; 1% for 3 consecutive checks</div><span class="step-tool">datadog_query_metrics(query="error_rate[payment-svc]")</span></div></div>
+            <div class="step-item"><div class="step-num">5</div><div><div class="step-txt">If error rate &gt; 5%: auto-rollback again and escalate to human</div><span class="step-tool">slack_send_message(channel="#inc-{id}", msg="Auto-rollback failed")</span></div></div>
+            <div class="step-item"><div class="step-num">6</div><div><div class="step-txt">On success: post resolution to Slack, update status page</div><span class="step-tool">statuspage_update(component="payment-api", status="operational")</span></div></div>
+          </div>
+        </div>
+        <div class="criteria-box">
+          <div class="criteria-lbl">Success criteria</div>
+          <div class="criteria-txt">Error rate &lt; 1% for 3 min sustained · All pods in Ready state · Heap usage stable below 70% · No new OOMKill events</div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:4px">
+          <button class="tbtn prim" onclick="sendPrompt('Manually trigger the OOMKill runbook for payment-svc INC-2847')"><i class="ti ti-player-play" aria-hidden="true"></i> Run Now ↗</button>
+          <button class="tbtn" onclick="sendPrompt('Test this runbook against the last 5 payment-svc incidents')"><i class="ti ti-test-pipe" aria-hidden="true"></i> Test Against History ↗</button>
+          <button class="tbtn ml-auto"><i class="ti ti-edit" aria-hidden="true"></i> Edit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="screen-postmortems" class="screen">
+  <div class="screen-label"><i class="ti ti-file-text" aria-hidden="true"></i> Postmortems — AI-Generated Analysis</div>
+  <div class="topbar">
+    <div class="tb-logo"><div class="tb-box">AIR</div><span style="color:rgba(255,255,255,.8);font-size:11px">Agentic IR</span></div>
+    <div class="tb-nav">
+      <button class="tb-link">Dashboard</button><button class="tb-link">Incidents</button>
+      <button class="tb-link">Alerts</button><button class="tb-link">Runbooks</button>
+      <button class="tb-link cur">Postmortems</button><button class="tb-link">Reports</button>
+    </div>
+    <div class="tb-right"><div class="env-tag">PROD</div><div class="av">SL</div></div>
+  </div>
+  <div class="toolbar">
+    <div class="page-title"><i class="ti ti-file-text" aria-hidden="true"></i>Postmortems</div>
+    <div style="display:flex;gap:5px">
+      <span class="tbtn" style="background:var(--pu);color:var(--wh);border-color:var(--pu)">Draft (3)</span>
+      <span class="tbtn">In Review (2)</span>
+      <span class="tbtn">Published (13)</span>
+    </div>
+    <div class="ml-auto" style="display:flex;gap:6px">
+      <input class="srch" placeholder="Search postmortems…">
+      <button class="tbtn prim" onclick="sendPrompt('Generate postmortem for INC-2847 payment service OOMKill')"><i class="ti ti-robot" aria-hidden="true"></i> AI Generate ↗</button>
+    </div>
+  </div>
+  <div class="layout layout-2col" style="min-height:620px">
+    <div style="background:var(--wh);border-right:1px solid var(--br);overflow-y:auto">
+      <div class="ph" style="padding:8px 14px"><span class="ph-title" style="font-size:11px">18 postmortems · 100% coverage this week</span></div>
+      <div class="pm-card row-sel">
+        <div class="pm-meta">
+          <span class="sev sP1">P1</span>
+          <span class="status-pill st-draft"><span class="sp-dot"></span>Draft</span>
+          <span style="font-size:10px;color:var(--mu)">INC-2843</span>
+          <span style="font-size:10px;font-weight:700;background:#EDE9FE;color:var(--pu);padding:2px 6px;border-radius:3px">AI Generated</span>
+        </div>
+        <div class="pm-title">Fraud model inference timeout — full outage 47m</div>
+        <div class="pm-excerpt">Fraud scoring service became unavailable due to GPU memory exhaustion on model serving pods after a 2.3x traffic spike from marketing campaign…</div>
+        <div style="font-size:10px;color:var(--mu);margin-top:4px;display:flex;gap:10px"><span><i class="ti ti-clock" style="font-size:11px" aria-hidden="true"></i> Generated 1h ago</span><span><i class="ti ti-users" aria-hidden="true"></i> Platform SRE</span></div>
+      </div>
+      <div class="pm-card">
+        <div class="pm-meta">
+          <span class="sev sP1">P1</span>
+          <span class="status-pill st-pub"><span class="sp-dot"></span>Published</span>
+          <span style="font-size:10px;color:var(--mu)">INC-2834</span>
+        </div>
+        <div class="pm-title">Payment API DB connection pool exhaustion — 23m</div>
+        <div class="pm-excerpt">Misconfigured connection pool max-size after infra upgrade led to exhaustion under moderate load…</div>
+        <div style="font-size:10px;color:var(--mu);margin-top:4px;display:flex;gap:10px"><span><i class="ti ti-calendar" aria-hidden="true"></i> Jun 10</span><span><i class="ti ti-users" aria-hidden="true"></i> Payments SRE</span></div>
+      </div>
+      <div class="pm-card">
+        <div class="pm-meta">
+          <span class="sev sP2">P2</span>
+          <span class="status-pill st-draft"><span class="sp-dot"></span>In Review</span>
+          <span style="font-size:10px;color:var(--mu)">INC-2829</span>
+          <span style="font-size:10px;font-weight:700;background:#EDE9FE;color:var(--pu);padding:2px 6px;border-radius:3px">AI Generated</span>
+        </div>
+        <div class="pm-title">Auth service certificate near-expiry — latency spike</div>
+        <div class="pm-excerpt">TLS certificate expiring in 12h caused handshake retries resulting in elevated p99 latency for all auth flows…</div>
+        <div style="font-size:10px;color:var(--mu);margin-top:4px;display:flex;gap:10px"><span><i class="ti ti-calendar" aria-hidden="true"></i> Jun 9</span><span><i class="ti ti-users" aria-hidden="true"></i> Identity SRE</span></div>
+      </div>
+      <div class="pm-card">
+        <div class="pm-meta">
+          <span class="sev sP1">P1</span>
+          <span class="status-pill st-pub"><span class="sp-dot"></span>Published</span>
+          <span style="font-size:10px;color:var(--mu)">INC-2801</span>
+        </div>
+        <div class="pm-title">Payment API OOMKill — v5.1.8 memory leak (prior)</div>
+        <div class="pm-excerpt">Same memory leak pattern in earlier version. Rollback resolved in 18m. Root fix: patched in v5.2.0…</div>
+        <div style="font-size:10px;color:var(--mu);margin-top:4px;display:flex;gap:10px"><span><i class="ti ti-calendar" aria-hidden="true"></i> May 28</span><span><i class="ti ti-users" aria-hidden="true"></i> Payments SRE</span></div>
+      </div>
+    </div>
+
+    <div style="background:var(--wh);overflow-y:auto">
+      <div class="ph"><i class="ti ti-file-text" aria-hidden="true"></i><div class="ph-title">INC-2843 — Fraud model inference timeout</div><span class="status-pill st-draft"><span class="sp-dot"></span>Draft</span></div>
+      <div class="pm-detail">
+        <div style="background:#EDE9FE;border-radius:6px;padding:8px 12px;border:1px solid #DDD6FE;display:flex;align-items:center;gap:8px">
+          <i class="ti ti-robot" style="color:var(--pu);font-size:16px" aria-hidden="true"></i>
+          <span style="font-size:11px;color:#4C1D95;font-weight:600">Generated by PostmortemAgent using incident chat, 23 alerts, Splunk logs, and Datadog metrics. Review before publishing.</span>
+        </div>
+        <div>
+          <div class="pm-section-lbl"><i class="ti ti-info-circle" aria-hidden="true"></i>Summary</div>
+          <div class="pm-text">The fraud scoring service experienced a complete outage for 47 minutes on Jun 11 starting at 09:12 UTC. A 2.3x traffic spike driven by a targeted marketing campaign exhausted GPU memory on model serving pods, causing inference requests to time out. All fraud-dependent transaction flows were affected, resulting in fallback to rule-based scoring with higher false-positive rates.</div>
+        </div>
+        <div>
+          <div class="pm-section-lbl"><i class="ti ti-clock" aria-hidden="true"></i>Timeline</div>
+          <div class="timeline-visual">
+            <div class="tv-item"><div class="tv-time">09:08</div><div class="tv-dot-col"><div class="tv-dot" style="background:var(--or)"></div><div class="tv-stem"></div></div><div class="tv-body"><div class="tv-event">Marketing campaign email blast sent</div><div class="tv-desc">3.4M emails, 2.3x normal transaction rate</div></div></div>
+            <div class="tv-item"><div class="tv-time">09:12</div><div class="tv-dot-col"><div class="tv-dot" style="background:var(--rd)"></div><div class="tv-stem"></div></div><div class="tv-body"><div class="tv-event">Fraud model pods GPU OOM</div><div class="tv-desc">All 4 inference pods crashed simultaneously</div></div></div>
+            <div class="tv-item"><div class="tv-time">09:13</div><div class="tv-dot-col"><div class="tv-dot" style="background:var(--b)"></div><div class="tv-stem"></div></div><div class="tv-body"><div class="tv-event">AIR alert group created, P1 opened</div><div class="tv-desc">L1 TriageAgent activated — no runbook match</div></div></div>
+            <div class="tv-item"><div class="tv-time">09:18</div><div class="tv-dot-col"><div class="tv-dot" style="background:var(--g)"></div><div class="tv-stem"></div></div><div class="tv-body"><div class="tv-event">On-call engineer identified GPU exhaustion</div><div class="tv-desc">Scaled inference fleet from 4 → 8 GPU pods</div></div></div>
+            <div class="tv-item"><div class="tv-time">09:59</div><div class="tv-dot-col"><div class="tv-dot" style="background:var(--g)"></div></div><div class="tv-body"><div class="tv-event">Service fully recovered, MTTR 47m</div><div class="tv-desc">All transactions reverting to ML scoring</div></div></div>
+          </div>
+        </div>
+        <div>
+          <div class="pm-section-lbl"><i class="ti ti-alert-triangle" aria-hidden="true"></i>Root cause</div>
+          <div class="pm-text">No HPA (Horizontal Pod Autoscaler) configured for the fraud inference deployment. GPU pods had a fixed replica count of 4 with no burst capacity. The marketing team did not notify SRE of the planned campaign, so no pre-scaling was done.</div>
+        </div>
+        <div>
+          <div class="pm-section-lbl"><i class="ti ti-check" aria-hidden="true"></i>Action items</div>
+          <div>
+            <div class="action-item">
+              <div class="ai-check"><i class="ti ti-check" style="font-size:10px" aria-hidden="true"></i></div>
+              <div><div class="ai-text">Configure HPA for fraud-inference: min 4, max 12 GPU pods</div><div style="display:flex;gap:10px;margin-top:2px"><span class="ai-owner">ML Platform team</span><span class="ai-due">Due Jun 15</span></div></div>
+            </div>
+            <div class="action-item">
+              <div class="ai-check"></div>
+              <div><div class="ai-text">Establish SRE notification process for marketing campaigns &gt; 1M users</div><div style="display:flex;gap:10px;margin-top:2px"><span class="ai-owner">Engineering + Marketing</span><span class="ai-due">Due Jun 18</span></div></div>
+            </div>
+            <div class="action-item">
+              <div class="ai-check"></div>
+              <div><div class="ai-text">Add L3 auto-scale runbook for GPU inference pods to AIR knowledge base</div><div style="display:flex;gap:10px;margin-top:2px"><span class="ai-owner">Platform SRE</span><span class="ai-due">Due Jun 20</span></div></div>
+            </div>
+            <div class="action-item">
+              <div class="ai-check"></div>
+              <div><div class="ai-text">Load test fraud-svc at 5x normal traffic to validate new HPA config</div><div style="display:flex;gap:10px;margin-top:2px"><span class="ai-owner">QA + Platform SRE</span><span class="ai-due">Due Jun 25</span></div></div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="tbtn prim" onclick="sendPrompt('Publish postmortem for INC-2843 and create JIRA action items')"><i class="ti ti-send" aria-hidden="true"></i> Publish &amp; Create JIRA ↗</button>
+          <button class="tbtn"><i class="ti ti-edit" aria-hidden="true"></i> Edit Draft</button>
+          <button class="tbtn ml-auto" onclick="sendPrompt('Share the INC-2843 postmortem to the #engineering-leads Slack channel')"><i class="ti ti-brand-slack" aria-hidden="true"></i> Share to Slack ↗</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="screen-reports" class="screen">
+  <div class="screen-label"><i class="ti ti-chart-bar" aria-hidden="true"></i> Reports — SRE Health &amp; AI Performance</div>
+  <div class="topbar">
+    <div class="tb-logo"><div class="tb-box">AIR</div><span style="color:rgba(255,255,255,.8);font-size:11px">Agentic IR</span></div>
+    <div class="tb-nav">
+      <button class="tb-link">Dashboard</button><button class="tb-link">Incidents</button>
+      <button class="tb-link">Alerts</button><button class="tb-link">Runbooks</button>
+      <button class="tb-link">Postmortems</button><button class="tb-link cur">Reports</button>
+    </div>
+    <div class="tb-right"><div class="env-tag">PROD</div><div class="av">SL</div></div>
+  </div>
+  <div class="toolbar">
+    <div class="page-title"><i class="ti ti-chart-bar" aria-hidden="true"></i>Reports</div>
+    <div style="display:flex;gap:5px">
+      <span class="tbtn" style="background:var(--b);color:var(--wh);border-color:var(--b)">This Week</span>
+      <span class="tbtn">This Month</span><span class="tbtn">Q2 2025</span>
+    </div>
+    <div class="ml-auto" style="display:flex;gap:6px">
+      <button class="tbtn" onclick="sendPrompt('Export the AIR weekly SRE report as PDF for the engineering director')"><i class="ti ti-download" aria-hidden="true"></i> Export PDF ↗</button>
+      <button class="tbtn prim" onclick="sendPrompt('Generate a custom report comparing MTTR across all service teams for Q2 2025')"><i class="ti ti-robot" aria-hidden="true"></i> AI Report ↗</button>
+    </div>
+  </div>
+  <div class="content" style="padding:12px">
+
+    <div class="report-grid">
+      <div class="rpt-stat" style="--rs-c:var(--rd)">
+        <div class="rs-lbl">Active P1/P2 now</div>
+        <div class="rs-val" style="color:var(--rd)">4</div>
+        <div class="rs-sub"><span class="rs-dn"><i class="ti ti-arrow-up" style="font-size:10px" aria-hidden="true"></i> +2 vs yesterday</span></div>
+      </div>
+      <div class="rpt-stat" style="--rs-c:var(--t)">
+        <div class="rs-lbl">Avg MTTR this week</div>
+        <div class="rs-val">18<span style="font-size:13px;font-weight:500;color:var(--mu)">m</span></div>
+        <div class="rs-sub"><span class="rs-up"><i class="ti ti-arrow-down" style="font-size:10px" aria-hidden="true"></i> −27m vs baseline 45m</span></div>
+      </div>
+      <div class="rpt-stat" style="--rs-c:var(--b)">
+        <div class="rs-lbl">Auto-resolved rate</div>
+        <div class="rs-val">63<span style="font-size:13px;font-weight:500;color:var(--mu)">%</span></div>
+        <div class="rs-sub"><span class="rs-up"><i class="ti ti-arrow-up" style="font-size:10px" aria-hidden="true"></i> +18% vs last week</span></div>
+      </div>
+      <div class="rpt-stat" style="--rs-c:var(--g)">
+        <div class="rs-lbl">SLA compliance</div>
+        <div class="rs-val" style="color:var(--g)">94<span style="font-size:13px;font-weight:500;color:var(--mu)">%</span></div>
+        <div class="rs-sub"><span class="rs-up"><i class="ti ti-arrow-up" style="font-size:10px" aria-hidden="true"></i> +4% vs last week</span></div>
+      </div>
+      <div class="rpt-stat" style="--rs-c:var(--or)">
+        <div class="rs-lbl">Alerts ingested</div>
+        <div class="rs-val">8,423</div>
+        <div class="rs-sub">843 live · 7,580 suppressed</div>
+      </div>
+      <div class="rpt-stat" style="--rs-c:var(--pu)">
+        <div class="rs-lbl">AI acceptance rate</div>
+        <div class="rs-val">83<span style="font-size:13px;font-weight:500;color:var(--mu)">%</span></div>
+        <div class="rs-sub"><span class="rs-up"><i class="ti ti-arrow-up" style="font-size:10px" aria-hidden="true"></i> +7% vs last week</span></div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="panel">
+        <div class="ph"><i class="ti ti-chart-bar" aria-hidden="true"></i><div class="ph-title">MTTR by severity — this week</div></div>
+        <div class="chart-h">
+          <div class="chart-legend">
+            <div class="leg-item"><div class="leg-sq" style="background:var(--rd)"></div>P1</div>
+            <div class="leg-item"><div class="leg-sq" style="background:var(--or)"></div>P2</div>
+            <div class="leg-item"><div class="leg-sq" style="background:#D97706"></div>P3</div>
+          </div>
+          <div class="mttr-bar-group">
+            <div class="mttr-row">
+              <div class="mttr-label">P1 Critical</div>
+              <div class="mttr-track"><div class="mttr-fill" style="width:40%;background:var(--rd)"></div></div>
+              <div class="mttr-val" style="color:var(--rd)">18m</div>
+            </div>
+            <div class="mttr-row">
+              <div class="mttr-label">P2 High</div>
+              <div class="mttr-track"><div class="mttr-fill" style="width:28%;background:var(--or)"></div></div>
+              <div class="mttr-val" style="color:var(--or)">13m</div>
+            </div>
+            <div class="mttr-row">
+              <div class="mttr-label">P3 Medium</div>
+              <div class="mttr-track"><div class="mttr-fill" style="width:14%;background:#D97706"></div></div>
+              <div class="mttr-val" style="color:#D97706">6m</div>
+            </div>
+            <div class="mttr-row">
+              <div class="mttr-label">P4 Low</div>
+              <div class="mttr-track"><div class="mttr-fill" style="width:5%;background:var(--g)"></div></div>
+              <div class="mttr-val" style="color:var(--g)">2m</div>
+            </div>
+          </div>
+          <div style="margin-top:8px">
+            <div style="position:relative;width:100%;height:140px">
+              <canvas id="mttrTrendRpt" role="img" aria-label="Line chart of MTTR trend Mon through Sun showing improvement from 42 to 18 minutes">MTTR daily trend this week: Mon 42m, Tue 38m, Wed 32m, Thu 27m, Fri 22m, Sat 20m, Sun 18m.</canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="ph"><i class="ti ti-users" aria-hidden="true"></i><div class="ph-title">Team performance</div></div>
+        <div class="team-perf">
+          <div class="tp-row tp-hdr">
+            <span>Team</span><span>MTTR trend</span>
+            <span style="text-align:right">MTTR</span>
+            <span style="text-align:right">Auto%</span>
+            <span style="text-align:right">SLA</span>
+          </div>
+          <div class="tp-row">
+            <div class="tp-team">Payments SRE</div>
+            <div class="tp-bar-wrap"><div class="tp-bar" style="width:70%;background:var(--g)"></div></div>
+            <div class="tp-num" style="color:var(--g)">14m</div>
+            <div class="tp-num" style="color:var(--g)">71%</div>
+            <div class="tp-num" style="color:var(--g)">96%</div>
+          </div>
+          <div class="tp-row" style="background:var(--sf)">
+            <div class="tp-team">Platform SRE</div>
+            <div class="tp-bar-wrap"><div class="tp-bar" style="width:62%;background:var(--b)"></div></div>
+            <div class="tp-num" style="color:var(--b)">16m</div>
+            <div class="tp-num" style="color:var(--b)">68%</div>
+            <div class="tp-num" style="color:var(--b)">94%</div>
+          </div>
+          <div class="tp-row">
+            <div class="tp-team">Identity SRE</div>
+            <div class="tp-bar-wrap"><div class="tp-bar" style="width:50%;background:var(--or)"></div></div>
+            <div class="tp-num" style="color:var(--or)">19m</div>
+            <div class="tp-num" style="color:var(--or)">54%</div>
+            <div class="tp-num" style="color:var(--or)">91%</div>
+          </div>
+          <div class="tp-row" style="background:var(--sf)">
+            <div class="tp-team">Cards SRE</div>
+            <div class="tp-bar-wrap"><div class="tp-bar" style="width:42%;background:var(--or)"></div></div>
+            <div class="tp-num" style="color:var(--or)">22m</div>
+            <div class="tp-num" style="color:var(--or)">47%</div>
+            <div class="tp-num" style="color:var(--or)">89%</div>
+          </div>
+          <div class="tp-row">
+            <div class="tp-team">Fraud SRE</div>
+            <div class="tp-bar-wrap"><div class="tp-bar" style="width:35%;background:var(--rd)"></div></div>
+            <div class="tp-num" style="color:var(--rd)">31m</div>
+            <div class="tp-num" style="color:var(--rd)">38%</div>
+            <div class="tp-num" style="color:var(--rd)">82%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="panel">
+        <div class="ph"><i class="ti ti-activity" aria-hidden="true"></i><div class="ph-title">Incident volume by day</div></div>
+        <div class="chart-h">
+          <div class="chart-legend">
+            <div class="leg-item"><div class="leg-sq" style="background:var(--rd)"></div>P1</div>
+            <div class="leg-item"><div class="leg-sq" style="background:var(--or)"></div>P2</div>
+            <div class="leg-item"><div class="leg-sq" style="background:#D97706"></div>P3/P4</div>
+          </div>
+          <div style="position:relative;width:100%;height:160px">
+            <canvas id="volChart" role="img" aria-label="Stacked bar chart of incident volume by day Mon through Sun">Incident volume: Mon 2+4+6, Tue 1+3+5, Wed 3+2+4, Thu 1+2+5, Fri 2+1+3, Sat 0+1+2, Sun 1+1+2.</canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="ph"><i class="ti ti-robot" aria-hidden="true"></i><div class="ph-title">AI agent performance</div></div>
+        <div style="padding:12px 14px;display:flex;flex-direction:column;gap:8px">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+            <div style="background:var(--sf);border-radius:5px;padding:8px;text-align:center;border:1px solid var(--br)">
+              <div style="font-size:16px;font-weight:700;color:var(--n)">4.2s</div>
+              <div style="font-size:10px;color:var(--mu);margin-top:1px">Triage p50</div>
+            </div>
+            <div style="background:var(--sf);border-radius:5px;padding:8px;text-align:center;border:1px solid var(--br)">
+              <div style="font-size:16px;font-weight:700;color:var(--g)">83%</div>
+              <div style="font-size:10px;color:var(--mu);margin-top:1px">Positive feedback</div>
+            </div>
+            <div style="background:var(--sf);border-radius:5px;padding:8px;text-align:center;border:1px solid var(--br)">
+              <div style="font-size:16px;font-weight:700;color:var(--b)">2.1M</div>
+              <div style="font-size:10px;color:var(--mu);margin-top:1px">Tokens this week</div>
+            </div>
+          </div>
+          <div style="position:relative;width:100%;height:140px">
+            <canvas id="agentChart" role="img" aria-label="Grouped bar chart of agent acceptance rate and auto-resolution rate by day">Agent acceptance: Mon 68%, growing to Sun 91%. Auto-resolution growing from 45% to 63%.</canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><i class="ti ti-trending-up" aria-hidden="true"></i><div class="ph-title">Savings &amp; ROI — this week</div><span class="ph-sub">Est. based on $1,400/min P1 downtime cost</span></div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0">
+        <div style="padding:14px 16px;border-right:1px solid var(--br);text-align:center">
+          <div style="font-size:22px;font-weight:700;color:var(--g)">$84K</div>
+          <div style="font-size:10px;color:var(--mu);margin-top:3px">Downtime cost avoided</div>
+          <div style="font-size:10px;color:var(--g);margin-top:2px">4 P1s resolved avg 27m faster</div>
+        </div>
+        <div style="padding:14px 16px;border-right:1px solid var(--br);text-align:center">
+          <div style="font-size:22px;font-weight:700;color:var(--b)">42h</div>
+          <div style="font-size:10px;color:var(--mu);margin-top:3px">Engineer hours saved</div>
+          <div style="font-size:10px;color:var(--b);margin-top:2px">Toil eliminated by AI agents</div>
+        </div>
+        <div style="padding:14px 16px;border-right:1px solid var(--br);text-align:center">
+          <div style="font-size:22px;font-weight:700;color:var(--pu)">18</div>
+          <div style="font-size:10px;color:var(--mu);margin-top:3px">Incidents auto-resolved</div>
+          <div style="font-size:10px;color:var(--pu);margin-top:2px">No human paged at 3AM</div>
+        </div>
+        <div style="padding:14px 16px;text-align:center">
+          <div style="font-size:22px;font-weight:700;color:var(--am)">100%</div>
+          <div style="font-size:10px;color:var(--mu);margin-top:3px">Postmortem coverage</div>
+          <div style="font-size:10px;color:var(--am);margin-top:2px">vs 35% pre-AIR baseline</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+function showScreen(name){
+  ['incidents','alerts','runbooks','postmortems','reports'].forEach(s=>{
+    const el=document.getElementById('screen-'+s);
+    const tab=document.getElementById('tab-'+s);
+    if(el) el.style.display=s===name?'block':'none';
+    if(tab){
+      tab.className=s===name?'tbtn prim':'tbtn';
+      tab.style.fontSize='12px';tab.style.padding='7px 14px';
+    }
+  });
+}
+showScreen('incidents');
+
+const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const gOpts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10},color:'#5C6B8A'},grid:{display:false}},y:{ticks:{font:{size:10},color:'#5C6B8A'},grid:{color:'rgba(0,0,0,.05)'}}}};
+
+new Chart(document.getElementById('mttrTrendRpt'),{
+  type:'line',
+  data:{labels:days,datasets:[{data:[42,38,32,27,22,20,18],borderColor:'#006FCF',backgroundColor:'rgba(0,111,207,.06)',fill:true,tension:.35,pointRadius:3,pointBackgroundColor:'#006FCF',borderWidth:2}]},
+  options:{...gOpts,scales:{x:{...gOpts.scales.x},y:{...gOpts.scales.y,ticks:{...gOpts.scales.y.ticks,callback:v=>v+'m'}}}}
+});
+
+new Chart(document.getElementById('volChart'),{
+  type:'bar',
+  data:{labels:days,datasets:[
+    {label:'P1',data:[2,1,3,1,2,0,1],backgroundColor:'#B91C1C',borderRadius:2},
+    {label:'P2',data:[4,3,2,2,1,1,1],backgroundColor:'#C2410C',borderRadius:2},
+    {label:'P3/P4',data:[6,5,4,5,3,2,2],backgroundColor:'#D97706',borderRadius:2}
+  ]},
+  options:{...gOpts,scales:{x:{stacked:true,ticks:{font:{size:10},color:'#5C6B8A'},grid:{display:false}},y:{stacked:true,ticks:{font:{size:10},color:'#5C6B8A'},grid:{color:'rgba(0,0,0,.05)'}}}}
+});
+
+new Chart(document.getElementById('agentChart'),{
+  type:'bar',
+  data:{labels:days,datasets:[
+    {label:'Acceptance rate',data:[68,72,75,78,80,83,83],backgroundColor:'#006FCF',borderRadius:2},
+    {label:'Auto-resolved %',data:[45,48,52,55,58,61,63],backgroundColor:'#007B40',borderRadius:2}
+  ]},
+  options:{...gOpts,scales:{x:{ticks:{font:{size:10},color:'#5C6B8A'},grid:{display:false}},y:{max:100,ticks:{font:{size:10},color:'#5C6B8A',callback:v=>v+'%'},grid:{color:'rgba(0,0,0,.05)'}}}}
+});
+</script>

@@ -1,0 +1,781 @@
+
+<h2 class="sr-only">AIR — Agentic Incident Response: Full architecture and executive pitch deck for Director and VP review</h2>
+<style>
+:root{--air-blue:#185FA5;--air-teal:#0F6E56;--air-coral:#993C1D;--air-amber:#854F0B;--air-purple:#3C3489}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);color:var(--color-text-primary)}
+.deck{width:100%;padding:0}
+.nav{display:flex;gap:0;border-bottom:0.5px solid var(--color-border-tertiary);overflow-x:auto;scrollbar-width:none;margin-bottom:24px;position:sticky;top:0;background:var(--color-background-primary);z-index:10}
+.nav::-webkit-scrollbar{display:none}
+.tab{padding:10px 16px;font-size:13px;font-weight:500;color:var(--color-text-secondary);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none}
+.tab:hover{color:var(--color-text-primary)}
+.tab.active{color:var(--color-text-primary);border-bottom-color:var(--color-text-primary)}
+.panel{display:none;padding:0 2px 32px}
+.panel.active{display:block}
+.hero{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:28px 32px;margin-bottom:20px}
+.hero-title{font-size:28px;font-weight:500;margin-bottom:6px}
+.hero-sub{font-size:15px;color:var(--color-text-secondary);line-height:1.6;max-width:640px}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;margin-right:6px;margin-bottom:6px}
+.badge-blue{background:var(--color-background-info);color:var(--color-text-info)}
+.badge-green{background:var(--color-background-success);color:var(--color-text-success)}
+.badge-amber{background:var(--color-background-warning);color:var(--color-text-warning)}
+.badge-red{background:var(--color-background-danger);color:var(--color-text-danger)}
+.section-title{font-size:14px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em;margin:24px 0 12px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:16px}
+.card-metric{font-size:26px;font-weight:500;margin-bottom:2px}
+.card-label{font-size:12px;color:var(--color-text-secondary)}
+.card-delta{font-size:11px;margin-top:4px}
+.card-delta.up{color:var(--color-text-success)}
+.card-delta.down{color:var(--color-text-danger)}
+.card-icon{font-size:22px;margin-bottom:8px;color:var(--color-text-secondary)}
+.benefit-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+@media(max-width:500px){.benefit-row{grid-template-columns:1fr}}
+.benefit-card{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:16px 20px}
+.benefit-card h4{font-size:14px;font-weight:500;margin-bottom:6px}
+.benefit-card p{font-size:13px;color:var(--color-text-secondary);line-height:1.6}
+.timeline{border-left:2px solid var(--color-border-secondary);padding-left:20px;margin:0}
+.tl-item{position:relative;margin-bottom:20px}
+.tl-dot{width:10px;height:10px;background:var(--color-text-primary);border-radius:50%;position:absolute;left:-26px;top:4px}
+.tl-phase{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.04em}
+.tl-title{font-size:14px;font-weight:500;margin:2px 0}
+.tl-desc{font-size:13px;color:var(--color-text-secondary);line-height:1.6}
+.arch-layer{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 18px;margin-bottom:10px}
+.arch-layer-title{font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;color:var(--color-text-secondary);margin-bottom:10px}
+.arch-nodes{display:flex;flex-wrap:wrap;gap:8px}
+.arch-node{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);transition:all .15s}
+.arch-node:hover{background:var(--color-background-tertiary);border-color:var(--color-border-primary)}
+.arch-node.blue{background:var(--color-background-info);color:var(--color-text-info);border-color:var(--color-border-info)}
+.arch-node.green{background:var(--color-background-success);color:var(--color-text-success);border-color:var(--color-border-success)}
+.arch-node.amber{background:var(--color-background-warning);color:var(--color-text-warning);border-color:var(--color-border-warning)}
+.arch-node.red{background:var(--color-background-danger);color:var(--color-text-danger);border-color:var(--color-border-danger)}
+.arrow-down{text-align:center;font-size:18px;color:var(--color-text-tertiary);margin:2px 0;line-height:1}
+.api-table{width:100%;font-size:13px;border-collapse:collapse;margin-bottom:16px}
+.api-table th{text-align:left;padding:8px 12px;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;color:var(--color-text-secondary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.api-table td{padding:8px 12px;border-bottom:0.5px solid var(--color-border-tertiary);vertical-align:top}
+.api-table tr:last-child td{border-bottom:none}
+.method{font-family:var(--font-mono);font-size:11px;font-weight:500;padding:2px 7px;border-radius:4px;white-space:nowrap}
+.GET{background:#E1F5EE;color:#085041}.POST{background:#E6F1FB;color:#042C53}.PUT{background:#FAEEDA;color:#412402}.DELETE{background:#FCEBEB;color:#501313}.PATCH{background:#EEEDFE;color:#26215C}
+.endpoint{font-family:var(--font-mono);font-size:12px;color:var(--color-text-primary)}
+.db-table{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:14px;margin-bottom:12px;display:inline-block;vertical-align:top;margin-right:12px;min-width:200px}
+.db-table h4{font-size:13px;font-weight:500;margin-bottom:8px;padding-bottom:6px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.db-field{display:flex;justify-content:space-between;gap:12px;font-size:12px;padding:2px 0;color:var(--color-text-secondary)}
+.db-field span:first-child{font-family:var(--font-mono)}
+.db-field .pk{color:var(--color-text-warning);font-weight:500}
+.db-field .fk{color:var(--color-text-info)}
+.db-wrap{overflow-x:auto;padding-bottom:4px}
+.agent-flow{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:20px;margin-bottom:16px}
+.agent-step{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px}
+.agent-step:last-child{margin-bottom:0}
+.step-num{width:28px;height:28px;min-width:28px;border-radius:50%;background:var(--color-text-primary);color:var(--color-background-primary);font-size:12px;font-weight:500;display:flex;align-items:center;justify-content:center}
+.step-content h4{font-size:14px;font-weight:500;margin-bottom:3px}
+.step-content p{font-size:13px;color:var(--color-text-secondary);line-height:1.6}
+.step-content .tools{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.tool-pill{font-size:11px;font-family:var(--font-mono);background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:4px;padding:2px 7px;color:var(--color-text-secondary)}
+.level-tabs{display:flex;gap:8px;margin-bottom:16px}
+.lvl-btn{padding:6px 16px;border-radius:20px;font-size:13px;cursor:pointer;border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);color:var(--color-text-secondary);transition:all .15s;font-weight:500}
+.lvl-btn.active{background:var(--color-text-primary);color:var(--color-background-primary);border-color:var(--color-text-primary)}
+.lvl-panel{display:none}.lvl-panel.active{display:block}
+.mcp-tool{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:12px 14px;margin-bottom:8px}
+.mcp-tool h4{font-size:13px;font-weight:500;margin-bottom:4px}
+.mcp-tool p{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+.mcp-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:500px){.mcp-tools-grid{grid-template-columns:1fr}}
+.ui-screen{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:20px;margin-bottom:16px}
+.incident-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer;transition:background .15s}
+.incident-row:last-child{border-bottom:none}
+.incident-row:hover{margin:-0 -8px;padding-left:8px;padding-right:8px;background:var(--color-background-primary);border-radius:var(--border-radius-md)}
+.sev{width:8px;min-width:8px;height:8px;border-radius:50%}
+.sev.p1{background:#E24B4A}.sev.p2{background:#EF9F27}.sev.p3{background:#1D9E75}
+.inc-title{font-size:13px;font-weight:500;flex:1}
+.inc-meta{font-size:11px;color:var(--color-text-secondary)}
+.ai-badge{font-size:10px;font-weight:500;padding:2px 7px;border-radius:10px;background:var(--color-background-success);color:var(--color-text-success)}
+.action-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:14px;margin-bottom:8px}
+.action-card h4{font-size:13px;font-weight:500;margin-bottom:6px}
+.action-card .actions{display:flex;gap:8px}
+.btn-sm{padding:5px 14px;font-size:12px;border-radius:6px;cursor:pointer;border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);color:var(--color-text-primary);transition:all .15s}
+.btn-sm:hover{background:var(--color-background-tertiary)}
+.btn-sm.primary{background:var(--color-text-primary);color:var(--color-background-primary);border-color:var(--color-text-primary)}
+.slack-msg{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:12px 14px;margin-bottom:8px;font-size:13px;line-height:1.6}
+.slack-sender{font-weight:500;margin-right:8px}
+.slack-time{font-size:11px;color:var(--color-text-tertiary)}
+.slack-bot{color:var(--color-text-info);font-weight:500}
+.roadmap-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.rm-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px;text-align:center}
+.rm-phase{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-secondary);margin-bottom:4px}
+.rm-label{font-size:13px;font-weight:500;margin-bottom:6px}
+.rm-dur{font-size:12px;color:var(--color-text-secondary)}
+.budget-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:14px}
+.budget-row:last-child{border-bottom:none;font-weight:500}
+.budget-amt{font-family:var(--font-mono);font-size:13px}
+</style>
+
+<div class="deck">
+<div class="nav" id="nav">
+  <button class="tab active" onclick="showPanel('exec')">Executive summary</button>
+  <button class="tab" onclick="showPanel('benefits')">Business benefits</button>
+  <button class="tab" onclick="showPanel('hld')">High-level design</button>
+  <button class="tab" onclick="showPanel('lld')">Low-level design</button>
+  <button class="tab" onclick="showPanel('api')">API spec</button>
+  <button class="tab" onclick="showPanel('db')">DB design</button>
+  <button class="tab" onclick="showPanel('agents')">Agent orchestration</button>
+  <button class="tab" onclick="showPanel('mcp')">MCP & tools</button>
+  <button class="tab" onclick="showPanel('ui')">UI/UX</button>
+  <button class="tab" onclick="showPanel('roadmap')">Roadmap & budget</button>
+</div>
+
+<!-- EXECUTIVE SUMMARY -->
+<div class="panel active" id="panel-exec">
+  <div class="hero">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <span style="font-size:22px">⚡</span>
+      <span class="badge badge-blue">AIR Platform</span>
+      <span class="badge badge-green">v1.0 Proposal</span>
+      <span class="badge badge-amber">Q3 2026</span>
+    </div>
+    <div class="hero-title">Agentic Incident Response</div>
+    <div class="hero-sub">An AI-native, multi-tenant incident management platform that autonomously detects, triages, resolves, and learns from incidents — across every engineering team — with configurable human oversight at every step.</div>
+  </div>
+
+  <div class="section-title">The problem we're solving</div>
+  <div class="cards">
+    <div class="card"><div class="card-metric" style="color:var(--color-text-danger)">47 min</div><div class="card-label">Avg MTTR today</div><div class="card-delta down">↑ 12% YoY as systems grow</div></div>
+    <div class="card"><div class="card-metric" style="color:var(--color-text-warning)">68%</div><div class="card-label">Alert fatigue rate</div><div class="card-delta down">Engineers ignoring alerts</div></div>
+    <div class="card"><div class="card-metric" style="color:var(--color-text-danger)">3.2×</div><div class="card-label">Context-switch cost</div><div class="card-delta down">Per incident, per engineer</div></div>
+    <div class="card"><div class="card-metric" style="color:var(--color-text-secondary)">$0</div><div class="card-label">RCA automation</div><div class="card-delta down">100% manual today</div></div>
+  </div>
+
+  <div class="section-title">What AIR delivers</div>
+  <div class="cards">
+    <div class="card"><div class="card-icon"><i class="ti ti-robot" aria-hidden="true"></i></div><div class="card-label" style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">3-level AI autonomy</div><div class="card-label">L1 co-pilot → L2 act-with-approval → L3 full auto with guardrails</div></div>
+    <div class="card"><div class="card-icon"><i class="ti ti-brand-slack" aria-hidden="true"></i></div><div class="card-label" style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Native Slack integration</div><div class="card-label">Incident warrooms, AI actions, approvals — all inside Slack</div></div>
+    <div class="card"><div class="card-icon"><i class="ti ti-topology-star" aria-hidden="true"></i></div><div class="card-label" style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Multi-team agents</div><div class="card-label">Domain-scoped agents per service, collaborating via MCP</div></div>
+    <div class="card"><div class="card-icon"><i class="ti ti-file-analytics" aria-hidden="true"></i></div><div class="card-label" style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Auto postmortems</div><div class="card-label">AI-generated RCA with timeline, impact, and action items</div></div>
+  </div>
+
+  <div class="section-title">Target outcomes (12-month post-launch)</div>
+  <div class="cards">
+    <div class="card"><div class="card-metric" style="color:var(--color-text-success)">60%↓</div><div class="card-label">MTTR reduction</div><div class="card-delta up">47 min → ~19 min target</div></div>
+    <div class="card"><div class="card-metric" style="color:var(--color-text-success)">40%</div><div class="card-label">Auto-resolved incidents</div><div class="card-delta up">No human touch needed</div></div>
+    <div class="card"><div class="card-metric" style="color:var(--color-text-success)">80%↓</div><div class="card-label">Alert noise</div><div class="card-delta up">Via embedding deduplication</div></div>
+    <div class="card"><div class="card-metric" style="color:var(--color-text-success)">5×</div><div class="card-label">Faster RCA</div><div class="card-delta up">AI-generated in &lt;2 min</div></div>
+  </div>
+</div>
+
+<!-- BUSINESS BENEFITS -->
+<div class="panel" id="panel-benefits">
+  <div class="hero">
+    <div class="hero-title">Business case & strategic value</div>
+    <div class="hero-sub">AIR is not a replacement tool — it is a platform that compounds in value as it learns, scales horizontally across business units, and positions the organisation at the frontier of AIOps.</div>
+  </div>
+
+  <div class="section-title">Direct financial impact</div>
+  <div class="benefit-row">
+    <div class="benefit-card"><h4><i class="ti ti-clock-dollar" style="margin-right:6px" aria-hidden="true"></i>Engineer time saved</h4><p>If MTTR drops from 47 to 19 min across ~200 incidents/month, that's 93 engineering-hours freed per month — at a blended rate of $120/hr, that is <strong>$134K/year</strong> in direct productivity.</p></div>
+    <div class="benefit-card"><h4><i class="ti ti-chart-line" aria-hidden="true" style="margin-right:6px"></i>Downtime cost avoidance</h4><p>A 1-minute reduction in P1 downtime at Amex-scale is worth $100K–$500K depending on service. Targeting 5× faster P1 resolution translates to <strong>$2M–$10M/year</strong> in avoided loss.</p></div>
+  </div>
+  <div class="benefit-row">
+    <div class="benefit-card"><h4><i class="ti ti-mood-happy" aria-hidden="true" style="margin-right:6px"></i>Engineer wellbeing</h4><p>Reducing 3am pages for routine incidents directly impacts retention. Replacing 60% of after-hours pages saves ~$40K/engineer in attrition risk, compounded across on-call rotations.</p></div>
+    <div class="benefit-card"><h4><i class="ti ti-certificate" aria-hidden="true" style="margin-right:6px"></i>Audit & compliance</h4><p>AI-generated, timestamped postmortems with full audit trails reduce manual compliance documentation effort by an estimated <strong>70%</strong> — critical for DORA and PCI-DSS reporting.</p></div>
+  </div>
+
+  <div class="section-title">Strategic & platform benefits</div>
+  <div class="benefit-row">
+    <div class="benefit-card"><h4><i class="ti ti-building-bank" aria-hidden="true" style="margin-right:6px"></i>Enterprise-wide reuse</h4><p>AIR is built as an internal platform, not a point tool. Payment teams, fraud ops, data engineering, and cloud infra all plug in to a single agent framework. One investment, multi-team ROI.</p></div>
+    <div class="benefit-card"><h4><i class="ti ti-brain" aria-hidden="true" style="margin-right:6px"></i>Institutional knowledge capture</h4><p>Every resolved incident teaches the agent. Runbooks, incident patterns, and expert intuition become machine-readable — surviving team rotations and org restructures.</p></div>
+  </div>
+  <div class="benefit-row">
+    <div class="benefit-card"><h4><i class="ti ti-shield-check" aria-hidden="true" style="margin-right:6px"></i>Risk & safety-first design</h4><p>All agentic actions are reversible, audited, and bounded by RBAC policies. No agent can exceed its declared permission boundary. AI supervises AI at L3 autonomy.</p></div>
+    <div class="benefit-card"><h4><i class="ti ti-rocket" aria-hidden="true" style="margin-right:6px"></i>Build vs buy advantage</h4><p>External vendors (PagerDuty, ilert) charge $40–$80/user/month and own your incident data. AIR is internal IP, data stays on-prem, and the LLM layer is swappable (Anthropic, Azure OpenAI, OSS).</p></div>
+  </div>
+
+  <div class="section-title">Competitive positioning</div>
+  <div style="overflow-x:auto">
+  <table class="api-table">
+    <thead><tr><th>Capability</th><th>PagerDuty</th><th>ilert</th><th>AIR (proposed)</th></tr></thead>
+    <tbody>
+      <tr><td>Agentic autonomy (L2/L3)</td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-amber">Partial</span></td><td><span class="badge badge-green">Full</span></td></tr>
+      <tr><td>Multi-team agent mesh</td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-green">Yes</span></td></tr>
+      <tr><td>Internal data residency</td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-green">Yes</span></td></tr>
+      <tr><td>Customisable LLM backend</td><td><span class="badge badge-red">No</span></td><td><span class="badge badge-amber">Limited</span></td><td><span class="badge badge-green">Yes</span></td></tr>
+      <tr><td>Cost at 500 users</td><td><span class="badge badge-red">$240K/yr</span></td><td><span class="badge badge-amber">$180K/yr</span></td><td><span class="badge badge-green">~$85K/yr</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- HIGH LEVEL DESIGN -->
+<div class="panel" id="panel-hld">
+  <div class="hero">
+    <div class="hero-title">High-level architecture</div>
+    <div class="hero-sub">Seven layers, each independently deployable. Java Spring Boot microservices + Spring AI for agent orchestration. React frontend. PostgreSQL + Redis + pgvector for state and embeddings.</div>
+  </div>
+
+  <div class="section-title">Architecture layers</div>
+
+  <div class="arch-layer" style="border-color:var(--color-border-info)">
+    <div class="arch-layer-title"><i class="ti ti-device-desktop" aria-hidden="true" style="margin-right:6px"></i>Presentation layer — React + TypeScript</div>
+    <div class="arch-nodes">
+      <span class="arch-node blue">AIR Dashboard</span>
+      <span class="arch-node blue">Incident warroom</span>
+      <span class="arch-node blue">Agent console</span>
+      <span class="arch-node blue">Analytics & postmortem UI</span>
+      <span class="arch-node blue">Admin & RBAC config</span>
+    </div>
+  </div>
+  <div class="arrow-down">↓</div>
+
+  <div class="arch-layer" style="border-color:var(--color-border-success)">
+    <div class="arch-layer-title"><i class="ti ti-brand-slack" aria-hidden="true" style="margin-right:6px"></i>Collaboration layer — Slack integration</div>
+    <div class="arch-nodes">
+      <span class="arch-node green">Slack bot (Socket Mode)</span>
+      <span class="arch-node green">Action card renderer</span>
+      <span class="arch-node green">Approval workflow handler</span>
+      <span class="arch-node green">Incident warroom creator</span>
+      <span class="arch-node green">Status update broadcaster</span>
+    </div>
+  </div>
+  <div class="arrow-down">↓</div>
+
+  <div class="arch-layer">
+    <div class="arch-layer-title"><i class="ti ti-api" aria-hidden="true" style="margin-right:6px"></i>API gateway layer — Spring Cloud Gateway</div>
+    <div class="arch-nodes">
+      <span class="arch-node">Auth / JWT validation</span>
+      <span class="arch-node">Rate limiting</span>
+      <span class="arch-node">Request routing</span>
+      <span class="arch-node">Audit logging middleware</span>
+      <span class="arch-node">CORS + SSL termination</span>
+    </div>
+  </div>
+  <div class="arrow-down">↓</div>
+
+  <div class="arch-layer" style="border-color:var(--color-border-warning)">
+    <div class="arch-layer-title"><i class="ti ti-robot" aria-hidden="true" style="margin-right:6px"></i>Agent orchestration layer — Spring AI + LangChain4J</div>
+    <div class="arch-nodes">
+      <span class="arch-node amber">Orchestrator agent</span>
+      <span class="arch-node amber">Domain agents (per team)</span>
+      <span class="arch-node amber">Alert deduplication agent</span>
+      <span class="arch-node amber">Postmortem agent</span>
+      <span class="arch-node amber">Communication agent</span>
+      <span class="arch-node amber">Guardrail engine</span>
+    </div>
+  </div>
+  <div class="arrow-down">↓</div>
+
+  <div class="arch-layer">
+    <div class="arch-layer-title"><i class="ti ti-topology-star" aria-hidden="true" style="margin-right:6px"></i>Microservices layer — Spring Boot</div>
+    <div class="arch-nodes">
+      <span class="arch-node">Incident service</span>
+      <span class="arch-node">Alert service</span>
+      <span class="arch-node">Notification service</span>
+      <span class="arch-node">Runbook service</span>
+      <span class="arch-node">On-call service</span>
+      <span class="arch-node">Postmortem service</span>
+      <span class="arch-node">Analytics service</span>
+      <span class="arch-node">User & RBAC service</span>
+    </div>
+  </div>
+  <div class="arrow-down">↓</div>
+
+  <div class="arch-layer" style="border-color:var(--color-border-danger)">
+    <div class="arch-layer-title"><i class="ti ti-plug" aria-hidden="true" style="margin-right:6px"></i>Integration layer — MCP servers</div>
+    <div class="arch-nodes">
+      <span class="arch-node red">Datadog MCP</span>
+      <span class="arch-node red">PagerDuty MCP</span>
+      <span class="arch-node red">Jira MCP</span>
+      <span class="arch-node red">GitHub MCP</span>
+      <span class="arch-node red">Splunk MCP</span>
+      <span class="arch-node red">Cloud (AWS/GCP) MCP</span>
+      <span class="arch-node red">ServiceNow MCP</span>
+    </div>
+  </div>
+  <div class="arrow-down">↓</div>
+
+  <div class="arch-layer">
+    <div class="arch-layer-title"><i class="ti ti-database" aria-hidden="true" style="margin-right:6px"></i>Data layer</div>
+    <div class="arch-nodes">
+      <span class="arch-node">PostgreSQL (primary)</span>
+      <span class="arch-node">Redis (cache + pub/sub)</span>
+      <span class="arch-node">pgvector (embeddings)</span>
+      <span class="arch-node">Kafka (event streaming)</span>
+      <span class="arch-node">S3 (artifact store)</span>
+    </div>
+  </div>
+
+  <div class="section-title" style="margin-top:24px">Tech stack summary</div>
+  <div class="cards">
+    <div class="card"><div class="card-label" style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Backend</div><div class="card-label">Java 21, Spring Boot 3.3, Spring AI 1.0, Spring Cloud Gateway</div></div>
+    <div class="card"><div class="card-label" style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Frontend</div><div class="card-label">React 18, TypeScript, Tailwind, React Query, Recharts</div></div>
+    <div class="card"><div class="card-label" style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">AI / LLM</div><div class="card-label">Anthropic Claude (primary), Azure OpenAI fallback, pgvector embeddings</div></div>
+    <div class="card"><div class="card-label" style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Infra</div><div class="card-label">Kubernetes, Helm, Docker, Kafka, Redis, PostgreSQL 16</div></div>
+  </div>
+</div>
+
+<!-- LOW LEVEL DESIGN -->
+<div class="panel" id="panel-lld">
+  <div class="hero">
+    <div class="hero-title">Low-level design</div>
+    <div class="hero-sub">Component-level data flows, service contracts, event schemas, and the alert-to-resolution lifecycle.</div>
+  </div>
+
+  <div class="section-title">Alert ingestion → incident lifecycle</div>
+  <div class="agent-flow">
+    <div class="agent-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Alert ingestion & normalisation</h4>
+        <p>Alerts arrive via webhooks (Datadog, Prometheus, CloudWatch). The <code>AlertService</code> normalises to a canonical <code>AlertEvent</code> schema, strips timestamps and IDs, and publishes to Kafka topic <code>air.alerts.raw</code>.</p>
+        <div class="tools"><span class="tool-pill">AlertController.java</span><span class="tool-pill">AlertNormaliser.java</span><span class="tool-pill">Kafka: air.alerts.raw</span></div>
+      </div>
+    </div>
+    <div class="agent-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Embedding deduplication</h4>
+        <p>The <code>DeduplicationAgent</code> consumes <code>air.alerts.raw</code>, generates text embeddings via Spring AI's <code>EmbeddingModel</code>, performs cosine similarity search in pgvector. If similarity &gt; 0.87, alert is grouped into existing incident.</p>
+        <div class="tools"><span class="tool-pill">DeduplicationAgent.java</span><span class="tool-pill">pgvector: alert_embeddings</span><span class="tool-pill">cosine_similarity()</span></div>
+      </div>
+    </div>
+    <div class="agent-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Incident creation & routing</h4>
+        <p>New alerts trigger <code>IncidentService.createIncident()</code>. The <code>OrchestratorAgent</code> determines severity (P1–P4) via LLM classification and routes to the correct <code>DomainAgent</code> based on service metadata tags.</p>
+        <div class="tools"><span class="tool-pill">IncidentService.java</span><span class="tool-pill">OrchestratorAgent.java</span><span class="tool-pill">Kafka: air.incidents.created</span></div>
+      </div>
+    </div>
+    <div class="agent-step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h4>Domain agent diagnosis (ReAct loop)</h4>
+        <p>The domain agent enters a ReAct loop: Reason → Act → Observe. It calls MCP tools to pull logs, metrics, recent deployments. Spring AI's <code>ChatClient</code> maintains conversation state across tool calls until hypothesis confidence &gt; 0.80.</p>
+        <div class="tools"><span class="tool-pill">DomainAgent.java</span><span class="tool-pill">ChatClient (Spring AI)</span><span class="tool-pill">MCP tool calls</span><span class="tool-pill">RunbookQueryTool</span></div>
+      </div>
+    </div>
+    <div class="agent-step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <h4>Autonomy-level dispatch</h4>
+        <p>Based on configured autonomy level (L1/L2/L3), the <code>GuardrailEngine</code> either posts recommendation to Slack (L1), sends Slack approval action card (L2), or executes remediation directly with rollback capability (L3).</p>
+        <div class="tools"><span class="tool-pill">GuardrailEngine.java</span><span class="tool-pill">SlackActionCard.java</span><span class="tool-pill">RemediationExecutor.java</span></div>
+      </div>
+    </div>
+    <div class="agent-step">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <h4>Resolution & postmortem generation</h4>
+        <p>On resolution, <code>PostmortemAgent</code> aggregates incident timeline, Slack thread, tool call traces, and root cause. Generates structured postmortem (Key info → Timeline → Impact → RCA → Action items) via LLM and stores as PDF + DB record.</p>
+        <div class="tools"><span class="tool-pill">PostmortemAgent.java</span><span class="tool-pill">PostmortemService.java</span><span class="tool-pill">S3: postmortems/</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Key service interfaces</div>
+  <div class="cards">
+    <div class="card"><div class="card-label" style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px">IncidentService</div><div class="card-label" style="font-family:var(--font-mono);font-size:11px;line-height:2">createIncident(alert)<br>updateStatus(id, status)<br>assignAgent(id, agentId)<br>resolveIncident(id, resolution)</div></div>
+    <div class="card"><div class="card-label" style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px">DomainAgent</div><div class="card-label" style="font-family:var(--font-mono);font-size:11px;line-height:2">diagnose(incident)<br>recommendAction(ctx)<br>executeRemediation(action)<br>rollback(actionId)</div></div>
+    <div class="card"><div class="card-label" style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px">GuardrailEngine</div><div class="card-label" style="font-family:var(--font-mono);font-size:11px;line-height:2">evaluate(action, level)<br>isAllowed(action)<br>requiresApproval(action)<br>logDecision(action, result)</div></div>
+    <div class="card"><div class="card-label" style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px">SlackIntegration</div><div class="card-label" style="font-family:var(--font-mono);font-size:11px;line-height:2">createWarroom(incident)<br>postActionCard(card)<br>handleApproval(action)<br>broadcastUpdate(msg)</div></div>
+  </div>
+</div>
+
+<!-- API SPEC -->
+<div class="panel" id="panel-api">
+  <div class="hero">
+    <div class="hero-title">REST API specification</div>
+    <div class="hero-sub">RESTful JSON APIs over HTTPS. All endpoints require Bearer JWT. Base URL: <code>https://air-api.internal.amex.com/v1</code></div>
+  </div>
+
+  <div class="section-title">Incidents</div>
+  <table class="api-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><span class="method GET">GET</span></td><td><span class="endpoint">/incidents</span></td><td>List incidents with filters (status, severity, team, dateRange)</td></tr>
+      <tr><td><span class="method GET">GET</span></td><td><span class="endpoint">/incidents/{id}</span></td><td>Get incident detail with timeline, alerts, agent actions</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td><span class="endpoint">/incidents</span></td><td>Create incident manually; body: <code>{title, severity, service, description}</code></td></tr>
+      <tr><td><span class="method PATCH">PATCH</span></td><td><span class="endpoint">/incidents/{id}/status</span></td><td>Update status: investigating → identified → monitoring → resolved</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td><span class="endpoint">/incidents/{id}/resolve</span></td><td>Resolve with resolution note; triggers postmortem generation</td></tr>
+      <tr><td><span class="method GET">GET</span></td><td><span class="endpoint">/incidents/{id}/timeline</span></td><td>Full event timeline (alerts, actions, approvals, messages)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">Alerts</div>
+  <table class="api-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><span class="method POST">POST</span></td><td><span class="endpoint">/alerts/ingest</span></td><td>Webhook ingestion endpoint. Accepts any alert source payload.</td></tr>
+      <tr><td><span class="method GET">GET</span></td><td><span class="endpoint">/alerts/{id}/similarity</span></td><td>Returns embedding similarity matches for deduplication audit</td></tr>
+      <tr><td><span class="method GET">GET</span></td><td><span class="endpoint">/alerts/sources</span></td><td>List configured alert sources with health status</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">Agents</div>
+  <table class="api-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><span class="method GET">GET</span></td><td><span class="endpoint">/agents</span></td><td>List all domain agents with status, assigned team, autonomy level</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td><span class="endpoint">/agents/{id}/trigger</span></td><td>Manually trigger agent diagnosis on incident ID</td></tr>
+      <tr><td><span class="method GET">GET</span></td><td><span class="endpoint">/agents/{id}/actions</span></td><td>Audit log of all actions taken by agent</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td><span class="endpoint">/agents/{id}/approve</span></td><td>Approve a pending L2 action. Body: <code>{actionId, approvedBy}</code></td></tr>
+      <tr><td><span class="method POST">POST</span></td><td><span class="endpoint">/agents/{id}/reject</span></td><td>Reject a pending L2 action with reason</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">On-call & runbooks</div>
+  <table class="api-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><span class="method GET">GET</span></td><td><span class="endpoint">/oncall/schedule</span></td><td>Current on-call rotations per team</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td><span class="endpoint">/oncall/schedule/generate</span></td><td>AI-assisted schedule generation from natural language</td></tr>
+      <tr><td><span class="method GET">GET</span></td><td><span class="endpoint">/runbooks</span></td><td>List runbooks with tags, last-used, AI success rate</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td><span class="endpoint">/runbooks/{id}/execute</span></td><td>Execute runbook steps on target; requires L2+ approval</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-title">Postmortems</div>
+  <table class="api-table">
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><span class="method GET">GET</span></td><td><span class="endpoint">/postmortems/{incidentId}</span></td><td>Retrieve generated postmortem document</td></tr>
+      <tr><td><span class="method POST">POST</span></td><td><span class="endpoint">/postmortems/{incidentId}/generate</span></td><td>Trigger AI postmortem generation (async, returns jobId)</td></tr>
+      <tr><td><span class="method GET">GET</span></td><td><span class="endpoint">/postmortems/{incidentId}/export</span></td><td>Export as PDF or Confluence page</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- DB DESIGN -->
+<div class="panel" id="panel-db">
+  <div class="hero">
+    <div class="hero-title">Database design</div>
+    <div class="hero-sub">PostgreSQL 16 with pgvector extension. Multi-tenant via <code>tenant_id</code> on all tables. Redis for hot paths. S3 for postmortem artifacts.</div>
+  </div>
+
+  <div class="section-title">Core entity model</div>
+  <div class="db-wrap">
+    <div style="display:inline-flex;flex-wrap:wrap;gap:12px;min-width:600px">
+
+    <div class="db-table">
+      <h4><i class="ti ti-alert-triangle" aria-hidden="true" style="margin-right:4px"></i>incidents</h4>
+      <div class="db-field"><span class="pk">id UUID PK</span><span>primary key</span></div>
+      <div class="db-field"><span class="fk">tenant_id UUID FK</span><span>multi-tenant</span></div>
+      <div class="db-field"><span>title VARCHAR(500)</span><span></span></div>
+      <div class="db-field"><span>severity ENUM</span><span>P1–P4</span></div>
+      <div class="db-field"><span>status ENUM</span><span>lifecycle state</span></div>
+      <div class="db-field"><span>service_name VARCHAR</span><span></span></div>
+      <div class="db-field"><span>autonomy_level INT</span><span>1/2/3</span></div>
+      <div class="db-field"><span class="fk">assigned_agent_id FK</span><span></span></div>
+      <div class="db-field"><span>detected_at TIMESTAMPTZ</span><span></span></div>
+      <div class="db-field"><span>resolved_at TIMESTAMPTZ</span><span></span></div>
+      <div class="db-field"><span>mttr_seconds INT</span><span>computed</span></div>
+      <div class="db-field"><span>slack_channel_id VARCHAR</span><span></span></div>
+    </div>
+
+    <div class="db-table">
+      <h4><i class="ti ti-bell" aria-hidden="true" style="margin-right:4px"></i>alerts</h4>
+      <div class="db-field"><span class="pk">id UUID PK</span><span></span></div>
+      <div class="db-field"><span class="fk">incident_id UUID FK</span><span></span></div>
+      <div class="db-field"><span class="fk">tenant_id UUID FK</span><span></span></div>
+      <div class="db-field"><span>source VARCHAR</span><span>datadog, etc.</span></div>
+      <div class="db-field"><span>raw_payload JSONB</span><span></span></div>
+      <div class="db-field"><span>normalised_text TEXT</span><span>for embedding</span></div>
+      <div class="db-field"><span>embedding vector(1536)</span><span>pgvector</span></div>
+      <div class="db-field"><span>is_duplicate BOOLEAN</span><span></span></div>
+      <div class="db-field"><span class="fk">deduped_to UUID FK</span><span></span></div>
+      <div class="db-field"><span>received_at TIMESTAMPTZ</span><span></span></div>
+    </div>
+
+    <div class="db-table">
+      <h4><i class="ti ti-robot" aria-hidden="true" style="margin-right:4px"></i>agent_actions</h4>
+      <div class="db-field"><span class="pk">id UUID PK</span><span></span></div>
+      <div class="db-field"><span class="fk">incident_id UUID FK</span><span></span></div>
+      <div class="db-field"><span class="fk">agent_id UUID FK</span><span></span></div>
+      <div class="db-field"><span>action_type VARCHAR</span><span>tool call type</span></div>
+      <div class="db-field"><span>action_payload JSONB</span><span></span></div>
+      <div class="db-field"><span>status ENUM</span><span>pending/done/fail</span></div>
+      <div class="db-field"><span>autonomy_level INT</span><span></span></div>
+      <div class="db-field"><span>requires_approval BOOL</span><span></span></div>
+      <div class="db-field"><span class="fk">approved_by UUID FK</span><span></span></div>
+      <div class="db-field"><span>result JSONB</span><span></span></div>
+      <div class="db-field"><span>rollback_payload JSONB</span><span></span></div>
+      <div class="db-field"><span>executed_at TIMESTAMPTZ</span><span></span></div>
+    </div>
+
+    <div class="db-table">
+      <h4><i class="ti ti-users" aria-hidden="true" style="margin-right:4px"></i>agents</h4>
+      <div class="db-field"><span class="pk">id UUID PK</span><span></span></div>
+      <div class="db-field"><span class="fk">tenant_id UUID FK</span><span></span></div>
+      <div class="db-field"><span>name VARCHAR</span><span></span></div>
+      <div class="db-field"><span>domain VARCHAR</span><span>payments, infra…</span></div>
+      <div class="db-field"><span>autonomy_level INT</span><span>1/2/3</span></div>
+      <div class="db-field"><span>llm_model VARCHAR</span><span></span></div>
+      <div class="db-field"><span>system_prompt TEXT</span><span></span></div>
+      <div class="db-field"><span>allowed_tools JSONB</span><span>array of tools</span></div>
+      <div class="db-field"><span>is_active BOOLEAN</span><span></span></div>
+    </div>
+
+    <div class="db-table">
+      <h4><i class="ti ti-file-text" aria-hidden="true" style="margin-right:4px"></i>postmortems</h4>
+      <div class="db-field"><span class="pk">id UUID PK</span><span></span></div>
+      <div class="db-field"><span class="fk">incident_id UUID FK</span><span></span></div>
+      <div class="db-field"><span>title VARCHAR</span><span></span></div>
+      <div class="db-field"><span>key_info JSONB</span><span></span></div>
+      <div class="db-field"><span>timeline JSONB</span><span></span></div>
+      <div class="db-field"><span>impact TEXT</span><span></span></div>
+      <div class="db-field"><span>root_cause TEXT</span><span></span></div>
+      <div class="db-field"><span>action_items JSONB</span><span></span></div>
+      <div class="db-field"><span>generated_by VARCHAR</span><span>LLM model</span></div>
+      <div class="db-field"><span>s3_url VARCHAR</span><span>PDF location</span></div>
+      <div class="db-field"><span>created_at TIMESTAMPTZ</span><span></span></div>
+    </div>
+
+    <div class="db-table">
+      <h4><i class="ti ti-book" aria-hidden="true" style="margin-right:4px"></i>runbooks</h4>
+      <div class="db-field"><span class="pk">id UUID PK</span><span></span></div>
+      <div class="db-field"><span class="fk">team_id UUID FK</span><span></span></div>
+      <div class="db-field"><span>name VARCHAR</span><span></span></div>
+      <div class="db-field"><span>trigger_pattern TEXT</span><span>regex/semantic</span></div>
+      <div class="db-field"><span>steps JSONB</span><span>ordered steps</span></div>
+      <div class="db-field"><span>risk_level ENUM</span><span>low/med/high</span></div>
+      <div class="db-field"><span>requires_level INT</span><span>min autonomy</span></div>
+      <div class="db-field"><span>success_rate FLOAT</span><span>AI tracked</span></div>
+      <div class="db-field"><span>embedding vector(1536)</span><span>pgvector</span></div>
+    </div>
+
+    </div>
+  </div>
+
+  <div class="section-title">Key indexes & performance notes</div>
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:14px;font-family:var(--font-mono);font-size:12px;line-height:2;color:var(--color-text-secondary)">
+    <div>CREATE INDEX ON alerts USING ivfflat (embedding vector_cosine_ops);</div>
+    <div>CREATE INDEX ON incidents (tenant_id, status, severity);</div>
+    <div>CREATE INDEX ON agent_actions (incident_id, executed_at DESC);</div>
+    <div>CREATE INDEX ON runbooks USING ivfflat (embedding vector_cosine_ops);</div>
+    <div>-- Redis: hot incident state, Slack channel map, on-call cache (TTL 300s)</div>
+  </div>
+</div>
+
+<!-- AGENT ORCHESTRATION -->
+<div class="panel" id="panel-agents">
+  <div class="hero">
+    <div class="hero-title">Agent orchestration & autonomy levels</div>
+    <div class="hero-sub">Spring AI <code>ChatClient</code> + <code>@Tool</code> annotations power the ReAct loop. The orchestrator routes to domain agents. Guardrail engine enforces autonomy boundaries.</div>
+  </div>
+
+  <div class="section-title">Select autonomy level to explore</div>
+  <div class="level-tabs">
+    <button class="lvl-btn active" onclick="showLevel('l1')">L1 — Co-pilot</button>
+    <button class="lvl-btn" onclick="showLevel('l2')">L2 — Act with approval</button>
+    <button class="lvl-btn" onclick="showLevel('l3')">L3 — Guardrailed auto</button>
+  </div>
+
+  <div class="lvl-panel active" id="lvl-l1">
+    <div class="agent-flow">
+      <div style="margin-bottom:14px"><span class="badge badge-blue">L1 Co-pilot</span><span style="font-size:13px;color:var(--color-text-secondary);margin-left:8px">AI reads, analyses, suggests. Human executes all actions.</span></div>
+      <div class="agent-step"><div class="step-num">1</div><div class="step-content"><h4>Alert received → agent activated</h4><p>OrchestratorAgent receives the incident. Activates the relevant DomainAgent. Pulls logs, metrics, recent deployments via read-only MCP tools.</p><div class="tools"><span class="tool-pill">get_logs()</span><span class="tool-pill">get_metrics()</span><span class="tool-pill">get_recent_deploys()</span><span class="tool-pill">search_runbooks()</span></div></div></div>
+      <div class="agent-step"><div class="step-num">2</div><div class="step-content"><h4>ReAct diagnosis loop (read-only)</h4><p>Agent reasons over gathered data, identifies probable root cause with confidence score. Stops when confidence &gt; 0.80 or max 5 iterations reached. No write operations permitted.</p><div class="tools"><span class="tool-pill">LLM reasoning chain</span><span class="tool-pill">confidence_score()</span><span class="tool-pill">similarity_search()</span></div></div></div>
+      <div class="agent-step"><div class="step-num">3</div><div class="step-content"><h4>Slack co-pilot post</h4><p>Agent posts structured recommendation to incident warroom: probable cause, evidence links, recommended steps, similar past incidents. Engineer validates and acts manually.</p><div class="tools"><span class="tool-pill">slack.postMessage()</span><span class="tool-pill">action_card render</span></div></div></div>
+    </div>
+  </div>
+
+  <div class="lvl-panel" id="lvl-l2">
+    <div class="agent-flow">
+      <div style="margin-bottom:14px"><span class="badge badge-amber">L2 Act with approval</span><span style="font-size:13px;color:var(--color-text-secondary);margin-left:8px">AI plans and proposes. Human approves in Slack. Agent executes.</span></div>
+      <div class="agent-step"><div class="step-num">1</div><div class="step-content"><h4>Diagnosis complete → action plan formed</h4><p>After L1-style diagnosis, agent constructs a remediation plan from the matching runbook. Validates plan against <code>GuardrailEngine</code> — must be low-risk, reversible, within allowed tool list.</p><div class="tools"><span class="tool-pill">GuardrailEngine.validate()</span><span class="tool-pill">RunbookMatcher.java</span></div></div></div>
+      <div class="agent-step"><div class="step-num">2</div><div class="step-content"><h4>Slack approval action card</h4><p>Agent posts interactive Slack card: "I want to restart payments-service-v3 pod on cluster prod-east-1. Impact: ~15s degraded checkout. Rollback: auto if health check fails." On-call engineer clicks Approve or Reject.</p><div class="tools"><span class="tool-pill">SlackActionCard.java</span><span class="tool-pill">Block Kit renderer</span></div></div></div>
+      <div class="agent-step"><div class="step-num">3</div><div class="step-content"><h4>Execution with telemetry</h4><p>On approval, agent executes via MCP tool. Monitors health metrics for 3 min. If service fails to recover, triggers automatic rollback. Posts outcome to Slack warroom.</p><div class="tools"><span class="tool-pill">restart_service()</span><span class="tool-pill">health_check()</span><span class="tool-pill">rollback_if_needed()</span></div></div></div>
+    </div>
+  </div>
+
+  <div class="lvl-panel" id="lvl-l3">
+    <div class="agent-flow">
+      <div style="margin-bottom:14px"><span class="badge badge-green">L3 Guardrailed autonomy</span><span style="font-size:13px;color:var(--color-text-secondary);margin-left:8px">Agent handles end-to-end for pre-approved runbooks. Humans alerted after.</span></div>
+      <div class="agent-step"><div class="step-num">1</div><div class="step-content"><h4>Confidence gating</h4><p>Agent only enters L3 path if: confidence &gt; 0.90, incident matches known pattern in runbook library, action is in pre-approved allow-list, blast-radius score &lt; threshold set by team admin.</p><div class="tools"><span class="tool-pill">ConfidenceGate.java</span><span class="tool-pill">BlastRadiusCalc.java</span><span class="tool-pill">allow_list check</span></div></div></div>
+      <div class="agent-step"><div class="step-num">2</div><div class="step-content"><h4>Autonomous execution with circuit breaker</h4><p>Agent executes remediation. A watchdog thread monitors: if action produces unexpected side effects (error rate spike, new alerts), circuit breaker fires and escalates to human immediately.</p><div class="tools"><span class="tool-pill">CircuitBreaker.java</span><span class="tool-pill">WatchdogAgent.java</span><span class="tool-pill">escalate_to_human()</span></div></div></div>
+      <div class="agent-step"><div class="step-num">3</div><div class="step-content"><h4>Async notification & audit</h4><p>Human on-call receives a Slack FYI notification (not a page): "Service X OOM restarted at 02:13 UTC. Impact: 5% errors for 90s. Auto-resolved. Postmortem queued." Full audit trail in AIR dashboard.</p><div class="tools"><span class="tool-pill">slack.postFYI()</span><span class="tool-pill">AuditLogger.java</span><span class="tool-pill">postmortem_trigger()</span></div></div></div>
+    </div>
+  </div>
+
+  <div class="section-title">Spring AI agent skeleton (Java)</div>
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:16px;font-family:var(--font-mono);font-size:12px;line-height:1.8;color:var(--color-text-secondary);overflow-x:auto">
+<span style="color:var(--color-text-warning)">@Service</span><br>
+<span style="color:var(--color-text-info)">public class</span> <span style="color:var(--color-text-primary)">DomainAgent</span> {<br>
+&nbsp;&nbsp;<span style="color:var(--color-text-warning)">@Autowired</span> <span style="color:var(--color-text-info)">private</span> ChatClient chatClient;<br>
+&nbsp;&nbsp;<span style="color:var(--color-text-warning)">@Autowired</span> <span style="color:var(--color-text-info)">private</span> GuardrailEngine guardrails;<br><br>
+&nbsp;&nbsp;<span style="color:var(--color-text-info)">public</span> DiagnosisResult diagnose(Incident incident) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--color-text-info)">return</span> chatClient.prompt()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.system(systemPrompt)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.user(incidentContext(incident))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.tools(mcpTools) <span style="color:var(--color-text-tertiary)">// MCP tool list</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.call()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.entity(DiagnosisResult.class);<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<span style="color:var(--color-text-warning)">@Tool</span>(description = <span style="color:var(--color-text-success)">"Get recent logs for a service"</span>)<br>
+&nbsp;&nbsp;<span style="color:var(--color-text-info)">public</span> String getLogs(String service, <span style="color:var(--color-text-info)">int</span> minutes) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--color-text-info)">return</span> datadogMcp.queryLogs(service, minutes);<br>
+&nbsp;&nbsp;}<br>
+}
+  </div>
+</div>
+
+<!-- MCP & TOOLS -->
+<div class="panel" id="panel-mcp">
+  <div class="hero">
+    <div class="hero-title">MCP servers & tool functions</div>
+    <div class="hero-sub">Model Context Protocol bridges live operational data to AI agents. Each MCP server exposes typed tools that agents call during the ReAct loop. All calls are logged, audited, and RBAC-controlled.</div>
+  </div>
+
+  <div class="section-title">MCP server registry</div>
+  <div class="mcp-tools-grid">
+    <div class="mcp-tool"><h4><i class="ti ti-chart-bar" aria-hidden="true" style="margin-right:4px"></i>Datadog MCP</h4><p>Exposes: <code>query_metrics</code>, <code>get_logs</code>, <code>list_monitors</code>, <code>get_traces</code>, <code>mute_monitor</code>. Read-mostly; <code>mute_monitor</code> requires L2+.</p></div>
+    <div class="mcp-tool"><h4><i class="ti ti-brand-github" aria-hidden="true" style="margin-right:4px"></i>GitHub MCP</h4><p>Exposes: <code>list_recent_commits</code>, <code>get_diff</code>, <code>get_deployment</code>, <code>rollback_release</code>. <code>rollback_release</code> requires L3 + human approval.</p></div>
+    <div class="mcp-tool"><h4><i class="ti ti-ticket" aria-hidden="true" style="margin-right:4px"></i>Jira MCP</h4><p>Exposes: <code>create_ticket</code>, <code>update_ticket</code>, <code>link_incident</code>, <code>get_open_bugs</code>. Used by postmortem agent to auto-create action item tickets.</p></div>
+    <div class="mcp-tool"><h4><i class="ti ti-cloud" aria-hidden="true" style="margin-right:4px"></i>AWS / GCP MCP</h4><p>Exposes: <code>describe_instances</code>, <code>restart_service</code>, <code>scale_deployment</code>, <code>get_cloudwatch_logs</code>. Write tools require L2+ and blast-radius check.</p></div>
+    <div class="mcp-tool"><h4><i class="ti ti-search" aria-hidden="true" style="margin-right:4px"></i>Splunk MCP</h4><p>Exposes: <code>run_query</code>, <code>get_alerts</code>, <code>get_security_events</code>. Read-only. Used for security incident correlation alongside Datadog metrics.</p></div>
+    <div class="mcp-tool"><h4><i class="ti ti-headset" aria-hidden="true" style="margin-right:4px"></i>ServiceNow MCP</h4><p>Exposes: <code>create_change_request</code>, <code>get_cmdb_item</code>, <code>update_incident</code>. Used to bridge AIR incident records with ITSM for compliance reporting.</p></div>
+    <div class="mcp-tool"><h4><i class="ti ti-brand-slack" aria-hidden="true" style="margin-right:4px"></i>Slack MCP</h4><p>Exposes: <code>create_channel</code>, <code>post_message</code>, <code>post_action_card</code>, <code>get_thread</code>, <code>get_channel_history</code>. Core to warroom and approval flows.</p></div>
+    <div class="mcp-tool"><h4><i class="ti ti-book" aria-hidden="true" style="margin-right:4px"></i>Runbook MCP (internal)</h4><p>Exposes: <code>search_runbooks</code> (vector similarity), <code>get_runbook_steps</code>, <code>execute_step</code>, <code>record_outcome</code>. Powers the institutional memory loop.</p></div>
+  </div>
+
+  <div class="section-title">Tool permission matrix</div>
+  <div style="overflow-x:auto">
+  <table class="api-table">
+    <thead><tr><th>Tool</th><th>Type</th><th>L1</th><th>L2</th><th>L3</th></tr></thead>
+    <tbody>
+      <tr><td><code>get_logs, query_metrics, get_traces</code></td><td>Read</td><td><span class="badge badge-green">✓</span></td><td><span class="badge badge-green">✓</span></td><td><span class="badge badge-green">✓</span></td></tr>
+      <tr><td><code>search_runbooks, get_runbook_steps</code></td><td>Read</td><td><span class="badge badge-green">✓</span></td><td><span class="badge badge-green">✓</span></td><td><span class="badge badge-green">✓</span></td></tr>
+      <tr><td><code>create_ticket, post_message</code></td><td>Write (low risk)</td><td><span class="badge badge-red">✗</span></td><td><span class="badge badge-green">✓</span></td><td><span class="badge badge-green">✓</span></td></tr>
+      <tr><td><code>restart_service, mute_monitor</code></td><td>Write (reversible)</td><td><span class="badge badge-red">✗</span></td><td><span class="badge badge-amber">Approval</span></td><td><span class="badge badge-green">✓ + guard</span></td></tr>
+      <tr><td><code>scale_deployment, rollback_release</code></td><td>Write (high risk)</td><td><span class="badge badge-red">✗</span></td><td><span class="badge badge-amber">Approval</span></td><td><span class="badge badge-amber">Approval</span></td></tr>
+      <tr><td><code>delete_*, destroy_*</code></td><td>Destructive</td><td><span class="badge badge-red">✗</span></td><td><span class="badge badge-red">✗</span></td><td><span class="badge badge-red">✗ always</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- UI/UX -->
+<div class="panel" id="panel-ui">
+  <div class="hero">
+    <div class="hero-title">UI/UX design</div>
+    <div class="hero-sub">Three primary surfaces: web dashboard, Slack warroom, and mobile (future). Designed for on-call engineers under pressure — clarity first, AI actions surfaced prominently.</div>
+  </div>
+
+  <div class="section-title">Incident dashboard (live view)</div>
+  <div class="ui-screen">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:14px;font-weight:500">Active incidents</div>
+      <div style="display:flex;gap:8px">
+        <span class="badge badge-red">3 P1</span>
+        <span class="badge badge-amber">7 P2</span>
+        <span class="badge badge-green">12 P3</span>
+      </div>
+    </div>
+    <div class="incident-row">
+      <div class="sev p1"></div>
+      <div style="flex:1"><div class="inc-title">Payment gateway timeout — prod-east-1</div><div class="inc-meta">Opened 4 min ago · Payments team · <span class="ai-badge">AI diagnosed</span></div></div>
+      <div style="font-size:12px;color:var(--color-text-secondary)">4:02 PM</div>
+    </div>
+    <div class="incident-row">
+      <div class="sev p1"></div>
+      <div style="flex:1"><div class="inc-title">Auth service OOM — 3 replicas down</div><div class="inc-meta">Opened 12 min ago · Identity team · <span class="ai-badge">Auto-restarted</span></div></div>
+      <div style="font-size:12px;color:var(--color-text-secondary)">3:54 PM</div>
+    </div>
+    <div class="incident-row">
+      <div class="sev p2"></div>
+      <div style="flex:1"><div class="inc-title">Kafka consumer lag spike — transactions topic</div><div class="inc-meta">Opened 28 min ago · Data team · <span style="font-size:10px;font-weight:500;padding:2px 7px;border-radius:10px;background:var(--color-background-warning);color:var(--color-text-warning)">Awaiting approval</span></div></div>
+      <div style="font-size:12px;color:var(--color-text-secondary)">3:38 PM</div>
+    </div>
+    <div class="incident-row">
+      <div class="sev p2"></div>
+      <div style="flex:1"><div class="inc-title">CDN cache miss rate elevated — rewards API</div><div class="inc-meta">Opened 45 min ago · Platform team · Investigating</div></div>
+      <div style="font-size:12px;color:var(--color-text-secondary)">3:21 PM</div>
+    </div>
+  </div>
+
+  <div class="section-title">AI action card (Slack warroom)</div>
+  <div class="action-card">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <i class="ti ti-robot" aria-hidden="true" style="font-size:16px;color:var(--color-text-info)"></i>
+      <span style="font-size:13px;font-weight:500;color:var(--color-text-info)">AIR Agent — Payments domain</span>
+      <span style="font-size:11px;color:var(--color-text-tertiary)">4:03 PM</span>
+    </div>
+    <div style="font-size:13px;line-height:1.7;margin-bottom:12px;color:var(--color-text-secondary)">
+      <strong style="color:var(--color-text-primary)">Root cause (confidence 92%):</strong> Memory leak in payments-gateway v2.4.1 deployed at 3:47 PM. Heap usage climbed 380MB → OOM. Same pattern as INC-2024-0892.<br><br>
+      <strong style="color:var(--color-text-primary)">Proposed action:</strong> Restart payments-gateway pods + rollback to v2.4.0.<br>
+      <strong style="color:var(--color-text-primary)">Impact:</strong> ~20s degraded checkout. Rollback auto-triggered if health fails.<br>
+      <strong style="color:var(--color-text-primary)">Evidence:</strong> <span style="color:var(--color-text-info);cursor:pointer">View logs ↗</span>  <span style="color:var(--color-text-info);cursor:pointer">View deploy diff ↗</span>
+    </div>
+    <div class="actions">
+      <button class="btn-sm primary">✓ Approve & execute</button>
+      <button class="btn-sm">✕ Reject</button>
+      <button class="btn-sm">Ask AI a question</button>
+    </div>
+  </div>
+
+  <div class="section-title">Slack warroom thread flow</div>
+  <div class="slack-msg"><span class="slack-sender">AIR Bot</span><span class="slack-time">4:02 PM</span><br>🚨 <strong>P1 Incident created</strong> — Payment gateway timeout. Warroom: #inc-4923-payments. On-call: @sarah.chen paged.</div>
+  <div class="slack-msg"><span class="slack-sender">AIR Bot</span><span class="slack-time">4:03 PM</span><br>🔍 <strong>Diagnosis in progress…</strong> Pulling Datadog logs, recent deployments, similar incidents.</div>
+  <div class="slack-msg"><span class="slack-sender">AIR Bot</span><span class="slack-time">4:04 PM</span><br>💡 <strong>Root cause identified (92% confidence).</strong> Memory leak in v2.4.1 (see action card above).</div>
+  <div class="slack-msg"><span class="slack-sender">Sarah Chen</span><span class="slack-time">4:05 PM</span><br>Approved. Execute rollback.</div>
+  <div class="slack-msg"><span class="slack-sender">AIR Bot</span><span class="slack-time">4:05 PM</span><br>✅ <strong>Rollback executed.</strong> Service recovering. Error rate: 12% → 0.4% in 90s. Incident resolved. Postmortem generating…</div>
+</div>
+
+<!-- ROADMAP & BUDGET -->
+<div class="panel" id="panel-roadmap">
+  <div class="hero">
+    <div class="hero-title">Implementation roadmap & investment</div>
+    <div class="hero-sub">16-week phased delivery. Three milestones map to L1 → L2 → L3 autonomy. Each phase independently valuable and deployable.</div>
+  </div>
+
+  <div class="section-title">Delivery phases</div>
+  <div class="roadmap-grid">
+    <div class="rm-card" style="border-color:var(--color-border-info)"><div class="rm-phase">Phase 1</div><div class="rm-label">Foundation & L1</div><div class="rm-dur">Weeks 1–5</div></div>
+    <div class="rm-card" style="border-color:var(--color-border-success)"><div class="rm-phase">Phase 2</div><div class="rm-label">L2 automation</div><div class="rm-dur">Weeks 6–10</div></div>
+    <div class="rm-card" style="border-color:var(--color-border-warning)"><div class="rm-phase">Phase 3</div><div class="rm-label">L3 autonomy</div><div class="rm-dur">Weeks 11–14</div></div>
+    <div class="rm-card"><div class="rm-phase">Phase 4</div><div class="rm-label">Scale & harden</div><div class="rm-dur">Weeks 15–16</div></div>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-phase">Phase 1 · Weeks 1–5</div><div class="tl-title">Foundation, ingestion & L1 co-pilot</div><div class="tl-desc">Core Spring Boot microservices, PostgreSQL schema, Kafka setup. Alert ingestion API, embedding deduplication (pgvector). Spring AI ChatClient integration. Slack bot with read-only agent posting RCA to warroom. Basic React dashboard.</div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-phase">Phase 2 · Weeks 6–10</div><div class="tl-title">L2 approval workflows & MCP integrations</div><div class="tl-desc">Slack Block Kit action cards. Approval workflow state machine. GuardrailEngine with RBAC policy store. First MCP integrations: Datadog, GitHub, Jira. Domain agent framework with team-scoped runbook search. On-call scheduling assistant.</div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-phase">Phase 3 · Weeks 11–14</div><div class="tl-title">L3 autonomous remediation & postmortem AI</div><div class="tl-desc">ConfidenceGate, BlastRadiusCalculator, circuit-breaker watchdog. Autonomous execution for pre-approved runbooks. PostmortemAgent with full timeline, RCA, Jira action items, PDF export. Analytics dashboard with MTTR trends, suggestion acceptance rate.</div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-phase">Phase 4 · Weeks 15–16</div><div class="tl-title">Hardening, multi-tenant onboarding & observability</div><div class="tl-desc">LLM observability layer (token usage, response time, feedback loops). Performance testing at scale. Multi-team rollout tooling. Runbook AI success-rate tracking. Documentation, runbooks for AIR itself, and DR plan.</div></div>
+  </div>
+
+  <div class="section-title" style="margin-top:24px">Investment estimate (indicative)</div>
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:16px 20px;max-width:480px">
+    <div class="budget-row"><span>Engineering (3 × 16 weeks)</span><span class="budget-amt">$240,000</span></div>
+    <div class="budget-row"><span>LLM API costs (Anthropic / Azure)</span><span class="budget-amt">$18,000 / yr</span></div>
+    <div class="budget-row"><span>Infrastructure (K8s, DB, S3)</span><span class="budget-amt">$36,000 / yr</span></div>
+    <div class="budget-row"><span>Tooling & licences</span><span class="budget-amt">$12,000</span></div>
+    <div class="budget-row" style="padding-top:12px;margin-top:4px;border-top:0.5px solid var(--color-border-secondary)"><span>Year 1 total investment</span><span class="budget-amt" style="font-size:15px">~$306,000</span></div>
+    <div class="budget-row"><span style="color:var(--color-text-success)">Projected year 1 savings</span><span class="budget-amt" style="color:var(--color-text-success)">$2M–$3M+</span></div>
+    <div class="budget-row"><span style="color:var(--color-text-success)">ROI</span><span class="budget-amt" style="color:var(--color-text-success)">6–10×</span></div>
+  </div>
+
+  <div class="section-title">Team structure</div>
+  <div class="cards">
+    <div class="card"><div class="card-label" style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">1 × Staff architect</div><div class="card-label">Platform design, agent orchestration, MCP framework, tech decisions</div></div>
+    <div class="card"><div class="card-label" style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">2 × Senior engineers</div><div class="card-label">Microservices, Kafka, Spring AI agents, integrations</div></div>
+    <div class="card"><div class="card-label" style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">1 × Frontend engineer</div><div class="card-label">React dashboard, Slack Block Kit UI, analytics</div></div>
+    <div class="card"><div class="card-label" style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">0.5 × DevOps / SRE</div><div class="card-label">K8s, observability, CI/CD pipeline for AIR itself</div></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function showPanel(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>{
+    if(t.getAttribute('onclick')&&t.getAttribute('onclick').includes("'"+id+"'"))t.classList.add('active');
+  });
+}
+function showLevel(id){
+  document.querySelectorAll('.lvl-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.lvl-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('lvl-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
