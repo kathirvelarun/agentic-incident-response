@@ -1,0 +1,796 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>AIR - Agentic Incident Response</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+/* For default-background callouts, render the border outline. */
+.callout.block-color-default_background {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+/*
+ * Toggles and callouts hold arbitrary content, so they can easily be taller
+ * than a page. They must stay breakable: avoiding breaks inside them makes
+ * Chromium push the whole block onto the next page, which leaves the previous
+ * page mostly empty before every long toggle.
+ */
+details,
+aside {
+	margin: 1.25em 0;
+}
+
+/* Keep a toggle's title on the same page as the start of its content. */
+summary {
+	page-break-after: avoid;
+	break-after: avoid;
+}
+
+/*
+ * Toggle headings render as <h1/h2/h3 style="display:inline-block"> inside
+ * <summary>. Without this reset, the heading's margin-top pushes it below the
+ * ::marker (▼), so the triangle and the title appear on separate lines.
+ */
+summary h1,
+summary h2,
+summary h3,
+summary h4 {
+	margin-top: 0;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding-inline: 0.125rem;
+	padding-block: 0.375rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+/*
+ * Render emoji icons using a ::before pseudo-element to keep the glyph
+ * out of the DOM textContent traversal. This avoids double-rendering icons
+ * in callouts and page titles.
+ * NOTE(slim/html-export-pseudo-icons): I can't tagref this because it will
+ * flag as a duplicate tag after codegen.
+ */
+.icon[data-emoji]::before {
+	content: attr(data-emoji);
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	margin-right: 0.4em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.tab {
+	margin: 1.25em 0;
+	padding-inline: 1rem;
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style><style>@import url('https://cdn.jsdelivr.net/npm/katex@0.16.25/dist/katex-swap.min.css')</style></head><body><article id="3b36d026-1980-8019-aad5-dfe15710d6bd" class="page sans"><header><h1 class="page-title" dir="auto">AIR - Agentic Incident Response</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><h1 id="3b36d026-1980-8081-9456-fb1eb9521818" class="" dir="auto">High-Level Architecture</h1><p id="3b36d026-1980-80fb-8209-c76994003d01" class="" dir="auto">AIR AI SRE is <strong>not a single LLM agent</strong>.</p><p id="3b36d026-1980-808f-a749-db26ea35a217" class="" dir="auto">It is a <strong>multi-agent investigation platform</strong> that orchestrates multiple specialised agents.</p><p id="3b36d026-1980-8013-b5ae-cd794b083f93" class="" dir="auto">Instead of asking an LLM:</p><blockquote id="3b36d026-1980-8022-9fdc-c0b275c53d99" class="" dir="auto">&quot;Find the root cause.&quot;</blockquote><p id="3b36d026-1980-80dc-a3f0-e2e3dced0252" class="" dir="auto">It performs something closer to:</p><h2 id="3b36d026-1980-807e-a281-f5e2c772c5d3" class="" dir="auto">Workflow Steps</h2><ol type="1" id="3b36d026-1980-80a1-ac38-d5ec0ff1ed5a" class="numbered-list" start="1" dir="auto"><li>Alert Arrives</li></ol><ol type="1" id="3b36d026-1980-800b-b77e-d03e3093da6b" class="numbered-list" start="2" dir="auto"><li>Planner Agent</li></ol><ol type="1" id="3b36d026-1980-8066-8947-fa829f69bb79" class="numbered-list" start="3" dir="auto"><li>Parallel Evidence Collection</li></ol><ol type="1" id="3b36d026-1980-80d8-a61e-f40b300ec8cb" class="numbered-list" start="4" dir="auto"><li>Data Normalization</li></ol><ol type="1" id="3b36d026-1980-802d-b258-d4719bb8e2de" class="numbered-list" start="5" dir="auto"><li>Correlation Agent</li></ol><ol type="1" id="3b36d026-1980-809c-9253-c85627e20854" class="numbered-list" start="6" dir="auto"><li>Hypothesis Generation</li></ol><ol type="1" id="3b36d026-1980-8069-b5e7-c88a5c4c19bc" class="numbered-list" start="7" dir="auto"><li>Specialized Investigation Agents</li></ol><ol type="1" id="3b36d026-1980-8066-8a66-df1626c75d54" class="numbered-list" start="8" dir="auto"><li>Evidence Scoring</li></ol><ol type="1" id="3b36d026-1980-8003-9875-f1ebc1324f72" class="numbered-list" start="9" dir="auto"><li>Refinement Loop</li></ol><ol type="1" id="3b36d026-1980-8052-88ce-f8b8086e597f" class="numbered-list numbered-list-digits-2" start="10" dir="auto"><li> Historical Knowledge</li></ol><ol type="1" id="3b36d026-1980-80b9-9d93-c637c7fc77ae" class="numbered-list numbered-list-digits-2" start="11" dir="auto"><li>Causal Timeline</li></ol><ol type="1" id="3b36d026-1980-80d2-ae3d-c1eb6cf8ce3d" class="numbered-list numbered-list-digits-2" start="12" dir="auto"><li>Root Cause Ranking</li></ol><ol type="1" id="3b36d026-1980-80da-aa45-d046ea7bddcc" class="numbered-list numbered-list-digits-2" start="13" dir="auto"><li>Recommendation Agent</li></ol><h2 id="3b36d026-1980-80fb-bb48-f729a9900e98" class="" dir="auto">LangGraph</h2><p id="3b36d026-1980-8058-9fec-feecc5343f30" class="" dir="auto">For your AIR implementation with LangGraph, each major box naturally becomes a graph node:</p><ul id="3b36d026-1980-80e4-b9af-fb5f4e2cefc6" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>ingest_incident</code></li></ul><ul id="3b36d026-1980-80c6-9a3c-c4677a257d64" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>triage_incident</code></li></ul><ul id="3b36d026-1980-8052-b782-dac7ac4625df" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>plan_investigation</code></li></ul><ul id="3b36d026-1980-80d3-bd29-d650d4b848b3" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>collect_logs</code></li></ul><ul id="3b36d026-1980-80ce-8d08-cd97b3a5f27b" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>collect_metrics</code></li></ul><ul id="3b36d026-1980-8038-a346-cc997f8ef82a" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>collect_traces</code></li></ul><ul id="3b36d026-1980-80e2-9af0-e27456f4faef" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>collect_deployment</code></li></ul><ul id="3b36d026-1980-802d-8b6d-fd4de88b9f2d" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>collect_k8s_events</code></li></ul><ul id="3b36d026-1980-8002-a5cc-fcc1baa5be17" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>retrieve_similar_incidents</code></li></ul><ul id="3b36d026-1980-8057-875d-e419dc432f23" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>retrieve_runbooks</code></li></ul><ul id="3b36d026-1980-807b-b29f-f8c92bd3ca76" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>correlate_evidence</code></li></ul><ul id="3b36d026-1980-8055-b6cc-d890d5967c3c" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>generate_hypotheses</code></li></ul><ul id="3b36d026-1980-8087-8441-e338fe17484d" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>investigate_hypothesis</code> (parallel subgraph)</li></ul><ul id="3b36d026-1980-80a8-b66a-cd6097de692d" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>validate_evidence</code></li></ul><ul id="3b36d026-1980-80df-b673-ed9e7b2977a7" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>build_causal_timeline</code></li></ul><ul id="3b36d026-1980-8090-9b4a-ebbed5eca8a0" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>rank_root_causes</code></li></ul><ul id="3b36d026-1980-80c3-95ec-c7c13ba3cedd" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>generate_recommendations</code></li></ul><ul id="3b36d026-1980-80cb-89da-ef9dc5a8ba13" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>human_approval</code></li></ul><ul id="3b36d026-1980-806f-9cda-f56172e64bfb" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>execute_remediation</code></li></ul><ul id="3b36d026-1980-80f1-98ea-c8c63067b1cd" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>verify_fix</code></li></ul><ul id="3b36d026-1980-8033-95c7-c430960e6140" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>close_incident</code></li></ul><h1 id="3b36d026-1980-8005-94d2-e28318ccbc0f" class="" dir="auto">Executive Summary</h1><p id="3b36d026-1980-804c-8ce9-ea9785cde3af" class="" dir="auto">AIR is an autonomous AI SRE platform that investigates production incidents from alerts, gathers evidence across observability and engineering systems, formulates competing hypotheses, validates them through parallel agents, identifies the most probable root cause, recommends remediation, and continuously learns from incident outcomes.</p><p id="3b36d026-1980-806f-8c7c-e49ea261a332" class="" dir="auto">Unlike traditional AIOps solutions that rely on predefined rules, AIR reasons over production context using agentic workflows, evidence correlation, historical incidents, and LLM-guided investigation.</p><h1 id="3b36d026-1980-8065-99cd-c892e881b7e0" class="" dir="auto">Product Scope</h1><h2 id="3b36d026-1980-800c-a8b2-c74bfacc1f81" class="" dir="auto">In Scope</h2><ul id="3b36d026-1980-8097-b22e-c50cfbed31c3" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Alert Investigation</li></ul><ul id="3b36d026-1980-802b-aaa3-e8974d7bdb4a" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Root Cause Analysis</li></ul><ul id="3b36d026-1980-8081-9a1c-dbd8ba4d9b44" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Evidence Collection</li></ul><ul id="3b36d026-1980-80b5-8961-c4d8c5627065" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Historical Search</li></ul><ul id="3b36d026-1980-80e8-acc2-e82ab9dadce2" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Runbook Retrieval</li></ul><ul id="3b36d026-1980-80ef-a062-c52f5d391ec2" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Slack Integration</li></ul><ul id="3b36d026-1980-800e-8e70-e56f611a31b3" class="bulleted-list" dir="auto"><li style="list-style-type:disc">ServiceNow Integration</li></ul><ul id="3b36d026-1980-8086-ac33-cb5d0a92afaf" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Jira Integration</li></ul><ul id="3b36d026-1980-802c-a6a7-f172a484221f" class="bulleted-list" dir="auto"><li style="list-style-type:disc">LLM Investigation</li></ul><ul id="3b36d026-1980-80cb-ae73-dcb910fad2d4" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Recommendation Generation</li></ul><ul id="3b36d026-1980-80e9-8f84-d861037be4cd" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Human Approval</li></ul><h1 id="3b36d026-1980-80ec-95b5-de458fa14d1b" class="" dir="auto">Product Roadmap</h1><p id="3b36d026-1980-806b-a82b-f865e7c45de2" class="" dir="auto"><strong>Phase 1 (MVP)</strong>: Alert intake, planner, evidence collection, RCA generation, Slack updates, ServiceNow integration, human approval.</p><p id="3b36d026-1980-80b5-8755-f8b65a6ef9c0" class="" dir="auto"><strong>Phase 2</strong>: Multi-hypothesis investigation, causal dependency graph, historical incident learning, evaluation framework, richer observability integrations.</p><p id="3b36d026-1980-80d8-95c9-f9952c18a54b" class="" dir="auto"><strong>Phase 3</strong>: Autonomous remediation with approval policies, deployment monitoring, proactive anomaly detection, continuous background agents, and production knowledge graph.</p><h1 id="3b36d026-1980-804c-ac21-c653b998e14a" class="" dir="auto">AIR –Technology Stack (Enterprise Production Architecture)</h1><table id="3b36d026-1980-8078-a1d1-e115442df4e0" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3b36d026-1980-8096-9c4c-c98228824a94" dir="ltr"><th id="PPOt" class="simple-table-header-color simple-table-header">Layer</th><th id="Zl_Y" class="simple-table-header-color simple-table-header">Recommended Technology</th><th id="LHCr" class="simple-table-header-color simple-table-header">Purpose</th><th id="kjL:" class="simple-table-header-color simple-table-header">Why This Technology</th></tr></thead><tbody><tr id="3b36d026-1980-8088-b475-d986d4475365" dir="ltr"><td id="PPOt" class=""><strong>Frontend UI</strong></td><td id="Zl_Y" class="">React 19 + TypeScript</td><td id="LHCr" class="">Web application</td><td id="kjL:" class="">Industry standard, component-based, excellent ecosystem</td></tr><tr id="3b36d026-1980-8080-aac7-d6d16e61c8dd" dir="ltr"><td id="PPOt" class=""><strong>UI Framework</strong></td><td id="Zl_Y" class="">Material UI (MUI)</td><td id="LHCr" class="">Enterprise UI components</td><td id="kjL:" class="">Professional design system, accessibility, rapid development</td></tr><tr id="3b36d026-1980-808a-97cb-d03ba2977540" dir="ltr"><td id="PPOt" class=""><strong>State Management</strong></td><td id="Zl_Y" class="">TanStack Query + Zustand</td><td id="LHCr" class="">Client-side state and server caching</td><td id="kjL:" class="">Efficient data fetching and lightweight state management</td></tr><tr id="3b36d026-1980-80ae-92be-e3b2cd071449" dir="ltr"><td id="PPOt" class=""><strong>Workflow Visualization</strong></td><td id="Zl_Y" class="">React Flow</td><td id="LHCr" class="">Display investigation graph and agent execution</td><td id="kjL:" class="">Ideal for visualizing LangGraph workflows and dependency graphs</td></tr><tr id="3b36d026-1980-8080-a9d4-dbfdf56fcd42" dir="ltr"><td id="PPOt" class=""><strong>Charts &amp; Dashboards</strong></td><td id="Zl_Y" class="">Recharts</td><td id="LHCr" class="">Incident metrics and analytics</td><td id="kjL:" class="">Lightweight and React-native</td></tr><tr id="3b36d026-1980-802e-b1bb-d10bfefdd0c2" dir="ltr"><td id="PPOt" class=""><strong>Code/JSON Viewer</strong></td><td id="Zl_Y" class="">Monaco Editor</td><td id="LHCr" class="">Display logs, JSON, YAML, prompts</td><td id="kjL:" class="">Same editor used in VS Code</td></tr></tbody></table><hr id="3b36d026-1980-8084-a869-c91ea156d146" dir="auto"/><h1 id="3b36d026-1980-8062-9faa-dddba1217d4f" class="" dir="auto">Backend Layer</h1><table id="3b36d026-1980-8074-b62a-dfa1c11c1efa" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3b36d026-1980-80b4-9eb8-fd92fd728a22" dir="ltr"><th id="zLRG" class="simple-table-header-color simple-table-header">Layer</th><th id="A`ss" class="simple-table-header-color simple-table-header">Recommended Technology</th><th id="DtJ\" class="simple-table-header-color simple-table-header">Purpose</th><th id="hQtp" class="simple-table-header-color simple-table-header">Why This Technology</th></tr></thead><tbody><tr id="3b36d026-1980-80c9-9771-f989dda57ca0" dir="ltr"><td id="zLRG" class=""><strong>API Gateway</strong></td><td id="A`ss" class="">Spring Boot 3.5 (Java 21)</td><td id="DtJ\" class="">Central API gateway</td><td id="hQtp" class="">Enterprise-grade performance, security, and scalability</td></tr><tr id="3b36d026-1980-80c5-96d4-d147f9c1d83e" dir="ltr"><td id="zLRG" class=""><strong>REST API</strong></td><td id="A`ss" class="">Spring Web</td><td id="DtJ\" class="">REST endpoints</td><td id="hQtp" class="">Standard enterprise REST implementation</td></tr><tr id="3b36d026-1980-804b-8730-d51508b3c0f7" dir="ltr"><td id="zLRG" class=""><strong>Authentication</strong></td><td id="A`ss" class="">Spring Security + OAuth2 + JWT</td><td id="DtJ\" class="">Secure authentication</td><td id="hQtp" class="">Enterprise SSO and RBAC support</td></tr><tr id="3b36d026-1980-80fc-aeb8-f40c6131d15f" dir="ltr"><td id="zLRG" class=""><strong>Authorization</strong></td><td id="A`ss" class="">Role-Based Access Control (RBAC)</td><td id="DtJ\" class="">Fine-grained permissions</td><td id="hQtp" class="">Required for enterprise governance</td></tr><tr id="3b36d026-1980-80a7-9e50-d711bee32555" dir="ltr"><td id="zLRG" class=""><strong>Validation</strong></td><td id="A`ss" class="">Jakarta Validation</td><td id="DtJ\" class="">Input validation</td><td id="hQtp" class="">Standard Java validation framework</td></tr><tr id="3b36d026-1980-80db-aad5-c245b273c39a" dir="ltr"><td id="zLRG" class=""><strong>API Documentation</strong></td><td id="A`ss" class="">OpenAPI 3 + Swagger</td><td id="DtJ\" class="">API documentation</td><td id="hQtp" class="">Interactive API documentation</td></tr><tr id="3b36d026-1980-80f1-b953-d6a6fbfa467b" dir="ltr"><td id="zLRG" class=""><strong>API Communication</strong></td><td id="A`ss" class="">REST + WebSocket + SSE</td><td id="DtJ\" class="">Real-time communication</td><td id="hQtp" class="">Supports live investigation updates</td></tr></tbody></table><hr id="3b36d026-1980-800d-822d-da6cf73fb6c0" dir="auto"/><h1 id="3b36d026-1980-8062-8efd-fdfebbd02b89" class="" dir="auto">AI Platform (Core)</h1><table id="3b36d026-1980-80fa-b050-f562ce577a49" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3b36d026-1980-8072-9348-c090a6bb6cac" dir="ltr"><th id="=MlL" class="simple-table-header-color simple-table-header">Layer</th><th id="vsHu" class="simple-table-header-color simple-table-header">Recommended Technology</th><th id="aSxU" class="simple-table-header-color simple-table-header">Purpose</th><th id="l&lt;T&gt;" class="simple-table-header-color simple-table-header">Why This Technology</th></tr></thead><tbody><tr id="3b36d026-1980-8024-9047-cc012421812c" dir="ltr"><td id="=MlL" class=""><strong>Programming Language</strong></td><td id="vsHu" class="">Python 3.12+</td><td id="aSxU" class="">AI development</td><td id="l&lt;T&gt;" class="">Richest AI ecosystem</td></tr><tr id="3b36d026-1980-8008-a07f-e2c30be3b273" dir="ltr"><td id="=MlL" class=""><strong>AI Framework</strong></td><td id="vsHu" class="">LangGraph</td><td id="aSxU" class="">Multi-agent orchestration</td><td id="l&lt;T&gt;" class="">Stateful workflows, checkpoints, retries, human approval</td></tr><tr id="3b36d026-1980-8071-946b-d2c934b5eb41" dir="ltr"><td id="=MlL" class=""><strong>LLM Tool Framework</strong></td><td id="vsHu" class="">LangChain</td><td id="aSxU" class="">Tool integration only</td><td id="l&lt;T&gt;" class="">Large ecosystem of integrations</td></tr><tr id="3b36d026-1980-803e-8165-da2d20c05106" dir="ltr"><td id="=MlL" class=""><strong>API Framework</strong></td><td id="vsHu" class="">FastAPI</td><td id="aSxU" class="">AI service APIs</td><td id="l&lt;T&gt;" class="">High performance, async support</td></tr><tr id="3b36d026-1980-80fc-a002-da067a66e13c" dir="ltr"><td id="=MlL" class=""><strong>LLM SDK</strong></td><td id="vsHu" class="">OpenAI SDK</td><td id="aSxU" class="">Model integration</td><td id="l&lt;T&gt;" class="">Native OpenAI Responses API support</td></tr><tr id="3b36d026-1980-8077-b4da-e965136cf9d2" dir="ltr"><td id="=MlL" class=""><strong>Data Validation</strong></td><td id="vsHu" class="">Pydantic v2</td><td id="aSxU" class="">Structured data models</td><td id="l&lt;T&gt;" class="">Type safety and JSON validation</td></tr><tr id="3b36d026-1980-8008-b7ea-c6eaf9e4216d" dir="ltr"><td id="=MlL" class=""><strong>Structured Output</strong></td><td id="vsHu" class="">OpenAI Structured Outputs</td><td id="aSxU" class="">Guaranteed JSON responses</td><td id="l&lt;T&gt;" class="">Reliable machine-readable output</td></tr><tr id="3b36d026-1980-803a-9d18-ff6d2e213190" dir="ltr"><td id="=MlL" class=""><strong>Prompt Management</strong></td><td id="vsHu" class="">LangSmith / Prompt Repository</td><td id="aSxU" class="">Version control prompts</td><td id="l&lt;T&gt;" class="">Prompt lifecycle management</td></tr></tbody></table><hr id="3b36d026-1980-80ed-9fd4-cf56ba77d9ff" dir="auto"/><h1 id="3b36d026-1980-8009-881f-f42662375315" class="" dir="auto">Large Language Models</h1><table id="3b36d026-1980-80df-af50-e034b97d6700" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3b36d026-1980-80b9-9bff-e7ed0f72abc1" dir="ltr"><th id="uQH^" class="simple-table-header-color simple-table-header">Use Case</th><th id="Edng" class="simple-table-header-color simple-table-header">Recommended Model</th><th id="`=GD" class="simple-table-header-color simple-table-header">Purpose</th></tr></thead><tbody><tr id="3b36d026-1980-807c-acfb-fde1728445c1" dir="ltr"><td id="uQH^" class="">Investigation Planning</td><td id="Edng" class="">GPT-5.5</td><td id="`=GD" class="">Task planning and orchestration</td></tr><tr id="3b36d026-1980-80cf-bd55-f76b68a7e537" dir="ltr"><td id="uQH^" class="">Root Cause Analysis</td><td id="Edng" class="">GPT-5.5</td><td id="`=GD" class="">Deep reasoning over evidence</td></tr><tr id="3b36d026-1980-8064-bbb4-f2525a20cd7f" dir="ltr"><td id="uQH^" class="">Recommendation Generation</td><td id="Edng" class="">GPT-5.5</td><td id="`=GD" class="">Actionable remediation plans</td></tr><tr id="3b36d026-1980-801f-8237-f476b2c9356f" dir="ltr"><td id="uQH^" class="">Report Generation</td><td id="Edng" class="">GPT-5.5</td><td id="`=GD" class="">Incident summaries and documentation</td></tr><tr id="3b36d026-1980-80a5-9325-e78052fcc204" dir="ltr"><td id="uQH^" class="">Lightweight Tasks</td><td id="Edng" class="">GPT-4.1 (optional)</td><td id="`=GD" class="">Cost optimization for simple operations</td></tr></tbody></table><hr id="3b36d026-1980-80f7-8e05-f9fcf36bf009" dir="auto"/><h1 id="3b36d026-1980-805c-ac05-d4ef8445ff86" class="" dir="auto">Agent Orchestration</h1><table id="3b36d026-1980-80ef-8264-e21dc4c5819e" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3b36d026-1980-807e-96a0-d018ed2f13d7" dir="ltr"><th id="UsQ?" class="simple-table-header-color simple-table-header">Component</th><th id="W_nc" class="simple-table-header-color simple-table-header">Technology</th><th id="wcSj" class="simple-table-header-color simple-table-header">Purpose</th></tr></thead><tbody><tr id="3b36d026-1980-8053-9595-ec50e039f741" dir="ltr"><td id="UsQ?" class="">Workflow Engine</td><td id="W_nc" class="">LangGraph StateGraph</td><td id="wcSj" class="">Agent orchestration</td></tr><tr id="3b36d026-1980-80b1-b9a8-ff5d24980562" dir="ltr"><td id="UsQ?" class="">State Management</td><td id="W_nc" class="">LangGraph State</td><td id="wcSj" class="">Investigation state</td></tr><tr id="3b36d026-1980-8051-8052-ed085229c189" dir="ltr"><td id="UsQ?" class="">Checkpointing</td><td id="W_nc" class="">LangGraph Checkpointer</td><td id="wcSj" class="">Resume interrupted workflows</td></tr><tr id="3b36d026-1980-805b-8542-eb327be99907" dir="ltr"><td id="UsQ?" class="">Human Approval</td><td id="W_nc" class="">LangGraph Interrupt</td><td id="wcSj" class="">Human-in-the-loop</td></tr><tr id="3b36d026-1980-8020-b94a-fac47a578946" dir="ltr"><td id="UsQ?" class="">Parallel Execution</td><td id="W_nc" class="">LangGraph Parallel Nodes</td><td id="wcSj" class="">Concurrent investigations</td></tr><tr id="3b36d026-1980-8011-9ac5-eed302a25f9d" dir="ltr"><td id="UsQ?" class="">Retry Mechanism</td><td id="W_nc" class="">LangGraph Conditional Edges</td><td id="wcSj" class="">Fault tolerance</td></tr></tbody></table><hr id="3b36d026-1980-80cc-8665-cd0c4ac94865" dir="auto"/><h1 id="3b36d026-1980-804a-a5e2-ff1d1087c0a7" class="" dir="auto">Data Storage</h1><table id="3b36d026-1980-80b5-afbf-da7e6749e6dc" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3b36d026-1980-80b3-8cf4-d499d5a5b47a" dir="ltr"><th id="EkM?" class="simple-table-header-color simple-table-header">Layer</th><th id="YY&gt;f" class="simple-table-header-color simple-table-header">Recommended Technology</th><th id="q;`N" class="simple-table-header-color simple-table-header">Purpose</th><th id="&gt;JQs" class="simple-table-header-color simple-table-header">Why</th></tr></thead><tbody><tr id="3b36d026-1980-802c-b123-e61cd69c255f" dir="ltr"><td id="EkM?" class="">Primary Database</td><td id="YY&gt;f" class="">PostgreSQL 16</td><td id="q;`N" class="">Operational data</td><td id="&gt;JQs" class="">Mature, reliable, ACID compliant</td></tr><tr id="3b36d026-1980-8005-b3b0-e24d04b95f74" dir="ltr"><td id="EkM?" class="">Vector Database</td><td id="YY&gt;f" class="">pgvector</td><td id="q;`N" class="">Semantic search</td><td id="&gt;JQs" class="">Native PostgreSQL extension, simplifies operations</td></tr><tr id="3b36d026-1980-80cd-9812-f8d0961526f4" dir="ltr"><td id="EkM?" class="">Cache</td><td id="YY&gt;f" class="">Redis</td><td id="q;`N" class="">Session, prompt, and state cache</td><td id="&gt;JQs" class="">Extremely fast in-memory storage</td></tr><tr id="3b36d026-1980-80d3-a9b4-e4d62ec3000e" dir="ltr"><td id="EkM?" class="">Blob Storage</td><td id="YY&gt;f" class="">AWS S3 / Azure Blob</td><td id="q;`N" class="">Incident attachments</td><td id="&gt;JQs" class="">Scalable object storage</td></tr></tbody></table><hr id="3b36d026-1980-803e-b139-f009bd8f700b" dir="auto"/><h1 id="3b36d026-1980-80b1-836f-f032accf9e42" class="" dir="auto">Retrieval-Augmented Generation (RAG)</h1><table id="3b36d026-1980-80f8-8e85-cc017dbe9ac4" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3b36d026-1980-8079-b227-e05033c99eac" dir="ltr"><th id="C;T{" class="simple-table-header-color simple-table-header">Layer</th><th id="K^PX" class="simple-table-header-color simple-table-header">Technology</th><th id="T\rg" class="simple-table-header-color simple-table-header">Purpose</th></tr></thead><tbody><tr id="3b36d026-1980-8016-9cbf-e6c287ea783c" dir="ltr"><td id="C;T{" class="">Document Processing</td><td id="K^PX" class="">LangChain Document Loaders</td><td id="T\rg" class="">Load runbooks and documentation</td></tr><tr id="3b36d026-1980-806b-adc5-cf0cda31479c" dir="ltr"><td id="C;T{" class="">Embedding Model</td><td id="K^PX" class="">OpenAI Embeddings</td><td id="T\rg" class="">Semantic embeddings</td></tr><tr id="3b36d026-1980-8086-9c83-c9473509d7e0" dir="ltr"><td id="C;T{" class="">Vector Store</td><td id="K^PX" class="">pgvector</td><td id="T\rg" class="">Similarity search</td></tr><tr id="3b36d026-1980-8000-b503-ec10e7c7c036" dir="ltr"><td id="C;T{" class="">Metadata Filtering</td><td id="K^PX" class="">PostgreSQL</td><td id="T\rg" class="">Context filtering</td></tr><tr id="3b36d026-1980-804d-af1a-dea70d892b11" dir="ltr"><td id="C;T{" class="">Keyword Search</td><td id="K^PX" class="">PostgreSQL Full Text Search</td><td id="T\rg" class="">Exact keyword matching</td></tr><tr id="3b36d026-1980-80fc-a359-f749aef12972" dir="ltr"><td id="C;T{" class="">Reranker</td><td id="K^PX" class="">Cross-Encoder (optional)</td><td id="T\rg" class="">Improve retrieval relevance</td></tr></tbody></table><hr id="3b36d026-1980-80b7-ab95-d0a77d7fb2e1" dir="auto"/><h1 id="3b36d026-1980-80ee-90a5-fd7e7e7bebe7" class="" dir="auto">Event Streaming &amp; Messaging</h1><table id="3b36d026-1980-80e8-a918-c6a980d76983" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3b36d026-1980-8062-aea5-fdc36d5a9180" dir="ltr"><th id="fZND" class="simple-table-header-color simple-table-header">Layer</th><th id="CTk~" class="simple-table-header-color simple-table-header">Recommended Technology</th><th id="pf^q" class="simple-table-header-color simple-table-header">Purpose</th></tr></thead><tbody><tr id="3b36d026-1980-80c9-a885-e9dca0d6a144" dir="ltr"><td id="fZND" class="">Event Streaming</td><td id="CTk~" class="">Apache Kafka</td><td id="pf^q" class="">Incident event bus</td></tr><tr id="3b36d026-1980-800a-8f4d-cedbf329c383" dir="ltr"><td id="fZND" class="">Message Queue</td><td id="CTk~" class="">Kafka Topics</td><td id="pf^q" class="">Asynchronous processing</td></tr><tr id="3b36d026-1980-80b5-9fcd-e339679aee13" dir="ltr"><td id="fZND" class="">Dead Letter Queue</td><td id="CTk~" class="">Kafka DLQ</td><td id="pf^q" class="">Failed message handling</td></tr><tr id="3b36d026-1980-8003-a081-c8fc3fa19a3a" dir="ltr"><td id="fZND" class="">Schema Registry</td><td id="CTk~" class="">Confluent Schema Registry</td><td id="pf^q" class="">Event versioning</td></tr></tbody></table><hr id="3b36d026-1980-8040-aebb-ca09c762131d" dir="auto"/><h1 id="3b36d026-1980-80af-a583-c326bd0aa02c" class="" dir="auto">External Integrations</h1><table id="3b36d026-1980-80af-81b9-efb9d1301e6e" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3b36d026-1980-801f-b850-dc2f158a1920" dir="ltr"><th id="kyVC" class="simple-table-header-color simple-table-header">Integration</th><th id="SBxp" class="simple-table-header-color simple-table-header">Technology</th><th id="GA;&lt;" class="simple-table-header-color simple-table-header">Purpose</th></tr></thead><tbody><tr id="3b36d026-1980-80c1-b631-de8267642979" dir="ltr"><td id="kyVC" class="">Slack</td><td id="SBxp" class="">MCP Server / Slack API</td><td id="GA;&lt;" class="">Notifications and approvals</td></tr><tr id="3b36d026-1980-80d1-bb38-f721a0a5d6ba" dir="ltr"><td id="kyVC" class="">ServiceNow</td><td id="SBxp" class="">MCP Server / REST API</td><td id="GA;&lt;" class="">Incident management</td></tr><tr id="3b36d026-1980-80ff-b937-f95a13d73b96" dir="ltr"><td id="kyVC" class="">Jira</td><td id="SBxp" class="">MCP Server / REST API</td><td id="GA;&lt;" class="">Ticket creation</td></tr><tr id="3b36d026-1980-8001-9b68-d9e168cd09af" dir="ltr"><td id="kyVC" class="">GitHub</td><td id="SBxp" class="">MCP Server</td><td id="GA;&lt;" class="">Deployment and code analysis</td></tr><tr id="3b36d026-1980-80dd-9353-fd39dfe36d00" dir="ltr"><td id="kyVC" class="">Kubernetes</td><td id="SBxp" class="">MCP Server</td><td id="GA;&lt;" class="">Cluster investigation</td></tr><tr id="3b36d026-1980-80bf-9614-f7a4d92c7971" dir="ltr"><td id="kyVC" class="">Prometheus</td><td id="SBxp" class="">MCP Server</td><td id="GA;&lt;" class="">Metrics collection</td></tr><tr id="3b36d026-1980-8090-868a-c881441e05b0" dir="ltr"><td id="kyVC" class="">Grafana</td><td id="SBxp" class="">MCP Server</td><td id="GA;&lt;" class="">Dashboard integration</td></tr><tr id="3b36d026-1980-8001-b03f-ddc5e89630c3" dir="ltr"><td id="kyVC" class="">Elastic/Splunk</td><td id="SBxp" class="">MCP Server</td><td id="GA;&lt;" class="">Log analysis</td></tr><tr id="3b36d026-1980-8030-8934-dee5a6b87a87" dir="ltr"><td id="kyVC" class="">Datadog</td><td id="SBxp" class="">MCP Server</td><td id="GA;&lt;" class="">Monitoring integration</td></tr></tbody></table><hr id="3b36d026-1980-807f-acfc-de555deaaf6f" dir="auto"/><h1 id="3b36d026-1980-8006-87a1-f9484a83978a" class="" dir="auto">Observability</h1><table id="3b36d026-1980-80c6-9137-dcbecf469a78" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3b36d026-1980-806a-ba10-d08752eec97e" dir="ltr"><th id="O&gt;go" class="simple-table-header-color simple-table-header">Layer</th><th id="mPTy" class="simple-table-header-color simple-table-header">Technology</th><th id="@s_C" class="simple-table-header-color simple-table-header">Purpose</th></tr></thead><tbody><tr id="3b36d026-1980-80e0-822f-d0969b83f653" dir="ltr"><td id="O&gt;go" class="">Metrics</td><td id="mPTy" class="">Prometheus</td><td id="@s_C" class="">Platform monitoring</td></tr><tr id="3b36d026-1980-804b-9450-f63f542d1ba4" dir="ltr"><td id="O&gt;go" class="">Dashboards</td><td id="mPTy" class="">Grafana</td><td id="@s_C" class="">Visualization</td></tr><tr id="3b36d026-1980-8097-8017-f31581285fb0" dir="ltr"><td id="O&gt;go" class="">Distributed Tracing</td><td id="mPTy" class="">OpenTelemetry + Jaeger</td><td id="@s_C" class="">Trace agent execution</td></tr><tr id="3b36d026-1980-80f2-8a53-e733f9ab5471" dir="ltr"><td id="O&gt;go" class="">Logging</td><td id="mPTy" class="">Loki / Elasticsearch</td><td id="@s_C" class="">Centralized logs</td></tr><tr id="3b36d026-1980-808e-a696-e03f02b6fa82" dir="ltr"><td id="O&gt;go" class="">Health Monitoring</td><td id="mPTy" class="">Spring Boot Actuator</td><td id="@s_C" class="">Service health</td></tr><tr id="3b36d026-1980-80cc-957d-d78e4535b35b" dir="ltr"><td id="O&gt;go" class="">AI Metrics</td><td id="mPTy" class="">LangSmith</td><td id="@s_C" class="">Prompt, token, and workflow analytics</td></tr></tbody></table><hr id="3b36d026-1980-8060-97fc-dd5b2388b2b6" dir="auto"/><h1 id="3b36d026-1980-80da-8879-ecc4a9100577" class="" dir="auto">Security</h1><table id="3b36d026-1980-80da-8681-d93745c975be" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3b36d026-1980-80d3-8bf0-f0190b0030f5" dir="ltr"><th id="m}]I" class="simple-table-header-color simple-table-header">Layer</th><th id="UlaL" class="simple-table-header-color simple-table-header">Technology</th><th id="w[bu" class="simple-table-header-color simple-table-header">Purpose</th></tr></thead><tbody><tr id="3b36d026-1980-8007-a55a-f92f83e51415" dir="ltr"><td id="m}]I" class="">Authentication</td><td id="UlaL" class="">OAuth2 + OpenID Connect</td><td id="w[bu" class="">User authentication</td></tr><tr id="3b36d026-1980-8037-abe0-fe894487f233" dir="ltr"><td id="m}]I" class="">Authorization</td><td id="UlaL" class="">RBAC</td><td id="w[bu" class="">Access control</td></tr><tr id="3b36d026-1980-80ec-b971-fae88fe2df4c" dir="ltr"><td id="m}]I" class="">Secrets Management</td><td id="UlaL" class="">HashiCorp Vault / Kubernetes Secrets</td><td id="w[bu" class="">Secure secret storage</td></tr><tr id="3b36d026-1980-80c3-b275-dba3cf858494" dir="ltr"><td id="m}]I" class="">Encryption</td><td id="UlaL" class="">TLS 1.3</td><td id="w[bu" class="">Secure communication</td></tr><tr id="3b36d026-1980-8044-86a6-d43290ab6bc1" dir="ltr"><td id="m}]I" class="">Audit Logging</td><td id="UlaL" class="">PostgreSQL + ELK</td><td id="w[bu" class="">Compliance and auditing</td></tr><tr id="3b36d026-1980-804a-87bc-e9a6b61a0fa0" dir="ltr"><td id="m}]I" class="">PII Protection</td><td id="UlaL" class="">Data masking middleware</td><td id="w[bu" class="">Sensitive data protection</td></tr></tbody></table><hr id="3b36d026-1980-80cc-8e56-ee139dedda06" dir="auto"/><h1 id="3b36d026-1980-80e9-a2c3-e9464b6b2eae" class="" dir="auto">DevOps &amp; Infrastructure</h1><table id="3b36d026-1980-8025-bd7d-ea49d3a8a9e5" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3b36d026-1980-805d-902c-e2dae8ddf3ea" dir="ltr"><th id="`&lt;Vq" class="simple-table-header-color simple-table-header">Layer</th><th id="UfJG" class="simple-table-header-color simple-table-header">Technology</th><th id="Vxx=" class="simple-table-header-color simple-table-header">Purpose</th></tr></thead><tbody><tr id="3b36d026-1980-80d3-8ac8-dfe363cca7bd" dir="ltr"><td id="`&lt;Vq" class="">Containerization</td><td id="UfJG" class="">Docker</td><td id="Vxx=" class="">Application packaging</td></tr><tr id="3b36d026-1980-80e2-a410-cb4af435e3f2" dir="ltr"><td id="`&lt;Vq" class="">Orchestration</td><td id="UfJG" class="">Kubernetes / OpenShift</td><td id="Vxx=" class="">Container orchestration</td></tr><tr id="3b36d026-1980-80e6-a47e-f81049ddc5b2" dir="ltr"><td id="`&lt;Vq" class="">Infrastructure as Code</td><td id="UfJG" class="">Terraform</td><td id="Vxx=" class="">Infrastructure provisioning</td></tr><tr id="3b36d026-1980-806f-a79a-e263abbdc1c7" dir="ltr"><td id="`&lt;Vq" class="">Package Management</td><td id="UfJG" class="">Helm</td><td id="Vxx=" class="">Kubernetes deployments</td></tr><tr id="3b36d026-1980-8052-9f38-f30a2b019f24" dir="ltr"><td id="`&lt;Vq" class="">CI/CD</td><td id="UfJG" class="">GitHub Actions / Jenkins</td><td id="Vxx=" class="">Automated build and deployment</td></tr><tr id="3b36d026-1980-80b5-9598-f2992f2273f4" dir="ltr"><td id="`&lt;Vq" class="">Artifact Repository</td><td id="UfJG" class="">Harbor / Nexus</td><td id="Vxx=" class="">Container image storage</td></tr></tbody></table><hr id="3b36d026-1980-8066-8990-ee2daa906fbd" dir="auto"/><h1 id="3b36d026-1980-80f1-935c-e4a4a777fa12" class="" dir="auto">Testing &amp; Quality</h1><table id="3b36d026-1980-80f7-ab09-ecd36792185a" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3b36d026-1980-80c3-9d8b-d9349fee75bf" dir="ltr"><th id="_mJK" class="simple-table-header-color simple-table-header">Layer</th><th id="hm;Y" class="simple-table-header-color simple-table-header">Technology</th><th id="EGau" class="simple-table-header-color simple-table-header">Purpose</th></tr></thead><tbody><tr id="3b36d026-1980-8056-9510-f2bf54c54f36" dir="ltr"><td id="_mJK" class="">Unit Testing</td><td id="hm;Y" class="">Pytest</td><td id="EGau" class="">Python testing</td></tr><tr id="3b36d026-1980-80bc-b0b6-fac7c35b768e" dir="ltr"><td id="_mJK" class="">Java Testing</td><td id="hm;Y" class="">JUnit 5</td><td id="EGau" class="">Spring Boot testing</td></tr><tr id="3b36d026-1980-8039-81cd-facfa349d37e" dir="ltr"><td id="_mJK" class="">API Testing</td><td id="hm;Y" class="">Postman / Newman</td><td id="EGau" class="">API validation</td></tr><tr id="3b36d026-1980-8016-870f-c9675af0c67b" dir="ltr"><td id="_mJK" class="">Load Testing</td><td id="hm;Y" class="">k6</td><td id="EGau" class="">Performance testing</td></tr><tr id="3b36d026-1980-8038-b0a5-d1c436d6027a" dir="ltr"><td id="_mJK" class="">Security Testing</td><td id="hm;Y" class="">OWASP ZAP</td><td id="EGau" class="">Security validation</td></tr><tr id="3b36d026-1980-8049-bbd6-cef71042e4bc" dir="ltr"><td id="_mJK" class="">Code Quality</td><td id="hm;Y" class="">SonarQube</td><td id="EGau" class="">Static code analysis</td></tr></tbody></table><hr id="3b36d026-1980-8096-8ffe-ec6a4f08bb41" dir="auto"/><h1 id="3b36d026-1980-8037-bddb-fba6abe5c248" class="" dir="auto">AI Evaluation</h1><table id="3b36d026-1980-80bf-8929-ff0e3539d157" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3b36d026-1980-804c-b61b-cfd87e644dcf" dir="ltr"><th id="MGYP" class="simple-table-header-color simple-table-header">Layer</th><th id="[Pin" class="simple-table-header-color simple-table-header">Technology</th><th id="|&gt;vA" class="simple-table-header-color simple-table-header">Purpose</th></tr></thead><tbody><tr id="3b36d026-1980-8018-a2f4-eaa517395001" dir="ltr"><td id="MGYP" class="">Prompt Evaluation</td><td id="[Pin" class="">LangSmith</td><td id="|&gt;vA" class="">Prompt performance evaluation</td></tr><tr id="3b36d026-1980-8048-95c3-c1be5aad36c5" dir="ltr"><td id="MGYP" class="">LLM Evaluation</td><td id="[Pin" class="">OpenAI Evals / DeepEval</td><td id="|&gt;vA" class="">Model quality assessment</td></tr><tr id="3b36d026-1980-80a0-a45f-da337aff32f2" dir="ltr"><td id="MGYP" class="">Experiment Tracking</td><td id="[Pin" class="">MLflow</td><td id="|&gt;vA" class="">AI experiment management</td></tr><tr id="3b36d026-1980-80b0-be84-c2ba5bf695f5" dir="ltr"><td id="MGYP" class="">Cost Monitoring</td><td id="[Pin" class="">OpenAI Usage API</td><td id="|&gt;vA" class="">Token and cost tracking</td></tr></tbody></table><hr id="3b36d026-1980-80a8-91ce-f920668ba65d" dir="auto"/><h1 id="3b36d026-1980-8063-a55b-f56f452d1ab3" class="" dir="auto">Recommended Repository Structure</h1><table id="3b36d026-1980-8012-a436-cbf7d09772ea" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3b36d026-1980-80c7-8063-f89c052a958b" dir="ltr"><th id="uU_m" class="simple-table-header-color simple-table-header">Repository</th><th id="`;f?" class="simple-table-header-color simple-table-header">Technology</th><th id="wN[o" class="simple-table-header-color simple-table-header">Responsibility</th></tr></thead><tbody><tr id="3b36d026-1980-803e-86f7-cb24893dcf5d" dir="ltr"><td id="uU_m" class=""><strong>air-ui-app</strong></td><td id="`;f?" class="">React + MUI</td><td id="wN[o" class="">User Interface</td></tr><tr id="3b36d026-1980-80d4-952c-e99de31f5e35" dir="ltr"><td id="uU_m" class=""><strong>air-api-app</strong></td><td id="`;f?" class="">Spring Boot</td><td id="wN[o" class="">API Gateway &amp; Business Services</td></tr><tr id="3b36d026-1980-8024-b98a-cb468b517621" dir="ltr"><td id="uU_m" class=""><strong>air-agent-app</strong></td><td id="`;f?" class="">Python + LangGraph</td><td id="wN[o" class="">AI Agents &amp; Orchestration</td></tr><tr id="3b36d026-1980-802e-b1ff-cf208258ba7e" dir="ltr"><td id="uU_m" class=""><strong>air-shared-sdk</strong></td><td id="`;f?" class="">Java/Python</td><td id="wN[o" class="">Shared DTOs and utilities</td></tr><tr id="3b36d026-1980-8040-8b53-c91b27fad715" dir="ltr"><td id="uU_m" class=""><strong>air-mcp-servers</strong></td><td id="`;f?" class="">Python</td><td id="wN[o" class="">MCP integrations</td></tr><tr id="3b36d026-1980-8016-850f-e4c0de589d43" dir="ltr"><td id="uU_m" class=""><strong>air-infra</strong></td><td id="`;f?" class="">Terraform + Helm</td><td id="wN[o" class="">Infrastructure automation</td></tr><tr id="3b36d026-1980-804a-a75a-dd75fee3a1c3" dir="ltr"><td id="uU_m" class=""><strong>air-observability</strong></td><td id="`;f?" class="">Grafana + Prometheus</td><td id="wN[o" class="">Monitoring and dashboards</td></tr><tr id="3b36d026-1980-8097-9bf9-f30ba1559a7d" dir="ltr"><td id="uU_m" class=""><strong>air-docs</strong></td><td id="`;f?" class="">MkDocs / Docusaurus</td><td id="wN[o" class="">Product documentation</td></tr></tbody></table><hr id="3b36d026-1980-80fe-b01e-c89ebced3769" dir="auto"/><h1 id="3b36d026-1980-805a-9ec7-ee966cd1112d" class="" dir="auto">Executive Technology Recommendation</h1><table id="3b36d026-1980-804c-88b4-fa415a6517e4" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3b36d026-1980-8064-987a-d4cb70ea6221" dir="ltr"><th id="RFbl" class="simple-table-header-color simple-table-header">Category</th><th id="~lxD" class="simple-table-header-color simple-table-header">Recommended Technology</th></tr></thead><tbody><tr id="3b36d026-1980-808b-98d8-e50c81f998dd" dir="ltr"><td id="RFbl" class=""><strong>Frontend</strong></td><td id="~lxD" class="">React 19 + TypeScript + Material UI</td></tr><tr id="3b36d026-1980-8014-9659-f2145d0f584d" dir="ltr"><td id="RFbl" class=""><strong>Backend API</strong></td><td id="~lxD" class="">Spring Boot 3.5 (Java 21)</td></tr><tr id="3b36d026-1980-80fc-a625-c2bdc059931d" dir="ltr"><td id="RFbl" class=""><strong>AI Framework</strong></td><td id="~lxD" class="">LangGraph</td></tr><tr id="3b36d026-1980-8086-ba9c-d3a2bc4a5591" dir="ltr"><td id="RFbl" class=""><strong>LLM Integration</strong></td><td id="~lxD" class="">OpenAI SDK</td></tr><tr id="3b36d026-1980-803f-9a6a-cd38f7386e4b" dir="ltr"><td id="RFbl" class=""><strong>Primary LLM</strong></td><td id="~lxD" class="">GPT-5.5</td></tr><tr id="3b36d026-1980-8055-9f99-c7c2322da486" dir="ltr"><td id="RFbl" class=""><strong>Programming Language</strong></td><td id="~lxD" class="">Python 3.12+</td></tr><tr id="3b36d026-1980-80aa-966c-d0b0476a7c14" dir="ltr"><td id="RFbl" class=""><strong>Operational Database</strong></td><td id="~lxD" class="">PostgreSQL 16</td></tr><tr id="3b36d026-1980-804b-84db-f6641790e21a" dir="ltr"><td id="RFbl" class=""><strong>Vector Database</strong></td><td id="~lxD" class="">pgvector</td></tr><tr id="3b36d026-1980-80f4-b20b-eec224fa3937" dir="ltr"><td id="RFbl" class=""><strong>Cache</strong></td><td id="~lxD" class="">Redis</td></tr><tr id="3b36d026-1980-80fa-9524-fdd13c0b2e8b" dir="ltr"><td id="RFbl" class=""><strong>Event Streaming</strong></td><td id="~lxD" class="">Apache Kafka</td></tr><tr id="3b36d026-1980-8092-8ee9-fb9f89e8a627" dir="ltr"><td id="RFbl" class=""><strong>Container Platform</strong></td><td id="~lxD" class="">Kubernetes / OpenShift</td></tr><tr id="3b36d026-1980-8054-b6c9-c2079bfecfa0" dir="ltr"><td id="RFbl" class=""><strong>Observability</strong></td><td id="~lxD" class="">OpenTelemetry + Prometheus + Grafana + Jaeger</td></tr><tr id="3b36d026-1980-8081-9428-d1876c80b8e1" dir="ltr"><td id="RFbl" class=""><strong>Security</strong></td><td id="~lxD" class="">OAuth2 + JWT + RBAC + Vault</td></tr><tr id="3b36d026-1980-8031-865e-d16fdcf9d6d1" dir="ltr"><td id="RFbl" class=""><strong>CI/CD</strong></td><td id="~lxD" class="">GitHub Actions + Helm + Terraform</td></tr><tr id="3b36d026-1980-80fe-82a0-d1d0b6ebf5e4" dir="ltr"><td id="RFbl" class=""><strong>External Integration Strategy</strong></td><td id="~lxD" class="">Model Context Protocol (MCP) Servers</td></tr></tbody></table><p id="3b36d026-1980-8049-84f4-ec1c8599a7da" class="" dir="auto">
+</p><figure id="3b36d026-1980-8038-9600-f721e49f421c" class="link-to-page"><a href="AIR%20-%20Agentic%20Incident%20Response/AIR%20%E2%80%93%20Feature%201%20Alert%20Intake%20&amp;%20Incident%20Initializa%203b36d026198080389600f721e49f421c.html" data-notion-page-id="3b36d026-1980-8038-9600-f721e49f421c" data-notion-space-id="6c0d4135-00e0-44e0-91c4-9dea11547c39">AIR – Feature 1: Alert Intake &amp; Incident Initialization</a></figure><figure id="3b36d026-1980-80ff-929b-d81d6edb5e12" class="link-to-page"><a href="AIR%20-%20Agentic%20Incident%20Response/AIR%20%E2%80%93%20Feature%202%20Investigation%20Planner%20Agent%203b36d026198080ff929bd81d6edb5e12.html" data-notion-page-id="3b36d026-1980-80ff-929b-d81d6edb5e12" data-notion-space-id="6c0d4135-00e0-44e0-91c4-9dea11547c39">AIR – Feature 2: Investigation Planner Agent</a></figure><figure id="3b36d026-1980-80b2-a1f1-fb85182e9261" class="link-to-page"><a href="AIR%20-%20Agentic%20Incident%20Response/AIR%20%E2%80%93%20Feature%203%20Evidence%20Collection%20Framework%203b36d026198080b2a1f1fb85182e9261.html" data-notion-page-id="3b36d026-1980-80b2-a1f1-fb85182e9261" data-notion-space-id="6c0d4135-00e0-44e0-91c4-9dea11547c39">AIR – Feature 3: Evidence Collection Framework</a></figure><figure id="3b36d026-1980-8010-bec6-ec50c7ef7d39" class="link-to-page"><a href="AIR%20-%20Agentic%20Incident%20Response/AIR%20%E2%80%93%20Feature%204%20Root%20Cause%20Assessment%20Architecture%203b36d02619808010bec6ec50c7ef7d39.html" data-notion-page-id="3b36d026-1980-8010-bec6-ec50c7ef7d39" data-notion-space-id="6c0d4135-00e0-44e0-91c4-9dea11547c39">AIR – Feature 4: Root Cause Assessment Architecture</a></figure><figure id="3b36d026-1980-8002-b94f-deb27a064d87" class="link-to-page"><a href="AIR%20-%20Agentic%20Incident%20Response/AIR%20-%20Feature%205%20Resolution%20Planning%20Agent%203b36d02619808002b94fdeb27a064d87.html" data-notion-page-id="3b36d026-1980-8002-b94f-deb27a064d87" data-notion-space-id="6c0d4135-00e0-44e0-91c4-9dea11547c39">AIR - Feature 5: Resolution Planning Agent</a></figure><figure id="3b36d026-1980-80aa-8c6a-c2f6d229893e" class="link-to-page"><a href="AIR%20-%20Agentic%20Incident%20Response/AIR%20-%20Feature%206%20AI%20Incident%20Report%20(MVP)%203b36d026198080aa8c6ac2f6d229893e.html" data-notion-page-id="3b36d026-1980-80aa-8c6a-c2f6d229893e" data-notion-space-id="6c0d4135-00e0-44e0-91c4-9dea11547c39">AIR - Feature 6: AI Incident Report (MVP)
+</a></figure></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
